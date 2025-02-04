@@ -1,33 +1,57 @@
 .navbar-container {
   display: flex;
+  position: absolute;
   width: 100%;
-  justify-content: center;
-  background-color: #4B4646;
+  min-height: 6em;
+  justify-content: space-between;
+  background-color: transparent;
+  align-items: center;
+  z-index: 10;
 
   .navbar {
     font-family: Inter, serif;
-    color: white;
     max-width: 750px;
-    width: 50%;
+    width: 20%;
     list-style: none;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     transition: font-size ease 0.3s;
 
-    #inactive {
+    a {
+      text-decoration: none;
+      color: white;
+    }
+
+    li {
       font-size: 20px;
       transition: font-size ease 0.3s;
+      text-decoration: none;
 
       &:hover {
-        text-decoration: underline;
+        text-decoration-color: white;
         font-size: 24px;
       }
     }
 
-    #active {
+    .active {
       font-size: 24px;
       text-decoration: underline;
+      text-decoration-thickness: 2px;
     }
+  }
+
+  #profile-icon {
+    display: flex;
+    width: 3em;
+    height: 3em;
+    margin-right: 2em;
+  }
+
+  #logo {
+    display: flex;
+    width: 3em;
+    height: 4em;
+    margin-left: 2em;
   }
 }

@@ -1,39 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
 import React from "react";
+import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 
-import Nav from './component/Nav';
-class App extends React.Component  {
+import Home from "./component/Home";
+import Catalog from "./component/Catalog";
+import Products from "./component/Products";
+import About from "./component/About";
+import Nav from "./component/Nav";
 
-  constructor(props) {
-    super(props);
-  }
+class App extends React.Component {
   render() {
-
     return (
-        <div className="App">
-
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>
-              Edit <code>src/App.js</code> and save to reload.
-            </p>
-            <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              Learn React
-            </a>
-          </header>
-        </div>
-
-
+      <BrowserRouter>
+        <Nav />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </BrowserRouter>
     );
   }
-
-
 }
 
 export default App;
+ 
