@@ -1,5 +1,7 @@
 #hero-container
 {
+    display: flex;
+    flex-direction: column;
     position: relative;
     width: 100%;
     height: 100vh;
@@ -25,11 +27,52 @@
         margin-top: 15%;
 
         #heading {
-            font-size: 68px;
+            font-size: 100px;
+            letter-spacing: 15px;
             font-weight: 200;
-            font-family: 'Montserrat', sans-serif;
+            font-family: "Bebas Neue", serif;
             width: 100%;
             color: white;
+        }
+    }
+
+    #paragraph-container {
+        width: 50%;
+        display: flex;
+        position: absolute;
+        text-align: center;
+        margin-left: 25%;
+        margin-top: 25%;
+        text-align: center;
+        z-index: 11;
+
+        #paragraph {
+            font-size: 24px;
+            font-family: "Raleway", serif;
+            width: 100%;
+            color: white;
+        }
+    }
+
+    #catalog-button {
+        position: absolute;
+        font-size: 30px;
+        width: 10%;
+        height: 7%;
+        background-color: transparent;
+        border: 2px solid white;
+        z-index: 11;
+        color: white;
+        margin-left: 45%;
+        margin-top: 32%;
+        transition: background-color ease 0.3s;
+
+        &:hover {
+            color: black;
+            text-decoration: underline;
+            text-decoration-thickness: 3px;
+            border-color: black;
+            background-color: white;
         }
     }
 }
