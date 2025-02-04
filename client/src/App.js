@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import React from "react";
+
+import Nav from './component/Nav';
 class App extends React.Component  {
 
   constructor(props) {

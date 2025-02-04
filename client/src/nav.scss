@@ -1,0 +1,33 @@
+.navbar-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  background-color: #4B4646;
+
+  .navbar {
+    font-family: Inter, serif;
+    color: white;
+    max-width: 750px;
+    width: 50%;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    transition: font-size ease 0.3s;
+
+    #inactive {
+      font-size: 20px;
+      transition: font-size ease 0.3s;
+
+      &:hover {
+        text-decoration: underline;
+        font-size: 24px;
+      }
+    }
+
+    #active {
+      font-size: 24px;
+      text-decoration: underline;
+    }
+  }
+}
