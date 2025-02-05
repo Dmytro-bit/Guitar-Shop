@@ -46,6 +46,11 @@
     width: 3em;
     height: 3em;
     margin-right: 2em;
+    transition: transform 0.3s;
+
+    &:hover{
+      transform: scale(1.2);
+    }
   }
 
   #logo {
@@ -53,5 +58,10 @@
     width: 3em;
     height: 4em;
     margin-left: 2em;
+    transition: transform 0.3s;
+
+    &:hover{
+      transform: scale(1.2);
+    }
   }
 }
