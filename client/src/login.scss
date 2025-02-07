@@ -1,9 +1,9 @@
 body {
-    background-color: rgb(228, 228, 228);
+    background-color: rgb(55, 55, 55);
 }
 
 #login-back {
-    color: black;
+    color: white;
     font-size: 26px;
     position: absolute;
     left: 4em;
@@ -17,7 +17,7 @@ body {
     }
 }
 #login-container {
-    background-color: white;
+    background-color: #E6E6E6;
     width: 26vw;
     height: 40vh;
     display: flex;
@@ -27,7 +27,7 @@ body {
     flex-direction: column;
     border-radius: 54px;
     padding: 2em 3em;
-    box-shadow: 0 1em 1em rgb(200, 197, 197);
+    box-shadow: 0 1em 1em rgb(40, 40, 40);
 
     #login-heading{
         font-size: 36px;
@@ -44,7 +44,7 @@ body {
 
         .login-cred-container {
             width: 100%;
-            height: 25%;
+            height: 30%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -59,6 +59,12 @@ body {
                 border: none;
                 background-color: #F2F2F2;
                 border-radius: 15px;
+            }
+
+            input:focus {
+                outline: none !important;
+                border-color: rgb(55, 55, 55);
+                box-shadow: 0 0 10px rgb(55, 55, 55);
             }
         }
 

@@ -34,7 +34,7 @@ class Home extends React.Component
                     <video autoPlay muted loop id="background">
                         <source src="../video/background.mp4"/>
                     </video>
-                    <div class="video-overlay"></div>
+                    <div className="video-overlay"></div>
                 </div>
             </div></>
         )
