@@ -15,10 +15,5 @@
     "dotenv": "^16.4.7",
     "mongoose": "^8.9.6",
     "mongodb": "^6.13.0"
-  },
-  "devDependencies": {
-    "express": "^4.21.2",
-    "nodemon": "^3.1.9",
-    "node-sass": "^4.14.1"
   }
 }
