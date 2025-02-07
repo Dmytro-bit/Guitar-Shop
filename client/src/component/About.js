@@ -1,5 +1,7 @@
 import React from "react";
 
+import "../aboutus.scss";
+
 class About extends React.Component
 {
     constructor(props)

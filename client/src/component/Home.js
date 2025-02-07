@@ -1,5 +1,7 @@
 import React from "react";
 
+import Nav from "./Nav"
+
 import "../home.scss"
 
 
@@ -13,6 +15,7 @@ class Home extends React.Component
     render()
     {
         return(
+           <><Nav /> 
             <div id="hero-container">
                 <div id="hero">
                     <div id="text-container">
@@ -32,10 +35,8 @@ class Home extends React.Component
                         <source src="../video/background.mp4"/>
                     </video>
                     <div class="video-overlay"></div>
-
-
                 </div>
-            </div>
+            </div></>
         )
     }
 
