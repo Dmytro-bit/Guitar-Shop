@@ -6,7 +6,7 @@ import Catalog from "./component/Catalog";
 import Products from "./component/Products";
 import About from "./component/About";
 import Login from "./component/Login"
-import Nav from "./component/Nav";
+import Register from "./component/Register";
 
 class App extends React.Component {
   render() {
@@ -18,6 +18,7 @@ class App extends React.Component {
           <Route path="/products" element={<Products />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </BrowserRouter>
     );
