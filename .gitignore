@@ -13,7 +13,7 @@
 #================CLIENT_SIDE================
 
 # dependencies
-client/node_modules
+**/node_modules/
 /.pnp
 .pnp.js
 
@@ -33,8 +33,4 @@ client/node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-
-#================SERVER_SIDE================
-server/node_modules
 
