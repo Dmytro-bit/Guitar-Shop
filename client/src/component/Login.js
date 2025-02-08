@@ -25,7 +25,7 @@ class Login extends React.Component
                             <input type="text" id="login-email" name="login-email"></input><br/>
                         </div>
                         <div className="login-cred-container">
-                            <label htmlFor="password">Paswword:</label><br/>
+                            <label htmlFor="password">Password:</label><br/>
                             <input type="text" id="login-password" name="login-password"></input><br/>
                         </div>
                     </>
