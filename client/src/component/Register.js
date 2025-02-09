@@ -160,7 +160,7 @@ class Register extends React.Component
                             )}
                         </div>
                     </>
-                    <input type="submit" value="SIGN UP" onClick={this.handleSubmit}/>
+                    <input type="submit" value="SIGN UP"/>
                 </form>
             </div></div>
         )

@@ -9,30 +9,97 @@ class Login extends React.Component
     constructor(props)
     {
         super(props)
+
+        this.state = 
+        {
+            email: "",
+            password: "",
+            wasSubmittedOnce : false,
+            errorMessage: {"email" : "Enter a valid email",
+                            "password" : "Password can not be an empty string"
+            }
+        }
+    }
+
+    handleChange = e =>
+    {
+        this.setState({ [e.target.name] : e.target.value })
+    }
+
+    validateEmail = () =>
+    {
+        const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        return pattern.test(String(this.state.email).toLowerCase())
+    }
+
+    validatePassword = () =>
+    {
+        return this.state.password.length > 0;
+    }
+
+    validate = () =>
+    {
+        return {
+            email: this.validateEmail(),
+            password: this.validatePassword()
+        }
+    }
+
+    handleSubmit = e =>
+    {
+        e.preventDefault()
+        this.setState({wasSubmittedOnce : true})
+        const formInputsState = this.validate()
+
+        if(Object.keys(formInputsState).every(key => formInputsState[key]))
+        {
+            //Axios post request
+        }
+        else
+        {
+            return
+        }
     }
 
     render() 
     {
+        let formInputsState = this.validate()
         return(
             /// TODO: Change CSS hover for this button 
-            <><Link to="/"><p id="login-back">&#8592; BACK</p></Link>
+            <div id="login-form-container"><Link to="/"><p id="login-back">&#8592; BACK</p></Link>
             <div id="login-container">
                 <p id="login-heading">Login</p>
-                <form id="login">
+                <form id="login" onSubmit={this.handleSubmit}>
                     <>
                         <div className="login-cred-container">
                             <label htmlFor="email">Email:</label><br/>
-                            <input type="text" id="login-email" name="login-email"></input><br/>
+                            <input type="text" id="login-email" name="email" onChange={this.handleChange} className={!formInputsState.email && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                        </div>
+                        <div className="error">
+                            {!formInputsState.email && this.state.wasSubmittedOnce &&
+                            (
+                                <i><p className="error-message">
+                                    {this.state.errorMessage["email"]}
+                                </p></i>
+                            )}
                         </div>
                         <div className="login-cred-container">
                             <label htmlFor="password">Password:</label><br/>
-                            <input type="text" id="login-password" name="login-password"></input><br/>
+                            <input type="password" id="login-password" name="password" onChange={this.handleChange} className={!formInputsState.password && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                        </div>
+                        <div className="error">
+                            {!formInputsState.password && this.state.wasSubmittedOnce &&
+                            (
+                                <i><p className="error-message">
+                                    {this.state.errorMessage["password"]}
+                                </p></i>
+                            )}
                         </div>
                     </>
                     <input type="submit" value="SIGN IN"/>
                 </form>
                 <div id="register-text-container"><p id="register-text">Don't have an account yet? <Link id="register-link" to="/register">Register</Link></p></div>
-            </div></>
+            </div></div>
         )
     }
 }
