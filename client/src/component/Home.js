@@ -2,7 +2,7 @@ import React from "react";
 
 import Nav from "./Nav"
 
-import "../home.scss"
+import "../styles/home.scss"
 
 
 class Home extends React.Component

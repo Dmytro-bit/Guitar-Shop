@@ -2,7 +2,7 @@ import React from "react"
 
 import { Link } from "react-router-dom";
 
-import "../login.scss"
+import "../styles/login.scss"
 
 class Login extends React.Component
 {

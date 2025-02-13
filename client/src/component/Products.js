@@ -1,5 +1,8 @@
 import React from "react";
 
+import Nav from "./Nav"
+import Card from "./Card"
+
 class Products extends React.Component
 {
     constructor(props)
@@ -10,7 +13,15 @@ class Products extends React.Component
     render()
     {
         return(
-            <div>This is Products Page</div>
+            <><Nav />
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <div><Card /></div></>
         )
     }
 

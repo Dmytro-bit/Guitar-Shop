@@ -3,7 +3,7 @@ import React from "react"
 
 import { Link } from "react-router-dom";
 
-import "../register.scss"
+import "../styles/register.scss"
 
 class Register extends React.Component
 {
