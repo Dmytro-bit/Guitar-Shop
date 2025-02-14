@@ -1,7 +1,7 @@
 import React from "react";
 
 import Nav from "./Nav"
-import Card from "./Card"
+import CardList from "./CardList"
 
 class Products extends React.Component
 {
@@ -14,14 +14,8 @@ class Products extends React.Component
     {
         return(
             <><Nav />
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <div><Card /></div></>
+        
+            <div><CardList /></div></>
         )
     }
 

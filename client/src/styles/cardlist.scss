@@ -1,0 +1,14 @@
+#cards-container {
+    margin-top: 2em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 300px;
+    width: 100%;
+    flex-direction: column;
+
+    .card {
+    
+        position: relative; /* Ensures cards are positioned normally */
+        width: 100%;
+    }
+}
