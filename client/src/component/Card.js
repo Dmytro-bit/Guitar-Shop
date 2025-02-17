@@ -9,13 +9,6 @@ class Card extends React.Component
     {
         super(props)
 
-        this.state = {
-            images : ["../img/guitar-test.png", ""],
-            name: "Fender 70th Anniversary Stratocaster",
-            chars: {"Shape" : "Stratocaster", "Strings" : "6", "Frets" : "22", "Body" : "Mahogany", "Pickups" : "Single"},
-            price : 599.99,
-            inStock : true,
-        }
     }
 
     render()
