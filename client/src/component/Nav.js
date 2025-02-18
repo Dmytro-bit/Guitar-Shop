@@ -10,7 +10,7 @@ class Nav extends React.Component {
         
         this.state = {
             isMenuActive : false,
-            isRegistered : true
+            isRegistered : false
         }
     }
 

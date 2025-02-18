@@ -94,14 +94,14 @@ class Register extends React.Component
     {
         const formInputsState = this.validate()
         return(
-            <div id="register-form-container"><Link to="/"><p id="login-back">&#8592; BACK</p></Link>
+            <div id="register-form-container"><Link to="/"><p id="register-back">&#8592; BACK</p></Link>
             <div id="register-container">
-                <p id="login-heading">Register</p>
+                <p id="register-heading">Register</p>
                 <form id="register" onSubmit={this.handleSubmit}>
                     <>
-                        <div className="login-cred-container">
+                        <div className="register-cred-container">
                             <label htmlFor="name">Name:</label><br/>
-                            <input type="text" id="login-name" name="name" onChange={this.handleChange} className={!formInputsState.name && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                            <input type="text" id="register-name" name="name" onChange={this.handleChange} className={!formInputsState.name && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
                         </div>
                         <div className="error">
                             {!formInputsState.name && this.state.wasSubmittedOnce &&
@@ -111,9 +111,9 @@ class Register extends React.Component
                                 </p></i>
                             )}
                         </div>
-                        <div className="login-cred-container">
+                        <div className="register-cred-container">
                             <label htmlFor="email">Email:</label><br/>
-                            <input type="text" id="login-email" name="email" onChange={this.handleChange} className={!formInputsState.email && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                            <input type="text" id="register-email" name="email" onChange={this.handleChange} className={!formInputsState.email && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
                         </div>
                         <div className="error">
                             {!formInputsState.email && this.state.wasSubmittedOnce &&
@@ -123,9 +123,9 @@ class Register extends React.Component
                                 </p></i>
                             )}
                         </div>
-                        <div className="login-cred-container">
+                        <div className="register-cred-container">
                             <label htmlFor="phone">Phone:</label><br/>
-                            <input type="text" id="login-phone" name="phone" onChange={this.handleChange} className={!formInputsState.phone && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                            <input type="text" id="register-phone" name="phone" onChange={this.handleChange} className={!formInputsState.phone && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
                         </div>
                         <div className="error">
                             {!formInputsState.phone && this.state.wasSubmittedOnce &&
@@ -135,9 +135,9 @@ class Register extends React.Component
                                 </p></i>
                             )}
                         </div>
-                        <div className="login-cred-container">
+                        <div className="register-cred-container">
                             <label htmlFor="password">Password:</label><br/>
-                            <input type="password" id="login-password" name="password" onChange={this.handleChange} className={!formInputsState.password && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                            <input type="password" id="register-password" name="password" onChange={this.handleChange} className={!formInputsState.password && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
                         </div>
                         <div className="error">
                             {!formInputsState.password && this.state.wasSubmittedOnce &&
@@ -147,9 +147,9 @@ class Register extends React.Component
                                 </p></i>
                             )}
                         </div>
-                        <div className="login-cred-container">
+                        <div className="register-cred-container">
                             <label htmlFor="confirm-password">Confirm Password:</label><br/>
-                            <input type="password" id="login-confirm-password" name="confirmPassword" onChange={this.handleChange} className={!formInputsState.confirmPassword && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                            <input type="password" id="register-confirm-password" name="confirmPassword" onChange={this.handleChange} className={!formInputsState.confirmPassword && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
                         </div>
                         <div className="error">
                             {!formInputsState.confirmPassword && this.state.wasSubmittedOnce &&

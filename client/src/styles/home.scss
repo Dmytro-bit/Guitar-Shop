@@ -15,6 +15,13 @@
             justify-content: center;
             align-items: center;
 
+            #inner-text-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                height: 25vh;
+            }
+
             #text-container{
                 z-index: 1;
                 position: absolute;
@@ -31,7 +38,7 @@
                     text-align: center;
             
                     #heading {
-                        font-size: 8vw;
+                        font-size: 5vw;
                         letter-spacing: 15px;
                         font-weight: 200;
                         font-family: "Bebas Neue", serif;
@@ -52,7 +59,7 @@
             
                     #paragraph {
                         //font-size: 28px;
-                        font-size: 1.8vw;
+                        font-size: 1.4vw;
                         // letter-spacing: 10px;
                         font-family: "Raleway", serif;
                         width: 100%;
@@ -64,11 +71,11 @@
                     position: relative;
                     display: flex;
                     justify-content: center;
-                    height: 8vh;
+                    height: 2vh;
                     
                     #catalog-button {
                         position: relative;
-                        font-size: 2vw;
+                        font-size: 1vw;
                         width: 15%;
                         background-color: transparent;
                         border-top: 3px solid rgb(201, 201, 201);
@@ -149,6 +156,11 @@
             top: 0;
             left: 0;
         }
+
+        .navbar-container #signup-button {
+            font-size: 1.5vw;
+            width: 10vw;
+        }
     }
 
     @media only screen and (min-width: 600px) {
@@ -165,6 +177,10 @@
                 width: 20%;
             }
         }
+
+        #hero-container #hero #inner-text-container {
+            height: 15vh;
+        }
     }
 
     @media only screen and (min-width: 992px) {
@@ -174,12 +190,15 @@
 
         #hero-container #hero #text-container #catalog-button-container {
             width: 100%;
-            height: 10vh;
+            height: 8vh;
+        }
+        #hero-container #hero #text-container #catalog-button-container #catalog-button {
+            font-size: 1.5vw;
+            width: 15%;
+        }
 
-            #catalog-button {
-                font-size: 2.5vw;
-                width: 20%;
-            }
+        #hero-container #hero #inner-text-container {
+            height: 25vh;
         }
     }
     
