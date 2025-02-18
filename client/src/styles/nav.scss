@@ -1,10 +1,10 @@
-@media only screen and (min-width: 992px)
-{
+
   a {
     text-decoration: none;
     color: white;
   }
   .navbar-container {
+    position: relative;
     display: flex;
     width: 100%;
     min-height: 8vh;
@@ -16,29 +16,30 @@
     #navbar-mobile-menu {
       display: none;
     }
-  
+
     .navbar {
       font-family: Inter, serif;
       max-width: 900px;
+      min-width: 300px;
       width: 20vw;
       list-style: none;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       transition: font-size ease 0.3s;
-  
-  
+
+
       li {
         font-size: 1vw;
         transition: font-size ease 0.3s;
         text-decoration: none;
-  
+
         &:hover {
           text-decoration-color: white;
           font-size: 1.3vw;
         }
       }
-  
+
       .active {
         font-size: 1.3vw;
         text-decoration: underline;
@@ -49,11 +50,11 @@
     .logo-mobile {
       display: none;
     }
-  
+
     #signup-button {
       background-color: transparent;
       border: 2px solid rgb(231, 231, 231);
-      width: 5vw;
+      min-width: 5vw;
       height: 5vh;
       margin-right: 2em;
       border-radius: 10px;
@@ -63,47 +64,47 @@
       font-size: 1vw;
       transition: transform ease 0.3s;
       text-decoration: none;
-  
+
       &:hover {
-        background-color: rgb(201, 201, 201);
+        background-color: white;
         color: black;
         transform: scale(1.15);
         font-weight: bold;
         box-shadow: 0 0 10px white;
       }
     }
-    
+
     #icons-container {
       display: flex;
       flex-direction: row;
     }
-  
+
     .icon {
       display: flex;
       width: 2.4vw;
       margin-right: 2vw;
       transition: transform 0.3s;
-  
+
       &:hover{
         transform: scale(1.2);
       }
     }
-  
+
     #logo {
       display: flex;
       width: 2.5vw;
       margin-left: 2.5vw;
       transition: transform 0.3s;
-  
+
       &:hover{
         transform: scale(1.2);
       }
     }
-  
+
     #user-container {
       position: relative;
       display: inline-block;
-  
+
       #dropdown {
         position: absolute;
         width: 10vw;
@@ -116,17 +117,17 @@
         border-radius: 10px;
         border: 2px solid rgb(201, 201, 201);
         z-index: 10;
-        
+
         &::before {
           content: "";
           position: absolute;
           top: -0.5em;
-          right: 1em; 
+          right: 1em;
           border-left: 0.5em solid transparent;
           border-right: 0.5em solid transparent;
-          border-bottom: 0.5em solid rgb(185, 184, 184); 
+          border-bottom: 0.5em solid rgb(185, 184, 184);
         }
-  
+
         hr {
           width: 80%;
           height: 2px;
@@ -135,7 +136,7 @@
           margin: 0 0 0 10%;
         }
       }
-  
+
       .dropdown-option {
         width: 100%;
         height: 6vh;
@@ -144,8 +145,8 @@
         align-items: center;
         cursor: pointer;
         font-size: 1vw;
-    
-  
+
+
         &:hover {
           background-color: #3e3939;
           border-radius: 10px;
@@ -156,10 +157,46 @@
   .navbar-mobile {
     display: none;
   }
-}
 
-@media only screen and (max-width: 600px) {
-  
+  @media only screen and (max-width: 880px) {
+    .navbar-container #logo{
+      width: 4vw ;
+    }
+
+    .navbar-container .navbar li {
+      font-size: 2vw;
+      transition: font-size ease 0.3s;
+
+      &:hover {
+        font-size: 2.3vw;
+      }
+    }
+
+    .navbar-container .navbar .active {
+      font-size: 2.3vw;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+
+    .navbar-container .icon {
+      display: flex;
+      width: 3.5vw;
+      margin-right: 2vw;
+      transition: transform 0.3s;
+
+      &:hover{
+        transform: scale(1.1);
+      }
+    }
+
+    .navbar-container #user-container #dropdown {
+      width: 15vw;
+    }
+
+  }
+
+  @media only screen and (max-width: 600px) {
+
   .navbar-container {
     display: flex;
     width: 100%;
@@ -172,7 +209,7 @@
     #logo-link {
       display: none;
     }
-    
+
     .navbar {
       display: none;
     }
@@ -186,6 +223,7 @@
       color: white;
       margin-left: 14vw;
       font-size: 4vw;
+      z-index: 11;
     }
 
     #navbar-mobile-menu {
@@ -193,16 +231,16 @@
       margin: 0 0 0 3vw;
 
       .menu-icon {
-        width: 6vw;
+        width: 5vw;
       }
     }
 
     .icon {
       display: flex;
-      width: 6vw;
+      width: 5vw !important;
       margin-right: 3vw;
       transition: transform 0.3s;
-  
+
       &:hover{
         transform: scale(1.1);
       }
@@ -211,7 +249,7 @@
     #user-container {
       position: relative;
       display: inline-block;
-  
+
       #dropdown {
         position: absolute;
         width: 20vw;
@@ -224,17 +262,17 @@
         border-radius: 10px;
         border: 2px solid rgb(201, 201, 201);
         z-index: 10;
-        
+
         &::before {
           content: "";
           position: absolute;
           top: -0.5em;
-          right: 1em; 
+          right: 1em;
           border-left: 0.5em solid transparent;
           border-right: 0.5em solid transparent;
-          border-bottom: 0.5em solid rgb(185, 184, 184); 
+          border-bottom: 0.5em solid rgb(185, 184, 184);
         }
-  
+
         hr {
           width: 80%;
           height: 2px;
@@ -243,7 +281,7 @@
           margin: 0 0 0 10%;
         }
       }
-  
+
       .dropdown-option {
         width: 100%;
         height: 6vh;
@@ -252,8 +290,8 @@
         align-items: center;
         cursor: pointer;
         font-size: 2.5vw;
-    
-  
+
+
         &:hover {
           background-color: #3e3939;
           border-radius: 10px;
@@ -261,7 +299,7 @@
       }
     }
 
-  } 
+  }
 
   .navbar-mobile {
     position: relative;
@@ -275,6 +313,7 @@
     justify-content: space-around;
     align-items: center;
     padding: 0;
+    z-index: 11;
 
     a {
       text-decoration: none;
@@ -291,16 +330,17 @@
     text-decoration: none;
   }
   #signup-button {
-    background-color: white;
-    border: 2px solid rgb(231, 231, 231);
-    width: 13vw;
+    background-color: rgb(231, 231, 231);
+    border: none;
+    box-shadow: 0px 0px 10px white;
+    min-width: 13vw;
     height: 4vh;
     margin-right: 2em;
     border-radius: 10px;
     color: black;
     justify-content: center;
     align-items: center;
-    font-size: 2.5vw;
+    font-size: 2vw;
     font-weight: bold;
   }
 }
