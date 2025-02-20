@@ -11,6 +11,7 @@ const app = express();
 app.use(cors({credentials:true, origin: process.env.LOCAL_HOST}));
 app.use(express.json())
 
+const jwt = require(`jsonwebtoken`)
 const port = process.env.PORT || 5000;
 // Port
 app.listen(port, () => {
@@ -18,7 +19,5 @@ app.listen(port, () => {
 })
 
 // Routers
-
-app.use(require(`./routes/users`))
 
 app.use(`/api/users`, require('./routes/users'));
