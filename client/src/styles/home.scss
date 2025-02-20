@@ -15,58 +15,61 @@
             justify-content: center;
             align-items: center;
 
-            #inner-text-container {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                height: 25vh;
-            }
-
             #text-container{
                 z-index: 1;
                 position: absolute;
                 display: flex;
                 flex-direction: column;
                 flex-wrap: wrap;
+                height: 60vh;
+                max-height: 10vh;
+                width: 80vw;
+                max-width: 90vw;
                 justify-content: space-around;
-        
-                #heading-container {
-                    width: 100%;
-                    display: flex;
-                    position: relative;
-                    z-index: 100;
-                    text-align: center;
-            
-                    #heading {
-                        font-size: 5vw;
-                        letter-spacing: 15px;
-                        font-weight: 200;
-                        font-family: "Bebas Neue", serif;
-                        width: 100%;
-                        color: rgb(231, 231, 231);
-                        margin: 0;
 
-                    }
-                }
-            
-                #paragraph-container {
-                    width: 70%;
-                    margin-left: 15%;
+                #inner-text-container {
                     display: flex;
-                    position: relative;
-                    text-align: center;
-                    z-index: 11;
-            
-                    #paragraph {
-                        //font-size: 28px;
-                        font-size: 1.4vw;
-                        // letter-spacing: 10px;
-                        font-family: "Raleway", serif;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    height: 25vh;
+
+                    #heading-container {
                         width: 100%;
-                        color: rgb(201, 201, 201);
+                        display: flex;
+                        position: relative;
+                        z-index: 100;
+                        text-align: center;
+
+                        #heading {
+                            font-size: 4rem;
+                            letter-spacing: 15px;
+                            font-weight: 200;
+                            font-family: "Bebas Neue", serif;
+                            width: 100%;
+                            color: rgb(231, 231, 231);
+                            margin: 0;
+
+                        }
+                    }
+
+                    #paragraph-container {
+                        width: 70%;
+                        margin-left: 15%;
+                        display: flex;
+                        position: relative;
+                        text-align: center;
+                        z-index: 11;
+
+                        #paragraph {
+                            font-size: 1.3rem;
+                            // letter-spacing: 10px;
+                            font-family: "Raleway", serif;
+                            width: 100%;
+                            color: rgb(201, 201, 201);
+                        }
                     }
                 }
-        
+
                 #catalog-button-container {
                     position: relative;
                     display: flex;
@@ -124,14 +127,14 @@
                 height: 100%;
             }
 
-            #text-container {
-                height: 40%;
+            //#text-container {
+            //    height: 40%;
 
-            }
+            //}
         }
 
         #hero-container #hero #text-container #heading-container #heading {
-            font-size: 12vw;
+            //font-size: 12vw;
             letter-spacing: 5px;
         }
 
@@ -163,42 +166,42 @@
         }
     }
 
-    @media only screen and (min-width: 600px) {
-        #hero-container #hero #text-container {
-            height: 35vh;
-        }
+    //@media only screen and (min-width: 600px) {
+    //    #hero-container #hero #text-container {
+    //        height: 35vh;
+    //    }
+    //
+    //    #hero-container #hero #text-container #catalog-button-container {
+    //        width: 100%;
+    //        height: 6vh;
+    //
+    //        #catalog-button {
+    //            font-size: 2.5vw;
+    //            width: 20%;
+    //        }
+    //    }
+    //
+    //    #hero-container #hero #inner-text-container {
+    //        height: 15vh;
+    //    }
+    //}
 
-        #hero-container #hero #text-container #catalog-button-container {
-            width: 100%;
-            height: 6vh;
-
-            #catalog-button {
-                font-size: 2.5vw;
-                width: 20%;
-            }
-        }
-
-        #hero-container #hero #inner-text-container {
-            height: 15vh;
-        }
-    }
-
-    @media only screen and (min-width: 992px) {
-        #hero-container #hero #text-container {
-            height: 70vh;
-        }
-
-        #hero-container #hero #text-container #catalog-button-container {
-            width: 100%;
-            height: 8vh;
-        }
-        #hero-container #hero #text-container #catalog-button-container #catalog-button {
-            font-size: 1.5vw;
-            width: 15%;
-        }
-
-        #hero-container #hero #inner-text-container {
-            height: 25vh;
-        }
-    }
+    //@media only screen and (min-width: 992px) {
+    //    #hero-container #hero #text-container {
+    //        height: 70vh;
+    //    }
+    //
+    //    #hero-container #hero #text-container #catalog-button-container {
+    //        width: 100%;
+    //        height: 8vh;
+    //    }
+    //    #hero-container #hero #text-container #catalog-button-container #catalog-button {
+    //        font-size: 1.5vw;
+    //        width: 15%;
+    //    }
+    //
+    //    #hero-container #hero #inner-text-container {
+    //        height: 25vh;
+    //    }
+    //}
     
