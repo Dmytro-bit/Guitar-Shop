@@ -14,23 +14,23 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
 
             #text-container{
                 z-index: 1;
                 position: absolute;
                 display: flex;
                 flex-direction: column;
-                flex-wrap: wrap;
                 height: 60vh;
-                max-height: 10vh;
+                max-height: 30vh;
                 width: 80vw;
                 max-width: 90vw;
-                justify-content: space-around;
+                justify-content: space-between;
 
                 #inner-text-container {
                     display: flex;
                     flex-direction: column;
-                    justify-content: space-between;
+                    justify-content: center;
                     height: 25vh;
 
                     #heading-container {
@@ -41,7 +41,7 @@
                         text-align: center;
 
                         #heading {
-                            font-size: 4rem;
+                            font-size: 6vw;
                             letter-spacing: 15px;
                             font-weight: 200;
                             font-family: "Bebas Neue", serif;
@@ -61,7 +61,7 @@
                         z-index: 11;
 
                         #paragraph {
-                            font-size: 1.3rem;
+                            font-size: 1.3vw;
                             // letter-spacing: 10px;
                             font-family: "Raleway", serif;
                             width: 100%;
@@ -70,36 +70,40 @@
                     }
                 }
 
-                #catalog-button-container {
-                    position: relative;
-                    display: flex;
-                    justify-content: center;
-                    height: 2vh;
-                    
-                    #catalog-button {
-                        position: relative;
-                        font-size: 1vw;
-                        width: 15%;
-                        background-color: transparent;
-                        border-top: 3px solid rgb(201, 201, 201);
-                        border-left: none;
-                        border-right: none;
-                        border-bottom: 3px solid rgb(201, 201, 201);
-                        z-index: 11;
-                        color: rgb(201, 201, 201);
-                        transition: background-color ease 0.3s;
                 
-                        &:hover {
-                            color: black;
-                            // text-decoration: underline;
-                            font-weight: bold;
-                            text-decoration-thickness: 3px;
-                            border-color: black;
-                            background-color: rgb(211, 211, 211);
-                        }
+            }
+            #catalog-button-container {
+                display: flex;
+                justify-content: center;
+                //height: 6vh;
+                max-height: 80px;
+                width: 100%;
+                margin-top: 5vw;
+                
+                
+                #catalog-button {
+                    position: relative;
+                    font-size: 1.5vw;
+                    width: 15%;
+                    background-color: transparent;
+                    border-top: 3px solid rgb(201, 201, 201);
+                    border-left: none;
+                    border-right: none;
+                    border-bottom: 3px solid rgb(201, 201, 201);
+                    z-index: 11;
+                    color: rgb(201, 201, 201);
+                    transition: background-color ease 0.3s;
+                    padding: 0.3em;
+            
+                    &:hover {
+                        color: black;
+                        // text-decoration: underline;
+                        font-weight: bold;
+                        text-decoration-thickness: 3px;
+                        border-color: black;
+                        background-color: rgb(211, 211, 211);
                     }
                 }
-            
             }
 
             video {
@@ -126,15 +130,9 @@
                 width: 100%;
                 height: 100%;
             }
-
-            //#text-container {
-            //    height: 40%;
-
-            //}
         }
 
         #hero-container #hero #text-container #heading-container #heading {
-            //font-size: 12vw;
             letter-spacing: 5px;
         }
 
@@ -143,7 +141,7 @@
         }
         #hero-container #hero #text-container #catalog-button-container {
             width: 100%;
-            height: 7vh;
+            height: 4vh;
 
             #catalog-button {
                 font-size: 3vw;
@@ -165,43 +163,3 @@
             width: 10vw;
         }
     }
-
-    //@media only screen and (min-width: 600px) {
-    //    #hero-container #hero #text-container {
-    //        height: 35vh;
-    //    }
-    //
-    //    #hero-container #hero #text-container #catalog-button-container {
-    //        width: 100%;
-    //        height: 6vh;
-    //
-    //        #catalog-button {
-    //            font-size: 2.5vw;
-    //            width: 20%;
-    //        }
-    //    }
-    //
-    //    #hero-container #hero #inner-text-container {
-    //        height: 15vh;
-    //    }
-    //}
-
-    //@media only screen and (min-width: 992px) {
-    //    #hero-container #hero #text-container {
-    //        height: 70vh;
-    //    }
-    //
-    //    #hero-container #hero #text-container #catalog-button-container {
-    //        width: 100%;
-    //        height: 8vh;
-    //    }
-    //    #hero-container #hero #text-container #catalog-button-container #catalog-button {
-    //        font-size: 1.5vw;
-    //        width: 15%;
-    //    }
-    //
-    //    #hero-container #hero #inner-text-container {
-    //        height: 25vh;
-    //    }
-    //}
-    
