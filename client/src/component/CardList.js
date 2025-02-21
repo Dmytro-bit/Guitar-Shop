@@ -9,7 +9,8 @@ class CardList extends React.Component {
         super(props)
 
         this.state = {
-            products: [{
+            products: [
+                {
                 images: ["../img/guitar-test.png", ""],
                 name: "Fender 70th Anniversary Stratocaster",
                 price: 599.99,

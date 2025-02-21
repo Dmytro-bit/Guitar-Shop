@@ -1,14 +1,19 @@
 #cards-container {
     margin-top: 2em;
     display: flex;
-    flex-wrap: wrap;
-    gap: 300px;
     width: 100%;
     flex-direction: column;
+    align-items: center; 
+    gap: 35vh;
+
+    @media screen and (max-width: 768px) {
+        gap: 90vh;
+        
+    }
 
     .card {
-    
-        position: relative; 
         width: 100%;
+        position: relative;
+        height: auto; 
     }
 }
