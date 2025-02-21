@@ -9,6 +9,7 @@ const fs = require("fs");
 router.post(`/register`, async (req, res) => {
     try{
         const { name, email, password, phone } = req.body;
+
         let user =  await usersModel.findOne({email: email}, undefined, undefined);
         if(user){ return res.json({errorMessage: `User already exists`})}
         const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
