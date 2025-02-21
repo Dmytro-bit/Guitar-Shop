@@ -1,0 +1,180 @@
+#register-form-container {
+    position: absolute;
+    width: 95%;
+    height: 100%;
+    z-index: 0;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1em; // Prevents content from touching screen edges
+}
+
+#register-back {
+    color: white;
+    font-size: clamp(0.9rem, 1.3vw, 1.4rem);
+    position: absolute;
+    left: 3vw;
+    top: 2vw;
+    transition: font-size ease 0.3s;
+
+    &:hover {
+        font-size: clamp(1rem, 1.4vw, 1.5rem);
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+#register-container {
+    background-color: #E6E6E6;
+    width: 90%;
+    max-width: 28vw;  // Reduced max width for better fit
+    min-width: 280px;
+    max-height: 85vh;  // Prevents it from being too tall
+    overflow: auto;  // Enables scrolling if needed
+    display: flex;
+    flex-direction: column;
+    border-radius: 30px; // Smaller radius for better proportion
+    padding: 1.5em 2em;
+    box-shadow: 0 0.8em 0.8em rgb(40, 40, 40);
+
+    #register-heading {
+        font-size: clamp(1.5rem, 2.3vw, 2.5rem);
+        font-weight: bold;
+        margin: 0 0 0.8em 0;
+        text-align: center;
+    }
+
+    #register {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .register-cred-container {
+            width: 100%;
+            height: 4em;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 0.8em;
+
+            label {
+                font-weight: 500;
+                font-size: clamp(0.9rem, 1vw, 1.2rem);
+                margin-bottom: 0.3em;
+            }
+
+            input {
+                width: 100%;
+                height: 38px; // Reduced height for better compactness
+                border: none;
+                background-color: #F2F2F2;
+                border-radius: 12px;
+                padding: 0.4em;
+            }
+
+            input.invalid {
+                border: 2px solid red;
+            }
+
+            input:focus {
+                outline: none !important;
+                border-color: rgb(55, 55, 55);
+                box-shadow: 0 0 8px rgb(55, 55, 55);
+            }
+        }
+
+        .error {
+            margin: 0.4em 0;
+
+            .error-message {
+                color: red;
+                margin: 0.4em 0;
+            }
+        }
+
+        input[type="submit"] {
+            border: none;
+            border-radius: 8px;
+            background-color: #4B4646;
+            color: white;
+            width: 100%;
+            max-width: 180px;
+            height: 42px;
+            margin: 0.8em auto;
+            font-size: clamp(0.9rem, 1.1vw, 1.2rem);
+            font-weight: bold;
+            transition: transform ease 0.3s;
+
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+    }
+
+    #register-text-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 0.8em;
+
+        #register-text {
+            font-size: clamp(0.8rem, 1vw, 1.1rem);
+            text-align: center;
+
+            #register-link {
+                color: black;
+                text-decoration: underline;
+                font-weight: bold;
+                transition: font-size ease 0.3s;
+
+                &:hover {
+                    font-size: clamp(0.9rem, 1.05vw, 1.2rem);
+                }
+            }
+        }
+    }
+}
+
+// Media Query for Tablets & Small Screens
+@media (max-width: 768px) {
+    #register-container {
+        max-width: 70%;
+        padding: 1.2em;
+    }
+
+    #register-heading {
+        font-size: 2rem;
+    }
+}
+
+// Media Query for Mobile Screens
+@media (max-width: 480px) {
+    #register-back {
+        left: 2vw;
+        top: 1.5vw;
+        font-size: 1.1rem;
+    }
+
+    #register-form-container{
+        width: 90%;
+    }
+
+    #register-container {
+        width: 80%;
+        max-width: unset;
+        border-radius: 20px;
+        padding: 1em;
+    }
+
+    #register-heading {
+        font-size: 1.6rem;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+        height: 38px;
+    }
+}
