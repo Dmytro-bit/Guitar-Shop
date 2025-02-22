@@ -4,16 +4,15 @@
     width: 100%;
     flex-direction: column;
     align-items: center; 
-    gap: 35vh;
+    justify-content: center;
+    gap: 21em;
 
     @media screen and (max-width: 768px) {
-        gap: 90vh;
-        
+        gap: 52em;
     }
+
 
     .card {
         width: 100%;
-        position: relative;
-        height: auto; 
     }
 }

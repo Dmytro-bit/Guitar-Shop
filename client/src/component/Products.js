@@ -3,6 +3,8 @@ import React from "react";
 import Nav from "./Nav"
 import CardList from "./CardList"
 
+import "../styles/products.scss"
+
 class Products extends React.Component
 {
     constructor(props)
