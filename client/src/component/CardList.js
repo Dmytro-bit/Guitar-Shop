@@ -11,9 +11,9 @@ class CardList extends React.Component {
         this.state = {
             products: [
                 {
-                images: ["../img/guitar-test.png", ""],
+                images: ["../img/fenderTest.jpeg", ""],
                 name: "Fender 70th Anniversary Stratocaster",
-                price: 599.99,
+                price: 599,
                 inStock: true,
                 chars: {
                     Shape: "Stratocaster",
@@ -26,7 +26,7 @@ class CardList extends React.Component {
             {
                 images: ["../img/guitar-test.png", ""],
                 name: "Gibson Les Paul Standard 50s HCS",
-                price: 2499.99,
+                price: 2499,
                 inStock: false,
                 chars: {
                     Shape: "Les Paul",
@@ -35,7 +35,33 @@ class CardList extends React.Component {
                     Body: "Mahogany",
                     Pickups: "Humbuckers"
                 }
-            }
+            },
+            {
+                images: ["../img/jacksonTest.jpeg", ""],
+                name: "Jackson JS32T Kelly",
+                price: 333,
+                inStock: true,
+                chars: {
+                    Shape: "Explorer",
+                    Strings: "6",
+                    Frets: "24",
+                    Body: "Poplar",
+                    Pickups: "Humbuckers"
+                }
+            },
+            {
+                images: ["../img/ibanezTest.jpg", ""],
+                name: "Ibanez RG470AHM-BMT ",
+                price: 555,
+                inStock: true,
+                chars: {
+                    Shape: "Superstrat",
+                    Strings: "6",
+                    Frets: "24",
+                    Body: "Ash",
+                    Pickups: "2 Humbuckers, 1 single"
+                }
+            },
         ]
         }
     }
