@@ -68,17 +68,19 @@ class CardList extends React.Component {
 
     render() {
         return (
-            <div id="cards-container">
-                {this.state.products.map((product, index) => (
-                        <div className="card" key={index}><Card 
-                        images={product.images} 
-                        name={product.name} 
-                        price={product.price} 
-                        inStock={product.inStock} 
-                        chars={product.chars} 
-                    /></div>
-                    
-                ))}
+            <div id="products-container">
+                <div id="cards-container">
+                    {this.state.products.map((product, index) => (
+                            <div className="card" key={index}><Card 
+                            images={product.images} 
+                            name={product.name} 
+                            price={product.price} 
+                            inStock={product.inStock} 
+                            chars={product.chars} 
+                        /></div>
+                        
+                    ))}
+                </div>
             </div>
         );
     }

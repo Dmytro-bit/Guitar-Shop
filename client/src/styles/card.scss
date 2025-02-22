@@ -91,10 +91,10 @@
                         margin-right: 0.5em;
                         object-fit: cover;
                         width: clamp(28px, 2vw, 3vw);
-                        height: 2vw;
+                        height: clamp(2vw, 100%, 2.5vw                                                                                                                                                                                                                                                                              );
                         transition: all 0.3s ease-in-out;
 
-                        @media screen and (max-width: 768px) {
+                        @media screen and (max-width: 768px) {                                                                                                                                                          
                             width: 5vw;
                             height: 5vw;
                             
