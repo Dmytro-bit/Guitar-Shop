@@ -6,7 +6,7 @@ let userSchema = new mongoose.Schema(
         email: {type: String, required: true, unique: true},
         password: {type: String, required: true},
         phone: {type: String, required: true},
-        isAdmin: {type: Boolean, default: false}
+        accessLevel: {type: Number, default: parseInt(process.env.ACCESS_LEVEL_NORMAL_USER)}
     }
 )
 

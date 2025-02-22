@@ -3,6 +3,8 @@ import React from "react"
 import { Link } from "react-router-dom";
 
 import "../styles/login.scss"
+import axios from "axios";
+import {SERVER_HOST} from "../config/global_constants";
 
 class Login extends React.Component
 {
@@ -45,7 +47,7 @@ class Login extends React.Component
         }
     }
 
-    handleSubmit = e =>
+    handleSubmit = async e =>
     {
         e.preventDefault()
         this.setState({wasSubmittedOnce : true})
@@ -53,7 +55,25 @@ class Login extends React.Component
 
         if(Object.keys(formInputsState).every(key => formInputsState[key]))
         {
+            const {email, password} = this.state
+            const data = {email:email, password:password}
             //Axios post request
+            try{
+                const res = await axios.post(`${SERVER_HOST}/api/users/login`, data)
+                console.log("Successfully logined")
+                console.log(res)
+                const {name, accessLevel, token} = res
+                localStorage.setItem("token", token)
+                localStorage.setItem("username", name)
+                localStorage.setItem("accessLevel", accessLevel)
+
+                console.log("User data saved to localStorage")
+
+
+            }catch(err){
+                console.log(err)
+            }
+
         }
         else
         {
