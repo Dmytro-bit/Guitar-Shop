@@ -11,7 +11,6 @@ const app = express();
 
 app.use(cors());
 app.use(require(`body-parser`).json())
-
 // app.use(cors({ origin: process.env.LOCAL_HOST, credentials: true }));
 
 const jwt = require(`jsonwebtoken`)
