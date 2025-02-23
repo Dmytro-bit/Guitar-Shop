@@ -13,6 +13,10 @@
     .card { 
         width: 100%;  
         max-width: 1200px; 
-        min-width: 590px; 
+        min-width: 590px;
+
+        @media (max-width: 600px) {
+            min-width: 350px;
+        }
     }
 }
