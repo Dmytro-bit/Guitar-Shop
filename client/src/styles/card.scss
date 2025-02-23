@@ -48,6 +48,7 @@
             flex-direction: column;
             width: 100%;
             padding-left: 2em;
+            background-color: transparent;
 
             @media (max-width: 768px) {
                 border-left: none;
@@ -64,6 +65,11 @@
                     font-weight: bold;
                     display: flex;
                     justify-content: space-between;
+
+                    a {
+                        color: black;
+                        text-decoration: none;
+                    }
 
                     .heart-icon {
                         margin-right: 0.5em;
@@ -87,6 +93,8 @@
 
                 .card-characteristics {
                     width: 100%;
+                    color: black;
+                    text-decoration: none;
 
                     .characteristics-list {
                         padding: 1em;
@@ -104,7 +112,7 @@
                         display: flex;
                         flex-direction: row;
                         align-items: center;
-                        min-width: 180px; 
+                        min-width: 180px;
 
                         .price {
                             font-size: clamp(24px, 2vw, 36px);
