@@ -56,7 +56,7 @@ class Register extends React.Component
 
     validateName = () =>
     {
-        const pattern =/^[a-zA-Z0-9_ ]{2,30}$/;
+        const pattern =/^[a-zA-Z ]{2,30}$/;
         return pattern.test(String(this.state.name))
     }
 
