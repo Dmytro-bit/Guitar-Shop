@@ -85,7 +85,8 @@ class Login extends React.Component
     {
         let formInputsState = this.validate()
         return(
-            /// TODO: Change CSS hover for this button 
+            <div className="login-bg">
+
             <div id="login-form-container"><Link to="/"><p id="login-back">&#8592; BACK</p></Link>
             <div id="login-container">
                 <p id="login-heading">Login</p>
@@ -119,6 +120,7 @@ class Login extends React.Component
                     <input type="submit" value="SIGN IN"/>
                 </form>
                 <div id="register-text-container"><p id="register-text">Don't have an account yet? <Link id="register-link" to="/register">Register</Link></p></div>
+            </div>
             </div></div>
         )
     }

@@ -117,6 +117,7 @@ class Register extends React.Component
     {
         const formInputsState = this.validate()
         return(
+            <div className="register-bg">
             <div id="register-form-container"><Link to="/"><p id="register-back">&#8592; BACK</p></Link>
             <div id="register-container">
                 <p id="register-heading">Register</p>
@@ -185,7 +186,7 @@ class Register extends React.Component
                     </>
                     <input type="submit" value="SIGN UP"/>
                 </form>
-            </div></div>
+            </div></div></div>
         )
     }
 }
