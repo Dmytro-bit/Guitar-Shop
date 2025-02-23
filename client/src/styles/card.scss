@@ -1,29 +1,39 @@
 .card-container {
     padding: 16px;
-    position: absolute;
-    right: 10%;
     background-color: #d9d9d9;
     border-radius: 10px;
-    width: 50%;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 0.3em 10px rgb(133, 132, 132);
 
     .card-content-container {
         display: flex;
         width: 100%;
-        min-width:200px;
-        display: flex;
+        min-width: 200px;
         mix-blend-mode: multiply;
+        flex-direction: row;
+        align-items: center;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+        }
 
         .card-image-container {
+            width: 220px;       //200px
+            min-width: 220px;   //200px
+            
 
-            margin-left: 1em;
-            width: 300px;
-            min-width: 100px;
+            @media (max-width: 768px) {
+                margin-left: 0;
+                width: 100%;
+                height: 480px;  
+            }
 
-            .card-image-link
-            {
+            .card-image-link {
                 display: flex;
                 height: 100%;
-    
+                justify-content: center;
+
                 .card-image {
                     max-width: 100%;
                     height: auto;
@@ -32,19 +42,23 @@
             }
         }
 
-        .card-main-container
-        {
+        .card-main-container {
             border-left: 1px solid rgb(51, 48, 48);
             display: flex;
             flex-direction: column;
             width: 100%;
             padding-left: 2em;
-            
+
+            @media (max-width: 768px) {
+                border-left: none;
+                padding-left: 0;
+                padding-top: 1em;
+            }
+
             .card-description {
                 display: flex;
                 flex-direction: column;
-                
-                
+
                 .card-name {
                     font-size: 24px;
                     font-weight: bold;
@@ -54,18 +68,26 @@
                     .heart-icon {
                         margin-right: 0.5em;
                         object-fit: cover;
-                        width: 1.5em;
-                        transition: transform 0.3s ease-in-out;
+                        width: clamp(28px, 2vw, 3vw);
+                        height: clamp(2vw, 100%, 2.5vw                                                                                                                                                                                                                                                                              );
+                        transition: all 0.3s ease-in-out;
+
+                        @media screen and (max-width: 768px) {                                                                                                                                                          
+                            width: 5vw;
+                            height: 5vw;
+                            
+                        }
 
                         &:hover {
                             transform: scale(1.1);
+
                         }
                     }
                 }
-                
+
                 .card-characteristics {
                     width: 100%;
-                    
+
                     .characteristics-list {
                         padding: 1em;
                         font-size: 20px;
@@ -82,9 +104,10 @@
                         display: flex;
                         flex-direction: row;
                         align-items: center;
+                        min-width: 180px; 
 
                         .price {
-                            font-size: 36px;
+                            font-size: clamp(24px, 2vw, 36px);
                             font-weight: bold;
                             margin: 0;
                             padding-right: 0.5em;
@@ -100,7 +123,8 @@
                     }
 
                     .card-buy-button {
-                        width: 218px;
+                        width: 12vw;
+                        min-width: 130px;
                         color: white;
                         font-weight: bold;
                         background-color: rgb(55, 55, 55);
@@ -108,7 +132,11 @@
                         border-radius: 14px;
                         border: none;
                         transition: all 0.3s ease;
-                        // box-shadow: 0.2em 0.2em 10px black;
+
+                        @media screen and (max-width: 768px) {
+                            width: 200px;
+                            
+                        }
 
                         &:hover {
                             transform: scale(1.05);
@@ -118,7 +146,5 @@
                 }
             }
         }
-        
-        
     }
 }
