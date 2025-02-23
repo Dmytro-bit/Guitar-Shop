@@ -1,16 +1,178 @@
-.product-container {
+.products-container {
   display: grid;
-  grid-template-rows: 6em 1fr;
+  grid-template-rows: 6em 4fr 1fr;
+  grid-template-columns: 1fr 2fr;
+  grid-template-areas:  'category header'
+                        'filter cards';
   overflow: hidden;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-areas:  'header header header header header'
-                        'filter filter cards cards cards';
+  padding: 0 3em;
+
+  @media screen and (max-width: 908px) {
+    grid-template-areas:  'header header'
+                        'cards cards';
+  }
 
   .cardlist-container {
-    //width: 100%;
-    height: 100%;
-    overflow-y: scroll;
     grid-area: cards;
+    //height: 100vh;
+    //overflow-y: scroll;
+    width: 100%;
+  }
+
+  .products-controls-container {
+    grid-area: header;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .products-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      width: 100%;
+      border-bottom: 2px solid rgb(55,55,55);
+
+      .product-search-container {
+        position: relative;
+        width: 75%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+
+
+        .product-search {
+          width: 100%;
+          height: 100%;
+          border: none;
+          border-radius: 25px;
+          padding-left: 15px;
+
+          &:focus {
+            outline: none;
+          }
+
+        }
+
+        .product-search-icon {
+          position: absolute;
+          right: 1em;
+        }
+      }
+
+      .sort-dropdown {
+        position: relative;
+        display: inline-block;
+        width: 20%;
+        height: 40px;
+
+        .sort-dropdown-toggle {
+          display: none;
+        }
+
+        .sort-dropdown-label {
+          display: flex;
+          position: relative;
+          background-color: rgb(55,55,55);
+          width: 100%;
+          min-width: 150px;
+          height: 100%;
+          color: white;
+          cursor: pointer;
+          border-radius: 25px;
+          border: 1px solid rgb(55,55,55);
+          user-select: none;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          font-weight: bold;
+          z-index: 2;
+          transition: all 0.3s ease-in-out;
+
+          &:hover {
+            background-color: rgb(35,35,35);
+            transform: scale(1.05);
+          }
+        }
+
+        .sort-dropdown-menu {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          top: 20px;
+          width: 100%;
+          background-color: #e4e4e4;
+          border: 1px solid rgb(55,55,55);
+          border-radius: 4px;
+          position: absolute;
+          opacity: 0%;
+          min-width: 150px;
+          transform: scaleY(0);
+          transform-origin: top;
+          transition: all 0.3s ease;
+          z-index: 1;
+
+          li:first-child {
+            // height: 3em;
+            display: flex;
+            // align-items: center;
+            padding-top: 25px;
+          }
+
+          li {
+            padding: 0.5em;
+            border-bottom: 1px solid rgb(55,55,55);
+
+
+            &:hover {
+              border-bottom: 0;
+              background-color: rgb(55,55,55);
+              color: white;
+              cursor: pointer;
+            }
+
+            a {
+              text-decoration: none;
+              color: black;
+
+              &:hover {
+                background-color: rgb(55,55,55);
+              }
+            }
+          }
+        }
+
+        .sort-dropdown-toggle:checked + .sort-dropdown-label + .sort-dropdown-menu {
+          opacity: 1;
+          transform: scaleY(1);
+        }
+      }
+    }
+  }
+
+  .products-filter-container {
+    grid-area: filter;
+    width: calc(100% - 3em);
+    height: 100vh;
+    background-color: #d9d9d9;
+    border-radius: 10px;
+    box-shadow: 0 0.3em 10px rgb(133, 132, 132);
+
+    @media screen and (max-width: 908px) {
+      display: none;
+    }
+  }
+
+  .products-category-name {
+    grid-area: category;
+    display: flex;
+    align-items: center;
+    font-size: 38px;
+    font-weight: bold;
+
+    @media screen and (max-width: 908px) {
+      display: none;
+    }
   }
 }
 
