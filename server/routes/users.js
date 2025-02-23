@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
 
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
     try {
         const {name, email, password, phone} = req.body;
 
@@ -22,8 +22,7 @@ const registerUser = async (req, res) => {
         res.json({name, token, accessLevel})
 
     } catch (err) {
-        console.log(err);
-        res.status(500).json({error: err})
+        next(err)
     }
 }
 
@@ -46,7 +45,7 @@ const checkDuplicateUser = async (req, res, next) => {
 router.post(`/register`, checkDuplicateUser, registerUser );
 
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     try {
         const {email} = req.body;
         const user = req.user;
@@ -61,7 +60,7 @@ const login = async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({error: err})
+        next(err)
     }
 }
 
