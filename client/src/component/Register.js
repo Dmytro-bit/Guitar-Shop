@@ -4,6 +4,8 @@ import React from "react"
 import { Link } from "react-router-dom";
 
 import "../styles/register.scss"
+import axios from "axios";
+import {SERVER_HOST} from "../config/global_constants";
 
 class Register extends React.Component
 {
@@ -11,7 +13,7 @@ class Register extends React.Component
     {
         super(props)
 
-        this.state = 
+        this.state =
         {
             wasSubmittedOnce : false,
             name: "",
@@ -25,7 +27,7 @@ class Register extends React.Component
                 "phone" : "Phone number should start with a country code (+353). No spaces allowed",
                 "password" : "Password must be at least 8-digits long and contains at least one lowercase letter, one uppercase letter, one digit and one of the following characters (£!#€$%^&*)",
                 "confirmPassword" : "Passwords must match"
-            } 
+            }
         }
     }
 
@@ -43,7 +45,7 @@ class Register extends React.Component
     validatePassword = () =>
     {
         const pattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[£!#€$%^&*]).{8,}$/
-        return pattern.test(String(this.state.password)) 
+        return pattern.test(String(this.state.password))
     }
 
     validatePhone = () =>
@@ -56,7 +58,7 @@ class Register extends React.Component
     {
         const pattern =/^[a-zA-Z0-9_ ]{2,30}$/;
         return pattern.test(String(this.state.name))
-    } 
+    }
 
     validateConfirmPassword = () =>
     {
@@ -74,23 +76,44 @@ class Register extends React.Component
         }
     }
 
-    handleSubmit = e =>
+    formData = () =>
+    {
+        return {
+            name: this.state.name,
+            email: this.state.email,
+            phone: this.state.phone,
+            password: this.state.password
+        }
+    }
+
+    handleSubmit = async e =>
     {
         e.preventDefault()
         this.setState({wasSubmittedOnce : true})
         const formInputsState = this.validate();
 
-        if (Object.keys(formInputsState).every(key => formInputsState[key])) 
+        if (Object.keys(formInputsState).every(key => formInputsState[key]))
         {
-            //Create axios post request 
+            const inputs = this.formData()
+            //Create axios post request
+            try {
+                const res = await axios.post(`${SERVER_HOST}/api/users/register`, inputs)
+
+                const{name, token, accessLevel} = res
+
+                localStorage.setItem("token", token)
+                localStorage.setItem("username", name)
+                localStorage.setItem("accessLevel", accessLevel)
+
+                console.log("Successfully registered and logined")
+            } catch (error) {
+                console.log(error)
+            }
         }
-        else
-        {
-            return  
-        }
+
     }
 
-    render() 
+    render()
     {
         const formInputsState = this.validate()
         return(
