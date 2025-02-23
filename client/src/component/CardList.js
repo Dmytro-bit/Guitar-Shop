@@ -68,7 +68,6 @@ class CardList extends React.Component {
 
     render() {
         return (
-            <div id="products-container">
                 <div id="cards-container">
                     {this.state.products.map((product, index) => (
                             <div className="card" key={index}><Card 
@@ -78,10 +77,8 @@ class CardList extends React.Component {
                             inStock={product.inStock} 
                             chars={product.chars} 
                         /></div>
-                        
                     ))}
                 </div>
-            </div>
         );
     }
 }
