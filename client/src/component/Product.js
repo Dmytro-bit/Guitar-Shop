@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import Nav from "./Nav";
@@ -31,21 +32,33 @@ class Products extends React.Component {
         }
     }
 
+    scrollImageForward = () =>
+    {
+        this.state.currImage >= this.state.product.images.length - 1 ? this.setState({currImage : 0}) : this.setState({currImage: this.state.currImage + 1});
+        console.log(this.state.currImage);
+    }
+
+    scrollImageBackward = () =>
+    {
+        this.state.currImage <= 0 ? this.setState({currImage : this.state.product.images.length - 1}) : this.setState({currImage: this.state.currImage - 1});
+        console.log(this.state.currImage);
+    }
+
     render() {
         const { name } = this.props.params;
         return(
             <><Nav />
             <div className="product-container">
                 <div className="product-header">
-                    <p>← BACK</p>
+                    <Link className="back-to-products-link" to="/products">← BACK</Link>
                 </div>
                 <div className="product-left">
                     <div className="product-images-container">
                         <img
                             src={(this.state.product.images.filter((img,index) => index === this.state.currImage))}
                             className="product-image"></img>
-                        <img src="../img/right-arrow.png" alt="arrow" className="product-image-arrow" id="product-image-arrow-left"/>
-                        <img src="../img/right-arrow.png" alt="arrow" className="product-image-arrow" id="product-image-arrow-right"/>
+                        <img src="../img/right-arrow.png" alt="arrow" className="product-image-arrow" id="product-image-arrow-left" onClick={this.scrollImageBackward}/>
+                        <img src="../img/right-arrow.png" alt="arrow" className="product-image-arrow" id="product-image-arrow-right" onClick={this.scrollImageForward}/>
                     </div>
                     <div className="product-chars">
                         <p className="product-chars-title">Description</p>

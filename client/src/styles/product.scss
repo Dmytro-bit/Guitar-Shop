@@ -14,11 +14,13 @@
     justify-content: start;
     align-items: center;
     text-decoration: underline;
-    p {
+
+    .back-to-products-link {
       margin: 0;
       font-size: 24px;
       transition: font-size 0.3s ease-in-out;
       cursor: pointer;
+      color: black;
 
       &:hover {
         font-size: 28px;
@@ -29,8 +31,6 @@
   .product-left {
     position: relative;
     grid-area: product;
-    //height: 160vh;
-    //width: 50vw;
     display: flex;
     flex-direction: column;
     background-color: white;
@@ -45,25 +45,33 @@
       position: relative;
 
       .product-image {
-        width: 90%;
+        width: 80%;
         height: auto;
       }
 
       .product-image-arrow {
         position: absolute;
-        width: 4em;
-        height: 4em;
+        max-width: 64px;
         top: calc(50% - 2em);
         cursor: pointer;
+        transition: all 0.3s ease-in-out;
       }
 
       #product-image-arrow-left {
         transform: scaleX(-1);
         left: 0;
+
+        &:hover {
+          transform: scaleX(-1) scale(1.1);
+        }
       }
 
       #product-image-arrow-right {
         right: 0;
+
+        &:hover {
+          transform: scale(1.1);
+        }
       }
     }
 
