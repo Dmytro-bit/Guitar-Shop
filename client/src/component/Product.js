@@ -19,6 +19,7 @@ class Products extends React.Component {
                 images: ["../img/ibanezTest.jpg", "../img/fenderTest.jpeg"],
                 name: "Fender 70th Anniversary Stratocaster",
                 price: 599,
+                rating: 3.2,
                 inStock: true,
                 chars: {
                     Shape: "Stratocaster",
@@ -75,10 +76,29 @@ class Products extends React.Component {
                 <div className="product-right">
                     <div className="product-name">{this.state.product.name}</div>
                     <div className="product-price">{this.state.product.price}<span>$</span></div>
-                    <div className="product-details"></div>
-                    <div className="product-rating"></div>
+                    <div className="product-details">
+                        <p className="product-shipping">Free Shipping</p>
+                        <p 
+                            className="product-stock"
+                            style={{color: this.state.product.inStock ? "green" : "red"}}
+                            >{this.state.product.inStock ? "In Stock" : "Not In Stock"}</p>
+                    </div>
+                    <div className="product-rating">
+                        <div 
+                            className="product-rating-stars"
+                            style={{width: `calc(${this.state.product.rating * 20}%`}}
+                            >
+                            <img src="../img/star.png" className="rating-star" alt="rating"></img>
+                            <img src="../img/star.png" className="rating-star" alt="rating"></img>
+                            <img src="../img/star.png" className="rating-star" alt="rating"></img>
+                            <img src="../img/star.png" className="rating-star" alt="rating"></img>
+                            <img src="../img/star.png" className="rating-star" alt="rating"></img>
+                        </div>
+                    </div>
                     <div className="product-controls">
-                        <div className="product-quantity"></div>
+                        <div className="product-quantity">
+                            <input type="number" defaultValue="1" min="1" className="product-quantity-field"/>
+                        </div>
                         <div className="product-buy"></div>
                         <div className="product-icons">
                             <img src="../icons/cart.png" alt="cart"></img>

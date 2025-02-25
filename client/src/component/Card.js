@@ -22,10 +22,14 @@ class Card extends React.Component
                     <div className="card-main-container">
                         <div className="card-description">
                             <div className="card-name">
-                                <Link to={`/products/${this.props.name}`}>{this.props.name}</Link>
+                                <Link to={`/products/${this.props.name}`} 
+                                    style={{ color : "black", textDecoration : "none"}}>{this.props.name}
+                                    </Link>
                                 <img src="../icons/heart.png" className="heart-icon"/>
                             </div>
-                            <Link to={`/products/${this.props.name}`} className="card-characteristics">
+                            <Link to={`/products/${this.props.name}`} 
+                                className="card-characteristics"
+                                style={{ color : "black", textDecoration : "none"}}>
                                 <ul className="characteristics-list">
                                 {Object.entries(this.props.chars)
                                     .slice(0, 5)
