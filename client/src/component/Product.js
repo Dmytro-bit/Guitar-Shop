@@ -19,8 +19,9 @@ class Products extends React.Component {
                 images: ["../img/ibanezTest.jpg", "../img/fenderTest.jpeg"],
                 name: "Fender 70th Anniversary Stratocaster",
                 price: 599,
-                rating: 3.2,
+                rating: 3.5,
                 inStock: true,
+                quantity: 10,
                 chars: {
                     Shape: "Stratocaster",
                     Strings: "6",
@@ -30,6 +31,7 @@ class Products extends React.Component {
                 }
             },
             currImage: 0,
+            quantity: 1,
         }
     }
 
@@ -44,6 +46,18 @@ class Products extends React.Component {
         this.state.currImage <= 0 ? this.setState({currImage : this.state.product.images.length - 1}) : this.setState({currImage: this.state.currImage - 1});
         console.log(this.state.currImage);
     }
+
+    handleQuantityIncrease = () =>
+    {
+        if(this.state.quantity < this.state.product.quantity)
+            this.setState({quantity : this.state.quantity + 1});
+    }
+
+    handleQuantityDecrease = () =>
+        {
+            if(this.state.quantity > 1)
+                this.setState({quantity : this.state.quantity - 1});
+        }
 
     render() {
         const { name } = this.props.params;
@@ -84,6 +98,11 @@ class Products extends React.Component {
                             >{this.state.product.inStock ? "In Stock" : "Not In Stock"}</p>
                     </div>
                     <div className="product-rating">
+                        <img src="../img/star_border.png" className="rating-star-border" alt="rating"></img>
+                        <img src="../img/star_border.png" className="rating-star-border" alt="rating"></img>
+                        <img src="../img/star_border.png" className="rating-star-border" alt="rating"></img>
+                        <img src="../img/star_border.png" className="rating-star-border" alt="rating"></img>
+                        <img src="../img/star_border.png" className="rating-star-border" alt="rating"></img>
                         <div 
                             className="product-rating-stars"
                             style={{width: `calc(${this.state.product.rating * 20}%`}}
@@ -97,12 +116,16 @@ class Products extends React.Component {
                     </div>
                     <div className="product-controls">
                         <div className="product-quantity">
-                            <input type="number" defaultValue="1" min="1" className="product-quantity-field"/>
+                            <button className="product-quantity-field-button" onClick={(() => this.handleQuantityDecrease())}>-</button>
+                            <input type="number" value={this.state.quantity} min="1" className="product-quantity-field" id="product-quantity-field"/>
+                            <button className="product-quantity-field-button" onClick={(() => this.handleQuantityIncrease())}>+</button>
                         </div>
-                        <div className="product-buy"></div>
+                        <div className="product-buy">
+                            <Link to="/paypal" className="product-buy-button">BUY</Link>                                                                        
+                        </div>
                         <div className="product-icons">
-                            <img src="../icons/cart.png" alt="cart"></img>
-                            <img src="../icons/heart.png" alt="favourite"></img>
+                            <img src="../img/shopping-cart.png" alt="cart"></img>
+                            <img src="../img/favorite.png" alt="favourite"></img>
                         </div>
                     </div>
                 </div>

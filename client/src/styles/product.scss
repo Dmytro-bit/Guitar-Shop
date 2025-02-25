@@ -43,6 +43,7 @@
       width: 100%;
       overflow: hidden;
       position: relative;
+      padding: 1em;
 
       .product-image {
         width: 80%;
@@ -59,7 +60,7 @@
 
       #product-image-arrow-left {
         transform: scaleX(-1);
-        left: 0;
+        left: 1em;
 
         &:hover {
           transform: scaleX(-1) scale(1.1);
@@ -67,7 +68,7 @@
       }
 
       #product-image-arrow-right {
-        right: 0;
+        right: 3em;
 
         &:hover {
           transform: scale(1.1);
@@ -108,10 +109,14 @@
 
   .product-right {
     height: 100vh;
-    position: relative;
+    position: sticky;
+    top: 0;
     grid-area: content;
     display: flex;
     flex-direction: column;
+    padding: 1em 1em;
+    margin-left: 1em; 
+    border-left: 10px double black;
 
     .product-name {
       display: flex;
@@ -119,14 +124,14 @@
       align-items: center;
       font-size: clamp(16px, 5vh, 64px);
       font-weight: bold;
-      // padding: 1em;
+      margin-bottom: 3em;
     }
 
     .product-price {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      font-size: clamp(16px, 12vh, 100px);
+      font-size: clamp(16px, 10vh, 100px);
       font-weight: bold;
       // padding: 0 1em;
     }
@@ -146,16 +151,28 @@
         font-size: clamp(6px, 2.5vh, 40px);
         font-weight: bold;
         font-style: italic;
+        margin-bottom: 3em;
       }
 
     }
     .product-rating {
+      position: relative;
       display: flex;
       justify-content: flex-start;
       overflow: hidden;
       width:min-content;
+      margin-bottom: 8em;
+
+      .rating-star-border {
+        width: 2vw;
+        height: auto;
+        max-width: 2vw;
+      }
       
       .product-rating-stars {
+        position: absolute;
+        top: 0;
+        left: 0;
         display: flex;
         justify-content: flex-start;
         overflow: hidden;       
@@ -171,30 +188,95 @@
     .product-controls {
       display: grid;
       grid-template-rows: 8vh;
-      grid-template-columns: 5vw 15vw 5vw 5vw;
-      grid-template-areas: 'quantity buy cart favourite';
+      grid-template-columns: 10vw 20vw 10vw;
+      grid-template-areas: 'quantity buy icons';
 
       .product-quantity {
         grid-area: quantity;
         display: flex;
         justify-content: flex-start;
+        align-items: center;
         width: 100%;
+        justify-content: space-between;
+        padding: 0.5em 0;
 
         .product-quantity-field {
-          width: 100%;
-          height: 50%;
+          width: 40%;
+          height: 100%;
           border: none;
           border-radius: 10px;
           color: white;
+          text-align: center;
           background-color: rgb(55,55,55);
           font-size: 1.5em;
-          -moz-appearance: textfield;
+          appearance: textfield;
 
           &:focus {
             outline: none;
           }
         }
-      
+
+        .product-quantity-field-button {
+          width: 25%;
+          height: 100%;
+          border: 2px solid black;
+          border-radius: 10px;
+          color: black;
+          text-align: center;
+          background-color: transparent;
+          font-size: 1.5em;
+          transition: all 0.3s ease;
+
+          &:hover {
+            color: white;
+            background-color: rgb(55,55,55);
+          }
+        }
+      }
+
+      .product-buy {
+        grid-area: buy;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5em;
+        
+        .product-buy-button {
+          color: white;
+          text-decoration: none;
+          background-color: rgb(55,55,55);
+          font-size: 2em;
+          font-weight: bold;
+          border-radius: 15px;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: all 0.3s ease;
+          
+          &:hover {
+            transform: scale(1.02);
+            background-color: rgb(20, 20, 20);
+          }
+        }
+      }
+
+      .product-icons {
+        grid-area: icons;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5em;
+
+        img
+        {
+        transition: all 0.3s ease;
+
+          &:hover{
+            transform: scale(1.1);
+          }
+        }
       }
     }
   }
