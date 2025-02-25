@@ -24,4 +24,8 @@ router.get(`/products`, async (req, res) => {
     }
 })
 
+
+router.post(`/product`, async (req, res) => {
+
+})
 module.exports = router;
