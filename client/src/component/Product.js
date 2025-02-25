@@ -56,6 +56,7 @@ class Products extends React.Component {
                     <div className="product-images-container">
                         <img
                             src={(this.state.product.images.filter((img,index) => index === this.state.currImage))}
+                            alt="instrument"
                             className="product-image"></img>
                         <img src="../img/right-arrow.png" alt="arrow" className="product-image-arrow" id="product-image-arrow-left" onClick={this.scrollImageBackward}/>
                         <img src="../img/right-arrow.png" alt="arrow" className="product-image-arrow" id="product-image-arrow-right" onClick={this.scrollImageForward}/>
@@ -72,8 +73,8 @@ class Products extends React.Component {
                     </div>
                 </div>
                 <div className="product-right">
-                    <div className="product-name"></div>
-                    <div className="product-price"></div>
+                    <div className="product-name">{this.state.product.name}</div>
+                    <div className="product-price">{this.state.product.price}<span>$</span></div>
                     <div className="product-details"></div>
                     <div className="product-rating"></div>
                     <div className="product-controls">
