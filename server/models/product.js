@@ -14,7 +14,7 @@ let productSchema = new mongoose.Schema(
     {
         name: String,
         description: String,
-        category: {type: 'ObjectId', ref: 'category'},
+        category: {type: 'ObjectId', ref: 'category', required: true},
         images: [{type: String, default: "", get: v => `${MEDIA_DIR}${v}`}],
         props: {
             type: Map,
