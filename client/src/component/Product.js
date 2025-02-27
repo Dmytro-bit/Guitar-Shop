@@ -19,7 +19,7 @@ class Products extends React.Component {
                 images: ["../img/ibanezTest.jpg", "../img/fenderTest.jpeg"],
                 name: "Fender 70th Anniversary Stratocaster",
                 price: 599,
-                rating: 3.5,
+                rating: 4.5,
                 inStock: true,
                 quantity: 10,
                 chars: {
@@ -68,6 +68,7 @@ class Products extends React.Component {
                     <Link className="back-to-products-link" to="/products">← BACK</Link>
                 </div>
                 <div className="product-left">
+                    <div className="product-name-mobile">{this.state.product.name}</div>
                     <div className="product-images-container">
                         <img
                             src={(this.state.product.images.filter((img,index) => index === this.state.currImage))}
@@ -129,7 +130,12 @@ class Products extends React.Component {
                         </div>
                     </div>
                 </div>
-            </div></>
+                <div className="product-description" id="product-description">
+                    <p className="product-description-title">Description</p>
+                    <p className="product-description-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget purus ac metus aliquet tincidunt. Nullam auctor, nunc ac euismod fermentum, justo nisl tincidunt sapien, nec lacinia justo purus in sapien. Donec auctor, metus nec ultricies ultricies, urna nulla interdum est, nec ultricies odio justo vel nunc. In hac habitasse platea dictumst. Donec auctor, metus nec ultricies ultricies, urna nulla interdum est, nec ultricies odio justo vel nunc. In hac habitasse platea dictumst.</p>
+                </div>
+            </div>
+            </>
         )
     }
 }
