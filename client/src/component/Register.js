@@ -25,7 +25,7 @@ class Register extends React.Component
                 "name" : "Name must be between 2 and 30 characters long ",
                 "email" : "Enter valid email address",
                 "phone" : "Phone number should start with a country code (+353). No spaces allowed",
-                "password" : "Password must be at least 8-digits long and contains at least one lowercase letter, one uppercase letter, one digit and one of the following characters (£!#€$%^&*)",
+                "password" : "Password must be at least 8-digits long and contains at least one lowercase letter, one uppercase letter, one digit and one special character",
                 "confirmPassword" : "Passwords must match"
             }
         }
@@ -44,7 +44,7 @@ class Register extends React.Component
 
     validatePassword = () =>
     {
-        const pattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[£!#€$%^&*]).{8,}$/
+        const pattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[£!#€$%^&*¬`@=)(-_:;'{}/\\ \[\].,<>?~|]).{8,}$/
         return pattern.test(String(this.state.password))
     }
 
@@ -56,7 +56,7 @@ class Register extends React.Component
 
     validateName = () =>
     {
-        const pattern =/^[a-zA-Z0-9_ ]{2,30}$/;
+        const pattern =/^[a-zA-Z ]{2,30}$/;
         return pattern.test(String(this.state.name))
     }
 
