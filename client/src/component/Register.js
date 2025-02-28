@@ -99,7 +99,7 @@ class Register extends React.Component
             try {
                 const res = await axios.post(`/auth/register`, inputs)
 
-                const{name, token, accessLevel} = res
+                const{name, token, accessLevel} = res.data
 
                 localStorage.setItem("token", token)
                 localStorage.setItem("username", name)

@@ -19,7 +19,7 @@ const registerUser = async (req, res, next) => {
             expiresIn: process.env.JWT_EXPIRY
         })
 
-        res.json({name, token, accessLevel})
+        res.status(201).json({name, token, accessLevel})
 
     } catch (err) {
         next(err)
@@ -120,7 +120,7 @@ const login = async (req, res, next) => {
             accessLevel: user.accessLevel
         }, JWT_PRIVATE_KEY, {algorithm: 'HS256', expiresIn: process.env.JWT_EXPIRY});
 
-        res.json({name: user.name, accessLevel: user.accessLevel, token: token})
+        res.status(205).json({name: user.name, accessLevel: user.accessLevel, token: token})
 
 
     } catch (err) {

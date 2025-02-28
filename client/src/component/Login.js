@@ -62,7 +62,7 @@ class Login extends React.Component
                 const res = await axios.post(`/auth/login`, data)
                 console.log("Successfully logined")
                 console.log(res)
-                const {name, accessLevel, token} = res
+                const {name, accessLevel, token} = res.data
                 localStorage.setItem("token", token)
                 localStorage.setItem("username", name)
                 localStorage.setItem("accessLevel", accessLevel)
