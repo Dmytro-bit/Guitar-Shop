@@ -1,10 +1,9 @@
 import React from "react"
 
-import { Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 
 import "../styles/login.scss"
 import axios from "axios";
-import {SERVER_HOST} from "../config/global_constants";
 
 class Login extends React.Component
 {
@@ -19,7 +18,9 @@ class Login extends React.Component
             wasSubmittedOnce : false,
             errorMessage: {"email" : "Enter a valid email",
                             "password" : "Password can not be an empty string"
-            }
+            },
+            loggedInSuccessfully : false,
+
         }
     }
 
@@ -67,6 +68,8 @@ class Login extends React.Component
                 localStorage.setItem("username", name)
                 localStorage.setItem("accessLevel", accessLevel)
 
+                this.setState({loggedInSuccessfully : true})
+
                 console.log("User data saved to localStorage")
 
 
@@ -75,17 +78,20 @@ class Login extends React.Component
             }
 
         }
-        else
-        {
-            return
-        }
+
     }
 
     render() 
     {
         let formInputsState = this.validate()
+
+        if (this.state.loggedInSuccessfully) {
+            return <Navigate to="/" />;
+        }
+
         return(
-            /// TODO: Change CSS hover for this button 
+            <div className="login-bg">
+
             <div id="login-form-container"><Link to="/"><p id="login-back">&#8592; BACK</p></Link>
             <div id="login-container">
                 <p id="login-heading">Login</p>
@@ -119,6 +125,7 @@ class Login extends React.Component
                     <input type="submit" value="SIGN IN"/>
                 </form>
                 <div id="register-text-container"><p id="register-text">Don't have an account yet? <Link id="register-link" to="/register">Register</Link></p></div>
+            </div>
             </div></div>
         )
     }

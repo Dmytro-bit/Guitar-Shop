@@ -16,7 +16,6 @@ class Products extends React.Component
     {
         return(
             <><Nav />
-
                 <div className="products-container">
                     <div className="products-controls-container">
                         <div className="products-controls">
@@ -43,8 +42,8 @@ class Products extends React.Component
                                         <li className="sort-dropdown-item">Price: High to Low</li>
                                         <li className="sort-dropdown-item">Rating: Low to High</li>
                                         <li className="sort-dropdown-item">Rating: High to Low</li>
-                                        <li className="sort-dropdown-item">Alphabeticaly: A-Z</li>
-                                        <li className="sort-dropdown-item">Alphabeticaly: Z-A</li>
+                                        <li className="sort-dropdown-item">Alphabetically: A-Z</li>
+                                        <li className="sort-dropdown-item">Alphabetically: Z-A</li>
                                     </ul>
                                 </div>
                             </div>

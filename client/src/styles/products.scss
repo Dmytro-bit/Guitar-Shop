@@ -4,7 +4,6 @@
   grid-template-columns: 1fr 2fr;
   grid-template-areas:  'category header'
                         'filter cards';
-  overflow: hidden;
   padding: 0 3em;
 
   @media screen and (max-width: 908px) {
@@ -211,7 +210,7 @@
             .filter-window {
               width: 100vw;
               position: fixed;
-              top: calc(0px + 4em);
+              top: calc(0px + 6em);
               left: 0;
               height: 100vh;
               background-color: #d9d9d9;
@@ -256,11 +255,13 @@
 
   .products-filter-container {
     grid-area: filter;
+    position: sticky;
     width: calc(100% - 3em);
     max-width: 650px;
     height: 100vh;
     background-color: #d9d9d9;
     border-radius: 10px;
+    top: 0;
     box-shadow: 0 0.3em 10px rgb(133, 132, 132);
 
     @media screen and (max-width: 908px) {

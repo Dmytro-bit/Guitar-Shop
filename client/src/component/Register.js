@@ -1,11 +1,10 @@
 import React from "react"
 // import axios from "axios"
 
-import { Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 
 import "../styles/register.scss"
 import axios from "axios";
-import {SERVER_HOST} from "../config/global_constants";
 
 class Register extends React.Component
 {
@@ -27,7 +26,8 @@ class Register extends React.Component
                 "phone" : "Phone number should start with a country code (+353). No spaces allowed",
                 "password" : "Password must be at least 8-digits long and contains at least one lowercase letter, one uppercase letter, one digit and one special character",
                 "confirmPassword" : "Passwords must match"
-            }
+            },
+            registrationSuccessfull : false,
         }
     }
 
@@ -97,15 +97,19 @@ class Register extends React.Component
             const inputs = this.formData()
             //Create axios post request
             try {
-                const res = await axios.post(`/auth/register`, inputs)
+                const res = await axios.post(`auth/register`, inputs)
+                if (res.status === 201){
+                    const{name, token, accessLevel} = res.data
 
-                const{name, token, accessLevel} = res.data
+                    localStorage.setItem("token", token)
+                    localStorage.setItem("username", name)
+                    localStorage.setItem("accessLevel", accessLevel)
 
-                localStorage.setItem("token", token)
-                localStorage.setItem("username", name)
-                localStorage.setItem("accessLevel", accessLevel)
+                    this.setState({ registrationSuccessfull : true })
 
-                console.log("Successfully registered and logined")
+                    console.log("Successfully registered and logined")
+            }
+
             } catch (error) {
                 console.log(error)
             }
@@ -116,7 +120,12 @@ class Register extends React.Component
     render()
     {
         const formInputsState = this.validate()
+
+        if (this.state.registrationSuccessfull)
+            return <Navigate to="/" />;
+
         return(
+            <div className="register-bg">
             <div id="register-form-container"><Link to="/"><p id="register-back">&#8592; BACK</p></Link>
             <div id="register-container">
                 <p id="register-heading">Register</p>
@@ -185,7 +194,7 @@ class Register extends React.Component
                     </>
                     <input type="submit" value="SIGN UP"/>
                 </form>
-            </div></div>
+            </div></div></div>
         )
     }
 }

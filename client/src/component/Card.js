@@ -17,24 +17,28 @@ class Card extends React.Component
             <div className="card-container">
                 <div className="card-content-container">
                     <div className="card-image-container">
-                        <Link to="/" className="card-image-link"><img src={this.props.images[0]} className="card-image"/></Link>
+                        <Link to={`/products/${this.props.name}`} className="card-image-link"><img src={this.props.images[0]} className="card-image"/></Link>
                     </div>
                     <div className="card-main-container">
                         <div className="card-description">
                             <div className="card-name">
-                                {this.props.name}
+                                <Link to={`/products/${this.props.name}`} 
+                                    style={{ color : "black", textDecoration : "none"}}>{this.props.name}
+                                    </Link>
                                 <img src="../icons/heart.png" className="heart-icon"/>
                             </div>
-                            <div className="card-characteristics">
+                            <Link to={`/products/${this.props.name}`} 
+                                className="card-characteristics"
+                                style={{ color : "black", textDecoration : "none"}}>
                                 <ul className="characteristics-list">
                                 {Object.entries(this.props.chars)
-                                    .slice(0, 5) // Take only the first 5 elements
+                                    .slice(0, 5)
                                     .map(([key, value], index) => (
                                     <li key={index}><strong>{key}:</strong> {value}</li>
                                     ))
                                  }
                                 </ul>
-                            </div>
+                            </Link>
                             <div className="card-price-container">
                                 <div className="card-price">
                                     <p className="price">${this.props.price}</p>
