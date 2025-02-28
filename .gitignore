@@ -9,7 +9,7 @@
 #ENV
 *.env
 *.log
-
+*.pem
 #================CLIENT_SIDE================
 
 # dependencies
