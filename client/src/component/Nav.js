@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, Redirect } from "react-router-dom";
 import "../styles/nav.scss";
 
 class Nav extends React.Component {
@@ -14,6 +14,11 @@ class Nav extends React.Component {
         }
     }
 
+    componentDidMount = () =>
+    {
+        localStorage.getItem("token") == null ? this.setState({isRegistered : false}) : this.setState({isRegistered : true})
+    }
+
     showMobileNavBar = () => {
         let navbar = document.querySelector(".navbar-mobile")
         if (navbar.style.display == "flex")
@@ -26,7 +31,17 @@ class Nav extends React.Component {
         this.setState({isMenuActive : !this.state.isMenuActive})
     }
 
+    handleLogOut = () =>
+    {
+        localStorage.removeItem("token")
+        localStorage.removeItem("username")
+        localStorage.removeItem("accessLevel")
+
+        this.setState({isRegistered : false})
+    }
+
     render() {
+
         return (
             <><nav className="navbar-container">
                 <Link to="/" id="logo-link"><img src="../icons/logo.png" id="logo"/></Link>
@@ -46,7 +61,7 @@ class Nav extends React.Component {
                             <hr />
                             <div className="dropdown-option"><b>ORDERS</b></div>
                             <hr />
-                            <div className="dropdown-option" style={{color:"#db3d45"}}><b>LOG OUT</b></div>
+                            <div className="dropdown-option" style={{color:"#db3d45"}} onClick={this.handleLogOut}><b>LOG OUT</b></div>
                         </div>
                     </div>
                     <Link to="/cart"><img src="../icons/cart.png" id="cart-icon" className="icon"/></Link>

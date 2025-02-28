@@ -4,7 +4,7 @@ const usersModel = require("../models/users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
-const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
+const JWT_PRIVATE_KEY = fs.readFileSync("/home/dmytro/FullStack/Sem2/music_shop/Guitar-Shop/server/config/jwt_private_key.pem", "utf8");
 
 const registerUser = async (req, res, next) => {
     try {
@@ -19,7 +19,7 @@ const registerUser = async (req, res, next) => {
             expiresIn: process.env.JWT_EXPIRY
         })
 
-        res.json({name, token, accessLevel})
+        res.status(201).json({name, token, accessLevel})
 
     } catch (err) {
         next(err)

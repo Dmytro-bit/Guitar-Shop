@@ -1,7 +1,7 @@
 import React from "react"
 // import axios from "axios"
 
-import { Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 
 import "../styles/register.scss"
 import axios from "axios";
@@ -27,7 +27,8 @@ class Register extends React.Component
                 "phone" : "Phone number should start with a country code (+353). No spaces allowed",
                 "password" : "Password must be at least 8-digits long and contains at least one lowercase letter, one uppercase letter, one digit and one special character",
                 "confirmPassword" : "Passwords must match"
-            }
+            },
+            registrationSuccessfull : false,
         }
     }
 
@@ -98,14 +99,18 @@ class Register extends React.Component
             //Create axios post request
             try {
                 const res = await axios.post(`${SERVER_HOST}/api/users/register`, inputs)
+                if (res.status === 201){
+                    const{name, token, accessLevel} = res.data
 
-                const{name, token, accessLevel} = res
+                    localStorage.setItem("token", token)
+                    localStorage.setItem("username", name)
+                    localStorage.setItem("accessLevel", accessLevel)
 
-                localStorage.setItem("token", token)
-                localStorage.setItem("username", name)
-                localStorage.setItem("accessLevel", accessLevel)
+                    this.setState({ registrationSuccessfull : true })
 
-                console.log("Successfully registered and logined")
+                    console.log("Successfully registered and logined")
+            }
+                
             } catch (error) {
                 console.log(error)
             }
@@ -116,6 +121,10 @@ class Register extends React.Component
     render()
     {
         const formInputsState = this.validate()
+
+        if (this.state.registrationSuccessfull)
+            return <Navigate to="/" />;
+
         return(
             <div className="register-bg">
             <div id="register-form-container"><Link to="/"><p id="register-back">&#8592; BACK</p></Link>

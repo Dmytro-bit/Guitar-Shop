@@ -1,6 +1,6 @@
 import React from "react"
 
-import { Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 
 import "../styles/login.scss"
 import axios from "axios";
@@ -19,7 +19,9 @@ class Login extends React.Component
             wasSubmittedOnce : false,
             errorMessage: {"email" : "Enter a valid email",
                             "password" : "Password can not be an empty string"
-            }
+            },
+            loggedInSuccessfully : false,
+
         }
     }
 
@@ -62,10 +64,12 @@ class Login extends React.Component
                 const res = await axios.post(`${SERVER_HOST}/api/users/login`, data)
                 console.log("Successfully logined")
                 console.log(res)
-                const {name, accessLevel, token} = res
+                const {name, accessLevel, token} = res.data
                 localStorage.setItem("token", token)
                 localStorage.setItem("username", name)
                 localStorage.setItem("accessLevel", accessLevel)
+
+                this.setState({loggedInSuccessfully : true})
 
                 console.log("User data saved to localStorage")
 
@@ -84,6 +88,11 @@ class Login extends React.Component
     render() 
     {
         let formInputsState = this.validate()
+
+        if (this.state.loggedInSuccessfully) {
+            return <Navigate to="/" />;
+        }
+
         return(
             <div className="login-bg">
 
