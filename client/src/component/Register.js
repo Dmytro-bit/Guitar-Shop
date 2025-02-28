@@ -97,7 +97,7 @@ class Register extends React.Component
             const inputs = this.formData()
             //Create axios post request
             try {
-                const res = await axios.post(`${SERVER_HOST}/api/users/register`, inputs)
+                const res = await axios.post(`/auth/register`, inputs)
 
                 const{name, token, accessLevel} = res
 

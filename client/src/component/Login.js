@@ -59,7 +59,7 @@ class Login extends React.Component
             const data = {email:email, password:password}
             //Axios post request
             try{
-                const res = await axios.post(`${SERVER_HOST}/api/users/login`, data)
+                const res = await axios.post(`/auth/login`, data)
                 console.log("Successfully logined")
                 console.log(res)
                 const {name, accessLevel, token} = res

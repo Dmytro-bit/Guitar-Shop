@@ -30,7 +30,7 @@ app.listen(port, () => {
 
 // Routers
 
-app.use(`/api/users`, require('./routes/users'));
+app.use(`/auth`, require('./routes/auth'));
 
 // error-handling
 

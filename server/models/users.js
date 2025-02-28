@@ -11,7 +11,8 @@ let userSchema = new mongoose.Schema(
         email: {type: String, required: true, unique: [true, "Email is required"], match: [emailPattern, "Invalid email format"],trim: true},
         password: {type: String, required: [true, "Password is required"], match: [passwordPattern, "Invalid password"]},
         phone: {type: String, required: [true, "Phone is required"], match: [phonePattern, "Invalid phone format"], trim: true},
-        accessLevel: {type: Number, default: parseInt(process.env.ACCESS_LEVEL_NORMAL_USER), min:[0, "Access level must be a positive number"], max:[2, "Access level does not exist"]}
+        accessLevel: {type: Number, default: parseInt(process.env.ACCESS_LEVEL_NORMAL_USER), min:[0, "Access level must be a positive number"], max:[2, "Access level does not exist"]},
+        profilePhotoUrl: {type: String, default: ""}
     }
 )
 
