@@ -1,5 +1,8 @@
 import React from "react";
 import { NavLink, Link, Redirect } from "react-router-dom";
+
+import Account from "./Account"
+
 import "../styles/nav.scss";
 
 class Nav extends React.Component {
@@ -10,7 +13,8 @@ class Nav extends React.Component {
         
         this.state = {
             isMenuActive : false,
-            isRegistered : false
+            isRegistered : false,
+            isUserAccountActive : false,
         }
     }
 
@@ -29,6 +33,13 @@ class Nav extends React.Component {
 
     handleMenu = () => {
         this.setState({isMenuActive : !this.state.isMenuActive})
+    }
+
+    handleUserAccount = () =>
+    {
+        this.setState({isUserAccountActive : !this.state.isUserAccountActive})
+        this.setState({isMenuActive : false})
+        console.log(this.state.isUserAccountActive)
     }
 
     handleLogOut = () =>
@@ -57,7 +68,7 @@ class Nav extends React.Component {
                     <div id="user-container">
                         <img src="../icons/user.png" id="profile-icon" className="icon" onClick={this.handleMenu}/>
                         <div id="dropdown" style={{display : this.state.isMenuActive ? "flex" : "none"}}>
-                            <div className="dropdown-option"><b>ACCOUNT</b></div>
+                            <div className="dropdown-option" onClick={this.handleUserAccount}><b>ACCOUNT</b></div>
                             <hr />
                             <div className="dropdown-option"><b>ORDERS</b></div>
                             <hr />
@@ -67,6 +78,9 @@ class Nav extends React.Component {
                     <Link to="/cart"><img src="../icons/cart.png" id="cart-icon" className="icon"/></Link>
                 </div>
             </nav>
+
+            <Account isActive={this.state.isUserAccountActive} handleClose={this.handleUserAccount}/>
+
             <ul className="navbar-mobile">
             <li><NavLink to="/" className={({ isActive }) => isActive ? "active" : "inactive"}>HOME</NavLink></li>
             <li><NavLink to="/products" className={({ isActive }) => isActive ? "active" : "inactive"}>PRODUCTS</NavLink></li>
