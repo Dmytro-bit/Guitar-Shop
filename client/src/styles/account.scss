@@ -1,0 +1,137 @@
+.user-account-container {
+    position: fixed;
+    right: calc(0px - max(30vw, 400px));
+    top: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr 1fr 1fr;
+    grid-template-areas: 'header'
+                          'data'
+                          'address'
+                          'edit';
+    width: 30vw;
+    height: 100vh;
+    min-width: 350px;
+    background-color: rgb(55,55,55);
+    overflow-y: scroll;
+    z-index: 10;
+    transition: right 0.5s ease;
+
+
+    .user-account-close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 2em;
+        margin: 1em 1em 0 0;
+        filter: invert(1);
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: scale(1.1) rotate(180deg);
+        }
+    }
+
+    hr {
+        height: 2px;
+        width: 90%;
+        background-color: white;
+        border: none;
+        margin: 0 auto;
+    }
+
+    .user-account-header {
+        grid-area: header;
+        display: flex;
+        justify-content: flex-start;
+        padding: 3em;
+        gap: 2em;
+
+        .user-account-photo {
+            max-width: 7vw;
+            min-width: 100px;
+        }
+
+        .user-account-name {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            color: white;
+            font-size: clamp(24px, 3vw, 40px);
+            font-weight: bold;
+        }
+    }
+
+    .user-account-data {
+        grid-area: data;
+        padding: 2em;
+        display: flex;
+        flex-direction: column;
+
+        .user-account-cred-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            .user-account-cred-title {
+                color: white;
+                font-size: clamp(16px, 2vw, 30px); 
+                margin-top: 0;
+            }
+
+            .editable {
+                margin-left: 1em;
+            }
+
+            .user-account-cred {
+                color: white;
+                margin: 0 0 1em 0;
+                background-color: rgb(36, 36, 36);
+                padding: 0.5em;
+                border-radius: 10px;
+                font-size: clamp(12px, 1.2vw, 28px);
+                box-shadow: 0.2em 0.2em 10px black;
+                border: none;
+            }
+
+            .editable {
+                margin-left: 1em;
+            }
+        }
+    }
+
+    .user-account-edit-button {
+        grid-area: edit;
+        padding: 2em;
+        display: flex;
+        flex-direction: column;
+        gap: 2em;
+        align-items: center;
+        justify-content: center;
+
+        .user-account-edit-save {
+            font-size: clamp(16px, 1.5vw, 30px);
+            border: none;
+            background-color: rgb(245, 244, 244);
+            border-radius: 10px;
+            font-weight: bold;
+            padding: 0.3em;
+            width: 50%;
+            min-width: 300px;
+            transition: transform 0.3s ease;
+
+            &:hover {
+                transform: scale(1.05);
+                background-color: white;
+            }
+        }
+    }
+}
+
+.active {
+    right: 0;
+}
+
+.inactive {
+    right: calc(0px - max(30vw, 400px));
+}
