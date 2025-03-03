@@ -1,0 +1,165 @@
+
+    #hero-container
+    {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        z-index: 0;
+
+        #hero {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+
+            #text-container{
+                z-index: 1;
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                height: 60vh;
+                max-height: 30vh;
+                width: 80vw;
+                max-width: 90vw;
+                justify-content: space-between;
+
+                #inner-text-container {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    height: 25vh;
+
+                    #heading-container {
+                        width: 100%;
+                        display: flex;
+                        position: relative;
+                        z-index: 100;
+                        text-align: center;
+
+                        #heading {
+                            font-size: 6vw;
+                            letter-spacing: 15px;
+                            font-weight: 200;
+                            font-family: "Bebas Neue", serif;
+                            width: 100%;
+                            color: rgb(231, 231, 231);
+                            margin: 0;
+
+                        }
+                    }
+
+                    #paragraph-container {
+                        width: 70%;
+                        margin-left: 15%;
+                        display: flex;
+                        position: relative;
+                        text-align: center;
+                        z-index: 11;
+
+                        #paragraph {
+                            font-size: 1.3vw;
+                            // letter-spacing: 10px;
+                            font-family: "Raleway", serif;
+                            width: 100%;
+                            color: rgb(201, 201, 201);
+                        }
+                    }
+                }
+
+                
+            }
+            #catalog-button-container {
+                display: flex;
+                justify-content: center;
+                //height: 6vh;
+                max-height: 80px;
+                width: 100%;
+                margin-top: 5vw;
+                
+                
+                #catalog-button {
+                    position: relative;
+                    font-size: 1.5vw;
+                    width: 15%;
+                    background-color: transparent;
+                    border-top: 3px solid rgb(201, 201, 201);
+                    border-left: none;
+                    border-right: none;
+                    border-bottom: 3px solid rgb(201, 201, 201);
+                    z-index: 11;
+                    color: rgb(201, 201, 201);
+                    transition: background-color ease 0.3s;
+                    padding: 0.3em;
+            
+                    &:hover {
+                        color: black;
+                        // text-decoration: underline;
+                        font-weight: bold;
+                        text-decoration-thickness: 3px;
+                        border-color: black;
+                        background-color: rgb(211, 211, 211);
+                    }
+                }
+            }
+
+            video {
+                width: 100%;
+                height: 100%;
+            }
+        
+            .video-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7); 
+            }
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        #hero-container{
+            height: 800px;
+
+            #hero {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        #hero-container #hero #text-container #heading-container #heading {
+            letter-spacing: 5px;
+        }
+
+        #hero-container #hero #text-container #paragraph-container #paragraph{
+            font-size: 4vw;
+        }
+        #hero-container #hero #text-container #catalog-button-container {
+            width: 100%;
+            height: 4vh;
+
+            #catalog-button {
+                font-size: 3vw;
+                width: 30%;
+            }
+        }
+
+        video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; // Ensures it fills the screen without stretching
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .navbar-container #signup-button {
+            font-size: 1.5vw;
+            width: 10vw;
+        }
+    }

@@ -1,6 +1,6 @@
 import React from "react";
 
-import "../aboutus.scss";
+import "../styles/aboutus.scss";
 
 class About extends React.Component
 {

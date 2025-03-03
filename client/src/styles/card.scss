@@ -1,0 +1,150 @@
+.card-container {
+    padding: 16px;
+    background-color: #d9d9d9;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 0.3em 10px rgb(133, 132, 132);
+
+    .card-content-container {
+        display: flex;
+        width: 100%;
+        min-width: 200px;
+        mix-blend-mode: multiply;
+        flex-direction: row;
+        align-items: center;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+        }
+
+        .card-image-container {
+            width: 220px;       //200px
+            min-width: 220px;   //200px
+            
+
+            @media (max-width: 768px) {
+                margin-left: 0;
+                width: 100%;
+                height: 480px;  
+            }
+
+            .card-image-link {
+                display: flex;
+                height: 100%;
+                justify-content: center;
+
+                .card-image {
+                    max-width: 100%;
+                    height: auto;
+                    object-fit: cover;
+                }
+            }
+        }
+
+        .card-main-container {
+            border-left: 1px solid rgb(51, 48, 48);
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding-left: 2em;
+
+            @media (max-width: 768px) {
+                border-left: none;
+                padding-left: 0;
+                padding-top: 1em;
+            }
+
+            .card-description {
+                display: flex;
+                flex-direction: column;
+
+                .card-name {
+                    font-size: 24px;
+                    font-weight: bold;
+                    display: flex;
+                    justify-content: space-between;
+
+                    .heart-icon {
+                        margin-right: 0.5em;
+                        object-fit: cover;
+                        width: clamp(28px, 2vw, 3vw);
+                        height: clamp(2vw, 100%, 2.5vw                                                                                                                                                                                                                                                                              );
+                        transition: all 0.3s ease-in-out;
+
+                        @media screen and (max-width: 768px) {                                                                                                                                                          
+                            width: 5vw;
+                            height: 5vw;
+                            
+                        }
+
+                        &:hover {
+                            transform: scale(1.1);
+
+                        }
+                    }
+                }
+
+                .card-characteristics {
+                    width: 100%;
+
+                    .characteristics-list {
+                        padding: 1em;
+                        font-size: 20px;
+                        margin: 0.5em 0 0 0;
+                    }
+                }
+
+                .card-price-container {
+                    display: flex;
+                    justify-content: space-between;
+                    height: 50px;
+
+                    .card-price {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        min-width: 180px; 
+
+                        .price {
+                            font-size: clamp(24px, 2vw, 36px);
+                            font-weight: bold;
+                            margin: 0;
+                            padding-right: 0.5em;
+                            border-right: 1px solid rgb(51, 48, 48);
+                        }
+
+                        .inStock {
+                            font-size: 20px;
+                            font-style: italic;
+                            margin: 0;
+                            padding-left: 0.5em;
+                        }
+                    }
+
+                    .card-buy-button {
+                        width: 12vw;
+                        min-width: 130px;
+                        color: white;
+                        font-weight: bold;
+                        background-color: rgb(55, 55, 55);
+                        font-size: 20px;
+                        border-radius: 14px;
+                        border: none;
+                        transition: all 0.3s ease;
+
+                        @media screen and (max-width: 768px) {
+                            width: 200px;
+                            
+                        }
+
+                        &:hover {
+                            transform: scale(1.05);
+                            background-color: rgb(20, 20, 20);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

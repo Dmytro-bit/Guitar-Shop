@@ -1,6 +1,6 @@
 import React from "react";
-import { NavLink, Link } from "react-router-dom";
-import "../nav.scss";
+import { NavLink, Link, Redirect } from "react-router-dom";
+import "../styles/nav.scss";
 
 class Nav extends React.Component {
 
@@ -14,20 +14,45 @@ class Nav extends React.Component {
         }
     }
 
+    componentDidMount = () =>
+    {
+        localStorage.getItem("token") == null ? this.setState({isRegistered : false}) : this.setState({isRegistered : true})
+    }
+
+    showMobileNavBar = () => {
+        let navbar = document.querySelector(".navbar-mobile")
+        if (navbar.style.display == "flex")
+            navbar.style.display = "none"
+        else
+            navbar.style.display = "flex"
+    }
+
     handleMenu = () => {
         this.setState({isMenuActive : !this.state.isMenuActive})
     }
 
+    handleLogOut = () =>
+    {
+        localStorage.removeItem("token")
+        localStorage.removeItem("username")
+        localStorage.removeItem("accessLevel")
+
+        this.setState({isRegistered : false})
+    }
+
     render() {
+
         return (
-            <nav className="navbar-container">
-                <Link to="/"><img src="../icons/logo.png" id="logo"/></Link>
+            <><nav className="navbar-container">
+                <Link to="/" id="logo-link"><img src="../icons/logo.png" id="logo"/></Link>
+                <div id="navbar-mobile-menu"><img src="../icons/menu.png" className="menu-icon" onClick={this.showMobileNavBar}/></div>
                 <ul className="navbar">
                     <li><NavLink to="/" className={({ isActive }) => isActive ? "active" : "inactive"}>HOME</NavLink></li>
                     <li><NavLink to="/products" className={({ isActive }) => isActive ? "active" : "inactive"}>PRODUCTS</NavLink></li>
                     <li><NavLink to="/about" className={({ isActive }) => isActive ? "active" : "inactive"}>ABOUT</NavLink></li>
                 </ul>
-                <Link to={"/login"}><button id="signup-button" style={{display : this.state.isRegistered ? "none" : "flex"}}>SIGN UP</button></Link>
+                <div className="logo-mobile"><b>GUITAR HERO</b></div>   
+                <Link to={"/login"} style={{display : this.state.isRegistered ? "none" : "flex"}} id="signup-button-link"><button id="signup-button">SIGN UP</button></Link>
                 <div id="icons-container" style={{display : this.state.isRegistered ? "flex" : "none"}}>
                     <div id="user-container">
                         <img src="../icons/user.png" id="profile-icon" className="icon" onClick={this.handleMenu}/>
@@ -36,12 +61,17 @@ class Nav extends React.Component {
                             <hr />
                             <div className="dropdown-option"><b>ORDERS</b></div>
                             <hr />
-                            <div className="dropdown-option" style={{color:"#db3d45"}}><b>LOG OUT</b></div>
+                            <div className="dropdown-option" style={{color:"#db3d45"}} onClick={this.handleLogOut}><b>LOG OUT</b></div>
                         </div>
                     </div>
                     <Link to="/cart"><img src="../icons/cart.png" id="cart-icon" className="icon"/></Link>
                 </div>
             </nav>
+            <ul className="navbar-mobile">
+            <li><NavLink to="/" className={({ isActive }) => isActive ? "active" : "inactive"}>HOME</NavLink></li>
+            <li><NavLink to="/products" className={({ isActive }) => isActive ? "active" : "inactive"}>PRODUCTS</NavLink></li>
+            <li><NavLink to="/about" className={({ isActive }) => isActive ? "active" : "inactive"}>ABOUT</NavLink></li>
+        </ul></>
         );
     }
 }
