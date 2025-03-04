@@ -54,10 +54,10 @@ class Products extends React.Component {
     }
 
     handleQuantityDecrease = () =>
-        {
-            if(this.state.quantity > 1)
-                this.setState({quantity : this.state.quantity - 1});
-        }
+    {
+        if(this.state.quantity > 1)
+            this.setState({quantity : this.state.quantity - 1});
+    }
 
     render() {
         const { name } = this.props.params;

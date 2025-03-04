@@ -1,6 +1,6 @@
 .user-account-container {
     position: fixed;
-    right: calc(0px - max(30vw, 400px));
+    right: calc(0px - max(35vw, 400px));
     top: 0;
     display: grid;
     grid-template-columns: 1fr;
@@ -9,7 +9,7 @@
                           'data'
                           'address'
                           'edit';
-    width: 30vw;
+    width: 35vw;
     height: 100vh;
     min-width: 350px;
     background-color: rgb(55,55,55);
@@ -75,8 +75,9 @@
 
             .user-account-cred-title {
                 color: white;
-                font-size: clamp(16px, 2vw, 30px); 
-                margin-top: 0;
+                font-size: clamp(16px, 1.5vw, 30px);
+                margin: 0 0 0.5em 0;
+                font-weight: bold;
             }
 
             .editable {
@@ -85,7 +86,7 @@
 
             .user-account-cred {
                 color: white;
-                margin: 0 0 1em 0;
+                margin: 0 0 2.5em 0;
                 background-color: rgb(36, 36, 36);
                 padding: 0.5em;
                 border-radius: 10px;
@@ -126,6 +127,29 @@
             }
         }
     }
+
+}
+
+.blur-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 3;
+    background-color: black;
+    transition: opacity 1s ease;
+}
+
+.visible {
+    opacity: 70%;
+    display: block;
+}
+
+.invisible {
+    opacity: 0;
+    display: none;
 }
 
 .active {
@@ -133,5 +157,5 @@
 }
 
 .inactive {
-    right: calc(0px - max(30vw, 400px));
+    right: calc(0px - max(35vw, 400px));
 }

@@ -8,6 +8,7 @@ import Product from "./component/Product";
 import About from "./component/About";
 import Login from "./component/Login"
 import Register from "./component/Register";
+import Cart from "./component/Cart"
 import {ACCESS_LEVEL_GUEST, SERVER_HOST} from "./config/global_constants";
 import axios from "axios";
 
@@ -70,6 +71,7 @@ class App extends React.Component {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
       </BrowserRouter>
     );
