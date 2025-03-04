@@ -135,3 +135,7 @@
 .inactive {
     right: calc(0px - max(30vw, 400px));
 }
+
+.hidden-input{
+    display: none;
+}
