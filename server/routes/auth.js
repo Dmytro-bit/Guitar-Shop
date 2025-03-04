@@ -130,7 +130,7 @@ const login = async (req, res, next) => {
             accessLevel: user.accessLevel
         }, JWT_PRIVATE_KEY, {algorithm: 'HS256', expiresIn: process.env.JWT_EXPIRY});
 
-        res.status(204).json({email: email, accessLevel: user.accessLevel, token: token})
+        res.json({email: email, accessLevel: user.accessLevel, token: token})
 
 
     } catch (err) {
