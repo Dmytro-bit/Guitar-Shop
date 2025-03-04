@@ -16,16 +16,19 @@ class Account extends React.Component {
                 email: "test@test.com",
                 phone: "+353851234567",
                 address: {
-                    fline: "Test Address",
-                    sline: "Test Street",
-                    city: "Test City",
-                    county: "Test County",
-                    eircode: "Test Code",
+                    fline: "",
+                    sline: "",
+                    city: "",
+                    county: "",
+                    eircode: "",
                 },
                 profilePhotoUrl: "../icons/user.png",
             },
             selectedFile: null,
             isEditable: false,
+            isAddressSet : false,
+            isSettingAddressEnabled : false,
+            addressWasSubmittedOnce : false,
         }
         this.imageHandlerRef = React.createRef();
     }
@@ -60,9 +63,22 @@ class Account extends React.Component {
                     profilePhotoUrl: userData.profilePhotoUrl ? userData.profilePhotoUrl : "../icons/user.png"
                 }
             });
+            console.log(this.state.user.address.fline);
+            this.checkEmptyAddress()
+
         } catch (err) {
             console.log(err)
         }
+    }
+
+    checkEmptyAddress = () => {
+        const noEmptyFields = Object.keys(this.state.user.address).map(key =>
+            this.state.user.address[key].trim()).every(value => value !== "")
+
+        console.log("Address Set: "+noEmptyFields)
+        if (noEmptyFields)
+            this.setState({ isAddressSet: true });
+
     }
     closeAccount = () => {
         this.setState({isEditable: false})
@@ -70,6 +86,8 @@ class Account extends React.Component {
 
     handleEditMode = () => {
         this.setState({isEditable: !this.state.isEditable})
+        this.setState({isSettingAddressEnabled : false })
+
 
         //Write a put request ro update the data
     }
@@ -79,6 +97,34 @@ class Account extends React.Component {
         }
 
     }
+
+    handleEnablingSettingAddress = () => {
+        this.setState({isSettingAddressEnabled : true })
+    }
+
+    handleAddressChange = (e) => {
+        e.preventDefault();
+        const { user } = this.state;
+        const { name, value } = e.target;
+        this.setState({
+            user: {
+                ...user,
+                address: {
+                    ...user.address,
+                    [name]: value
+                }
+            }
+        })
+    }
+
+    handleAddressSave = () => {
+        const noEmptyFields = this.checkEmptyAddress()
+        if (noEmptyFields)
+            this.setState({isSettingAddressEnabled : false })
+
+        this.setState({addressWasSubmittedOnce : true})
+    }
+
     handleFileChange = async (e) => {
         const file = e.target.files[0]
         this.setState({selectedFile: file})
@@ -150,7 +196,7 @@ class Account extends React.Component {
                         <input type="text" value={this.state.user.phone} disabled={!this.state.isEditable}
                                className="user-account-cred"></input>
                     </div>
-                    <div className="user-account-cred-container">
+                    <div className="user-account-cred-container" style={{display : this.state.isAddressSet ? "flex" : "none"}}>
                         {!this.state.isEditable ? (
                             <div>
                                 <p className="user-account-cred-title"><u>Address :</u></p>
@@ -186,6 +232,44 @@ class Account extends React.Component {
                             </div>
                         )
                         }
+                    </div>
+                    <div className="set-address-container" style={{display : this.state.isAddressSet ? "none" : "flex"}}>
+                        {!this.state.isSettingAddressEnabled ?
+                            (
+                                <>
+                                    <div className="set-address-text-container">
+                                        <p className="set-address-text">It looks like you haven't set your delivery address yet. Let's fix it straight away!</p>
+                                    </div>
+                                    <button className="set-address-button" onClick={this.handleEnablingSettingAddress}>SET ADDRESS</button>
+                                </>
+                            ) : (
+                                <>
+                                    <p className={`user-account-cred-title`}>
+                                        <u>First Address Line :</u></p>
+                                    <input type="text" name="fline"
+                                           className={`user-account-cred`} onChange={(e) => this.handleAddressChange(e)}/>
+                                    <p className={`user-account-cred-title`}>
+                                        <u>Second Address Line :</u></p>
+                                    <input type="text" name="sline"
+                                           className={`user-account-cred`} onChange={(e) => this.handleAddressChange(e)}/>
+                                    <p className={`user-account-cred-title`}>
+                                        <u>City/Town :</u></p>
+                                    <input type="text" name="city"
+                                           className={`user-account-cred`} onChange={(e) => this.handleAddressChange(e)}/>
+                                    <p className={`user-account-cred-title`}>
+                                        <u>County :</u></p>
+                                    <input type="text" name="county"
+                                           className={`user-account-cred`} onChange={(e) => this.handleAddressChange(e)}/>
+                                    <p className={`user-account-cred-title`}>
+                                        <u>Eircode</u></p>
+                                    <input type="text" name="eircode" onChange={(e) => this.handleAddressChange(e)}
+                                           className={`user-account-cred`}/>
+
+                                    <button className="set-address-button" onClick={this.handleAddressSave}>SET ADDRESS</button>
+
+                                    <p className="address-error" style={{display : this.state.addressWasSubmittedOnce ? "flex" : "none"}}>All Fields Should Be Filled</p>
+                                </>
+                            )}
                     </div>
                 </div>
                 <div className="user-account-edit-button">
