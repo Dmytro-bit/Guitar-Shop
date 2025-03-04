@@ -21,6 +21,12 @@ class Nav extends React.Component {
     componentDidMount = () =>
     {
         localStorage.getItem("token") == null ? this.setState({isRegistered : false}) : this.setState({isRegistered : true})
+        // if(localStorage.getItem("token") === "undefined")
+        // {
+        //     this.setState({isRegistered: false})
+        // }
+        // else
+        //     this.setState({isRegistered : true})
     }
 
     showMobileNavBar = () => {
@@ -39,14 +45,16 @@ class Nav extends React.Component {
     {
         this.setState({isUserAccountActive : !this.state.isUserAccountActive})
         this.setState({isMenuActive : false})
-        console.log(this.state.isUserAccountActive)
+        // console.log(this.state.isUserAccountActive)
     }
 
     handleLogOut = () =>
     {
         localStorage.removeItem("token")
-        localStorage.removeItem("username")
+        localStorage.removeItem("name")
         localStorage.removeItem("accessLevel")
+        localStorage.removeItem("email")
+        localStorage.removeItem("profilePhoto")
 
         this.setState({isRegistered : false})
     }

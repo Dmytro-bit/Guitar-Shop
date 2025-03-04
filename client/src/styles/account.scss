@@ -16,6 +16,7 @@
     overflow-y: scroll;
     z-index: 10;
     transition: right 0.5s ease;
+    box-sizing: border-box;
 
 
     .user-account-close {
@@ -64,6 +65,7 @@
 
     .user-account-data {
         grid-area: data;
+        box-sizing: border-box;
         padding: 2em;
         display: flex;
         flex-direction: column;
@@ -97,6 +99,73 @@
             .editable {
                 margin-left: 1em;
             }
+        }
+
+        .set-address-container {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            background-color: rgb(37, 37, 37);
+            align-items: center;
+            gap: 1em;
+            padding: 1em;
+            box-sizing: border-box;
+            border-radius: 10px;
+            box-shadow: inset 0px 5px 5px 1px rgba(0, 0, 0, .3);
+            margin-top: 2em;
+
+            .set-address-text-container {
+                width: 100%;
+                margin: 1em 0;
+                text-align: center;
+
+                .set-address-text{
+                    font-size: clamp(12px, 1vw, 28px);
+                    color: white;
+                }
+            }
+
+            .set-address-button {
+                font-size: clamp(12px, 1.3vw, 26px);
+                border: none;
+                background-color: rgb(245, 244, 244);
+                border-radius: 10px;
+                font-weight: bold;
+                padding: 0.3em;
+                width: 50%;
+                min-width: 200px;
+                transition: transform 0.3s ease;
+
+                &:hover {
+                    transform: scale(1.05);
+                    background-color: white;
+                }
+            }
+
+            .address-error {
+                color: white;
+                font-size: clamp(16px, 1vw, 28px);
+                font-weight: bold;
+                text-decoration: underline;
+            }
+
+            .user-account-cred-title {
+                color: white;
+                font-size: clamp(16px, 2vw, 30px);
+                margin-top: 0;
+            }
+            .user-account-cred {
+                width: 80%;
+                color: white;
+                margin: 0 0 1em 0;
+                background-color: rgb(94, 93, 93);
+                padding: 0.5em;
+                border-radius: 10px;
+                font-size: clamp(12px, 1.2vw, 28px);
+                box-shadow: 0.2em 0.2em 10px black;
+                border: none;
+            }
+
         }
     }
 

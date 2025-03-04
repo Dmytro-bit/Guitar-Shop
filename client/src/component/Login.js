@@ -20,7 +20,6 @@ class Login extends React.Component
                             "password" : "Password can not be an empty string"
             },
             loggedInSuccessfully : false,
-
         }
     }
 
