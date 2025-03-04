@@ -23,7 +23,7 @@ let orderSchema = new mongoose.Schema(
         total_price: {type: Number, required: true},
 
         paid: {type: Boolean, default: false},
-        payment_id:{type: 'String', required: true},
+        payment_id: {type: 'String', required: true},
 
         customer_info: {
             name: String,
