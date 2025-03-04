@@ -122,7 +122,7 @@ router.post(`/register`, validateUserRegistrationInput, checkDuplicateUser, regi
 
 const login = async (req, res, next) => {
     try {
-        const {email} = req.body;
+        const email = req.body.email;
         const user = req.user;
 
         const token = jwt.sign({
@@ -130,7 +130,7 @@ const login = async (req, res, next) => {
             accessLevel: user.accessLevel
         }, JWT_PRIVATE_KEY, {algorithm: 'HS256', expiresIn: process.env.JWT_EXPIRY});
 
-        res.status(205).json({email: email, accessLevel: user.accessLevel, token: token})
+        res.status(204).json({email: email, accessLevel: user.accessLevel, token: token})
 
 
     } catch (err) {

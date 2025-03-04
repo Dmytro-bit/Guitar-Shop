@@ -42,7 +42,7 @@ class Account extends React.Component {
             const email = localStorage.getItem("email");
             console.log(email)
             const res = await axios.get(`user/getProfile`, {params: {email}})
-            console.log(res.data)
+            console.log(res.data.user)
             const userData = res.data.user; // use the nested user object
             this.setState({
                 user: {
@@ -86,6 +86,7 @@ class Account extends React.Component {
             try {
                 const formData = new FormData();
                 const email = localStorage.getItem("email");
+
                 formData.append('file', file)
                 formData.append('email', email)
                 const res = await axios.patch('user/upload', formData, {headers: {"Content-Type": "multipart/form-data"}})
