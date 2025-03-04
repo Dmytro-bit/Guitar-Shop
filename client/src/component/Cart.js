@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom";
 
 import Nav from "./Nav"
 
@@ -69,7 +70,7 @@ class Cart extends React.Component
             <><Nav></Nav>
             <div className="cart-container">
                 <div className="cart-content">
-                    <div className="back">←BACK</div>
+                    <Link to="/products" className="back">←BACK</Link>
                     <div className="cart-title-container">
                         <p className="cart-title">Shopping Cart</p>
                     </div>
