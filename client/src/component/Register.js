@@ -78,11 +78,23 @@ class Register extends React.Component
 
     formData = () =>
     {
+        const nameParts = this.state.name.split(' ');
+        let fname = "";
+        let lname ="";
+        if (nameParts.length > 2) {
+            fname = nameParts[0];
+            lname = nameParts.slice(1).join(' ');
+        } else if (nameParts.length === 2) {
+            fname = nameParts[0];
+            lname = nameParts[1];
+        }
         return {
-            name: this.state.name,
+            fname: fname,
+            lname: lname,
             email: this.state.email,
             phone: this.state.phone,
-            password: this.state.password
+            password: this.state.password,
+            confirmPassword: this.state.confirmPassword
         }
     }
 
@@ -99,10 +111,10 @@ class Register extends React.Component
             try {
                 const res = await axios.post(`auth/register`, inputs)
                 if (res.status === 201){
-                    const{name, token, accessLevel} = res.data
+                    const{email, token, accessLevel} = res.data
 
                     localStorage.setItem("token", token)
-                    localStorage.setItem("username", name)
+                    localStorage.setItem("email", email)
                     localStorage.setItem("accessLevel", accessLevel)
 
                     this.setState({ registrationSuccessfull : true })

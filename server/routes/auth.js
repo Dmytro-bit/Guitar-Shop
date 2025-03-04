@@ -8,10 +8,10 @@ const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
 
 const registerUser = async (req, res, next) => {
     try {
-        const {name, email, password, phone} = req.body;
+        const {lname, fname, email, password, phone} = req.body;
 
         const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
-        let user = new usersModel({name: name, email: email, password: hashedPassword, phone:phone});
+        let user = new usersModel({fname:fname,lname: lname, email: email, password: hashedPassword, phone: phone});
         await user.save();
         const {accessLevel} = user;
         const token = jwt.sign({email: email, accessLevel: accessLevel}, JWT_PRIVATE_KEY, {
@@ -19,7 +19,7 @@ const registerUser = async (req, res, next) => {
             expiresIn: process.env.JWT_EXPIRY
         })
 
-        res.status(201).json({name, token, accessLevel})
+        res.status(201).json({email, token, accessLevel})
 
     } catch (err) {
         next(err)
@@ -40,18 +40,23 @@ const checkDuplicateUser = async (req, res, next) => {
     }
 }
 
-function validateUserRegistrationInput (req, res, next) {
+
+
+function validateUserRegistrationInput(req, res, next) {
     try {
         const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         const passwordPattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[£!#€$%^&*¬`@=)(-_:;'{}/\\ \[\].,<>?~|]).{8,}$/
         const phonePattern = /^\+3538\d\d{3,4}\d{4}$/;
-        const namePattern =/^[a-zA-Z ]{2,30}$/;
+        const namePattern = /^[a-zA-Z ]{2,30}$/;
 
-        const {name, email, phone, password, confirmPassword} = req.body;
+        const {fname,lname, email, phone, password, confirmPassword} = req.body;
         const errors = [];
 
-        if (!name || typeof name !== 'string' || name.trim() === '') {
-            errors.push('Username is required and must be a non-empty string.');
+        if (!fname || typeof fname !== 'string' || fname.trim() === '') {
+            errors.push('First name is required and must be a non-empty string.');
+        }
+        if (!lname || typeof lname !== 'string' || lname.trim() === '') {
+            errors.push('Last name is required and must be a non-empty string.');
         }
         if (!email || typeof email !== 'string' || email.trim() === '') {
             errors.push('Email is required and must be a valid email address.');
@@ -67,23 +72,30 @@ function validateUserRegistrationInput (req, res, next) {
             // Sanitize input by trimming whitespace
             const trimmedEmail = email.trim();
             const trimmedPhone = phone.trim();
-            const trimmedName = name.trim();
+            const trimmedName = fname.trim();
+            const trimmedLname = lname.trim();
             // --- Length & Whitelist Constraints ---
 
             if (trimmedName.length < 2 || trimmedName.length > 30) {
-                errors.push('Username must be between 2 and 30 characters.');
+                errors.push('First name must be between 2 and 30 characters.');
+            }
+            if (trimmedLname.length < 2 || trimmedLname.length > 30) {
+                errors.push('Last name must be between 2 and 30 characters.');
             }
 
             if (!namePattern.test(trimmedName)) {
                 errors.push('Username can only contain letters and whitespace characters.');
             }
-
+            if (!namePattern.test(trimmedLname)) {
+                errors.push('Username can only contain letters and whitespace characters.');
+            }
 
             if (!emailPattern.test(trimmedEmail)) {
                 errors.push('Invalid email format.');
             }
             if (!phonePattern.test(trimmedPhone)) {
-            errors.push('Invalid phone number format.');}
+                errors.push('Invalid phone number format.');
+            }
 
             if (!passwordPattern.test(password)) {
                 errors.push('Password must be at least 8 characters long, include uppercase, lowercase, number, and special character.');
@@ -94,20 +106,18 @@ function validateUserRegistrationInput (req, res, next) {
         }
 
 
-
-            if (errors.length > 0) {
-                return res.status(400).send({errors: errors})
-            }
+        if (errors.length > 0) {
+            return res.status(400).send({errors: errors})
+        }
 
         next();
-    } catch(err) {
+    } catch (err) {
         next(err)
     }
 }
 
 
-
-router.post(`/register`, validateUserRegistrationInput, checkDuplicateUser, registerUser );
+router.post(`/register`, validateUserRegistrationInput, checkDuplicateUser, registerUser);
 
 
 const login = async (req, res, next) => {
@@ -120,7 +130,7 @@ const login = async (req, res, next) => {
             accessLevel: user.accessLevel
         }, JWT_PRIVATE_KEY, {algorithm: 'HS256', expiresIn: process.env.JWT_EXPIRY});
 
-        res.status(205).json({name: user.name, accessLevel: user.accessLevel, token: token})
+        res.status(205).json({email: email, accessLevel: user.accessLevel, token: token})
 
 
     } catch (err) {
@@ -129,7 +139,7 @@ const login = async (req, res, next) => {
     }
 }
 
-function validateUserLoginInput (req, res, next) {
+function validateUserLoginInput(req, res, next) {
     try {
         const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
@@ -162,7 +172,7 @@ function validateUserLoginInput (req, res, next) {
         }
 
         next();
-    } catch(err) {
+    } catch (err) {
         next(err)
     }
 }
@@ -196,7 +206,7 @@ const checkPasswordIsMatch = async (req, res, next) => {
     }
 }
 
-router.post("/login", validateUserLoginInput,checkUserExists, checkPasswordIsMatch, login)
+router.post("/login", validateUserLoginInput, checkUserExists, checkPasswordIsMatch, login)
 
 const verifyToken = (req, res) => {
     const authHeader = req.headers.authorization;
