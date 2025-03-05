@@ -20,7 +20,6 @@ class Login extends React.Component
                             "password" : "Password can not be an empty string"
             },
             loggedInSuccessfully : false,
-
         }
     }
 
@@ -63,9 +62,9 @@ class Login extends React.Component
                 const res = await axios.post(`/auth/login`, data)
                 console.log("Successfully logined")
                 console.log(res)
-                const {name, accessLevel, token} = res.data
+                const {email, accessLevel, token} = res.data
                 localStorage.setItem("token", token)
-                localStorage.setItem("username", name)
+                localStorage.setItem("email", email)
                 localStorage.setItem("accessLevel", accessLevel)
 
                 this.setState({loggedInSuccessfully : true})
