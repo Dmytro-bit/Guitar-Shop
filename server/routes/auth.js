@@ -147,7 +147,14 @@ const registerUser = async (req, res, next) => {
         const {lname, fname, email, password, phone} = req.body;
 
         const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
-        let user = new usersModel({fname: fname, lname: lname, email: email, password: hashedPassword, phone: phone});
+        let user = new usersModel({
+            fname: fname,
+            lname: lname,
+            email: email,
+            password: hashedPassword,
+            phone: phone,
+            shopping_cart: []
+        });
         await user.save();
         const {accessLevel, id} = user;
         const token = jwt.sign({email: email, user_id: id, accessLevel: accessLevel}, JWT_PRIVATE_KEY, {
@@ -228,7 +235,9 @@ const verifyLogin = async (req, res, next) => {
 
     const {email, user_id, accessLevel} = user_data
 
-    req.user = await usersModel.findOne({email: email, _id: user_id, accessLevel: accessLevel}, undefined, undefined)
+    req.user_id = user_id
+    req.accessLevel = accessLevel
+    req.user_email = email
     next()
 }
 // ==============================================================================================================
@@ -239,4 +248,4 @@ router.post("/login", validateUserLoginInput, checkUserExists, checkPasswordIsMa
 router.post(`/register`, validateUserRegistrationInput, checkDuplicateUser, registerUser);
 
 
-module.exports = router;
+module.exports = {router, verifyLogin};

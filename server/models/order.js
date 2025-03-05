@@ -7,7 +7,6 @@ const delivery_methods = ["an_post", "collect_from_store"]
 
 const itemSchema = new mongoose.Schema({
     product: {type: mongoose.Schema.Types.ObjectId, ref: 'products', required: true},
-
     quantity: {type: Number, required: true}, // Item quantity in order
     price: {type: Number, required: true} // Price of all Items (Num of products * quantity)
 });
@@ -37,26 +36,11 @@ let orderSchema = new mongoose.Schema(
     }
 )
 
-let shoppingCartSchema = new mongoose.Schema(
-    {
-        user_id: {type: 'ObjectId', ref: 'users', required: true},
-        products: [
-            {
-                product_id: {type: 'ObjectId', ref: 'productSchema', required: true},
-                quantity: {type: Number, required: true, default: 1} // Item quantity in Cart
-            }
-        ]
-    }
-)
-
-
 const itemModel = mongoose.model('items', itemSchema);
 const orderModel = mongoose.model('orders', orderSchema);
-const shoppingCartModel = mongoose.model('shoppingCart', shoppingCartSchema);
 
 
 module.exports = {
     orderModel,
     itemModel,
-    shoppingCartModel
 };

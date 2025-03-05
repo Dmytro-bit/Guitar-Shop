@@ -16,7 +16,7 @@ let userSchema = new mongoose.Schema(
         },
         lname: {
             type: String,
-             required: [true, "Last name is required"],
+            required: [true, "Last name is required"],
             match: [namePattern, "Invalid name format"],
             trim: true
         },
@@ -52,6 +52,12 @@ let userSchema = new mongoose.Schema(
             eircode: {type: String, default: ""}
         },
         profilePhotoUrl: {type: String, get: v => `${MEDIA_DIR}${v}`, default: "../icons/user.png"},
+        shopping_cart: [
+            {
+                product: {type: 'ObjectId', ref: 'products', required: true},
+                quantity: {type: Number, required: true, default: 1} // Item quantity in Cart
+            }
+        ]
     }
 )
 
