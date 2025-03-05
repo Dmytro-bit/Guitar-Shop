@@ -51,7 +51,7 @@ let userSchema = new mongoose.Schema(
             county: {type: String, default: ""},
             eircode: {type: String, default: ""}
         },
-        profilePhotoUrl: {type: String, get: v => `${MEDIA_DIR}${v}`, default: "./public/icons/user.png"},
+        profilePhotoUrl: {type: String, get: v => `${MEDIA_DIR}${v}`, default: "../icons/user.png"},
     }
 )
 
