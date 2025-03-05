@@ -6,40 +6,44 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
 
-const registerUser = async (req, res, next) => {
+// ===========================================================================================================================
+// ============================================ Validation check =============================================================
+// ===========================================================================================================================
+
+function validateUserLoginInput(req, res, next) {
     try {
-        const {lname, fname, email, password, phone} = req.body;
+        const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-        const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
-        let user = new usersModel({fname:fname,lname: lname, email: email, password: hashedPassword, phone: phone});
-        await user.save();
-        const {accessLevel} = user;
-        const token = jwt.sign({email: email, accessLevel: accessLevel}, JWT_PRIVATE_KEY, {
-            algorithm: 'HS256',
-            expiresIn: process.env.JWT_EXPIRY
-        })
 
-        res.status(201).json({email, token, accessLevel})
+        const {email, password} = req.body;
+        const errors = [];
 
+
+        if (!email || typeof email !== 'string' || email.trim() === '') {
+            errors.push('Email is required and must be a valid email address.');
+        }
+        if (!password || typeof password !== 'string') {
+            errors.push('Password is required.');
+        }
+
+
+        if (errors.length === 0) {
+            const trimmedEmail = email.trim();
+
+            if (!emailPattern.test(trimmedEmail)) {
+                errors.push('Invalid email format.');
+            }
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).send({errors: errors})
+        }
+
+        next();
     } catch (err) {
         next(err)
     }
 }
-
-const checkDuplicateUser = async (req, res, next) => {
-    try {
-        const {email} = req.body;
-        let user = await usersModel.findOne({email: email}, undefined, undefined)
-        if (user) {
-            return res.status(400).send({message: `User already exists`})
-        }
-        next()
-
-    } catch (error) {
-        next(error)
-    }
-}
-
 
 
 function validateUserRegistrationInput(req, res, next) {
@@ -49,7 +53,7 @@ function validateUserRegistrationInput(req, res, next) {
         const phonePattern = /^\+3538\d\d{3,4}\d{4}$/;
         const namePattern = /^[a-zA-Z ]{2,30}$/;
 
-        const {fname,lname, email, phone, password, confirmPassword} = req.body;
+        const {fname, lname, email, phone, password, confirmPassword} = req.body;
         const errors = [];
 
         if (!fname || typeof fname !== 'string' || fname.trim() === '') {
@@ -117,16 +121,15 @@ function validateUserRegistrationInput(req, res, next) {
 }
 
 
-router.post(`/register`, validateUserRegistrationInput, checkDuplicateUser, registerUser);
-
-
 const login = async (req, res, next) => {
     try {
         const email = req.body.email;
         const user = req.user;
+        const user_id = req.user.id
 
         const token = jwt.sign({
             email: email,
+            user_id: user_id,
             accessLevel: user.accessLevel
         }, JWT_PRIVATE_KEY, {algorithm: 'HS256', expiresIn: process.env.JWT_EXPIRY});
 
@@ -139,44 +142,44 @@ const login = async (req, res, next) => {
     }
 }
 
-function validateUserLoginInput(req, res, next) {
+const registerUser = async (req, res, next) => {
     try {
-        const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        const {lname, fname, email, password, phone} = req.body;
 
+        const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
+        let user = new usersModel({fname: fname, lname: lname, email: email, password: hashedPassword, phone: phone});
+        await user.save();
+        const {accessLevel, id} = user;
+        const token = jwt.sign({email: email, user_id: id, accessLevel: accessLevel}, JWT_PRIVATE_KEY, {
+            algorithm: 'HS256',
+            expiresIn: process.env.JWT_EXPIRY
+        })
 
-        const {email, password} = req.body;
-        const errors = [];
+        res.status(201).json({email, token, accessLevel})
 
-
-        if (!email || typeof email !== 'string' || email.trim() === '') {
-            errors.push('Email is required and must be a valid email address.');
-        }
-        if (!password || typeof password !== 'string') {
-            errors.push('Password is required.');
-        }
-
-
-        if (errors.length === 0) {
-            // Sanitize input by trimming whitespace
-            const trimmedEmail = email.trim();
-
-            // --- Length & Whitelist Constraints ---
-
-            if (!emailPattern.test(trimmedEmail)) {
-                errors.push('Invalid email format.');
-            }
-        }
-
-        if (errors.length > 0) {
-            return res.status(400).send({errors: errors})
-        }
-
-        next();
     } catch (err) {
         next(err)
     }
 }
 
+
+// ======================================================================================================================
+// ============================================ Logic Check =============================================================
+// ======================================================================================================================
+
+const checkDuplicateUser = async (req, res, next) => {
+    try {
+        const {email} = req.body;
+        let user = await usersModel.findOne({email: email}, undefined, undefined)
+        if (user) {
+            return res.status(400).send({message: `User already exists`})
+        }
+        next()
+
+    } catch (error) {
+        next(error)
+    }
+}
 
 const checkUserExists = async (req, res, next) => {
     try {
@@ -206,9 +209,7 @@ const checkPasswordIsMatch = async (req, res, next) => {
     }
 }
 
-router.post("/login", validateUserLoginInput, checkUserExists, checkPasswordIsMatch, login)
-
-const verifyToken = (req, res) => {
+const verifyLogin = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -216,13 +217,26 @@ const verifyToken = (req, res) => {
     }
 
     const token = authHeader.split(" ")[1];
+    let user_data
 
     jwt.verify(token, JWT_PRIVATE_KEY, (err, decoded) => {
         if (err) {
             return res.status(403).json({error: "Forbidden"})
         }
-        res.status(200).json({message: "Token verified"});
+        user_data = decoded;
     })
+
+    const {email, user_id, accessLevel} = user_data
+
+    req.user = await usersModel.findOne({email: email, _id: user_id, accessLevel: accessLevel}, undefined, undefined)
+    next()
 }
+// ==============================================================================================================
+// ============================================ URL =============================================================
+// ==============================================================================================================
+
+router.post("/login", validateUserLoginInput, checkUserExists, checkPasswordIsMatch, login)
+router.post(`/register`, validateUserRegistrationInput, checkDuplicateUser, registerUser);
+
 
 module.exports = router;
