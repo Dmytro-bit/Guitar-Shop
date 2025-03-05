@@ -40,12 +40,18 @@ class Account extends React.Component {
             console.log(err);
         }
     }
+
     loadUserData = async () => {
+        const email = localStorage.getItem("email");
+        if (!email || email === "null" || email === "undefined") {
+            console.log("No valid email found; user is not logged in.");
+            return;
+        }
         try {
-            const email = localStorage.getItem("email");
+
             console.log(email)
             const res = await axios.get(`user/getProfile`, {params: {email}})
-            console.log(res.data)
+            console.log(res.data.user)
             const userData = res.data.user; // use the nested user object
             this.setState({
                 user: {
@@ -78,7 +84,7 @@ class Account extends React.Component {
         console.log("Address Set: "+noEmptyFields)
         if (noEmptyFields)
             this.setState({ isAddressSet: true });
-
+        return noEmptyFields
     }
     closeAccount = () => {
         this.setState({isEditable: false})
@@ -117,12 +123,27 @@ class Account extends React.Component {
         })
     }
 
-    handleAddressSave = () => {
+    handleAddressSave = async () => {
         const noEmptyFields = this.checkEmptyAddress()
-        if (noEmptyFields)
+        if (noEmptyFields){
             this.setState({isSettingAddressEnabled : false })
 
-        this.setState({addressWasSubmittedOnce : true})
+            try {
+                const {fline, sline, city, county, eircode} = this.state.user.address;
+                const email = this.state.user.email;
+                console.log("email sent to patch", email);
+                const sentData = {email: email, fline: fline, sline: sline, city: city, county: county, eircode: eircode};
+                console.log("sentData", sentData);
+                const res = await axios.patch(`/user/editAddress`, sentData)
+                const address = res.data.user.address;
+                console.log("address is ", address)
+            } catch (e){
+                console.log(e)
+            }
+
+            this.setState({addressWasSubmittedOnce : true})
+        }
+
     }
 
     handleFileChange = async (e) => {
@@ -132,6 +153,7 @@ class Account extends React.Component {
             try {
                 const formData = new FormData();
                 const email = localStorage.getItem("email");
+
                 formData.append('file', file)
                 formData.append('email', email)
                 const res = await axios.patch('user/upload', formData, {headers: {"Content-Type": "multipart/form-data"}})
@@ -147,6 +169,9 @@ class Account extends React.Component {
             }
         }
     }
+
+
+
 
     render() {
         return (

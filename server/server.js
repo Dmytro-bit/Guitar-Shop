@@ -35,13 +35,14 @@ app.use(`/auth`, require('./routes/auth'));
 app.use(``, require('./routes/product'));
 app.use(`/user`, require('./routes/user'));
 app.use(`/getProfile`, require('./routes/user'));
-
+app.use('/editAddress', require('./routes/user'));
 
 // uploading files
 const appPath = path.join(__dirname,"..","client/build")
 
 app.use(express.static(path.join(appPath)))
 app.use('/uploads', express.static('uploads'));
+
 // error-handling
 
 app.use((req, res, next) => {next(createHttpError(404))});

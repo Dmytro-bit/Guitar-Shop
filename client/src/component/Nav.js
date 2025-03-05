@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, Link, Redirect } from "react-router-dom";
+import {NavLink, Link} from "react-router-dom";
 
 import Account from "./Account"
 
@@ -10,7 +10,7 @@ class Nav extends React.Component {
     constructor(props)
     {
         super(props)
-        
+
         this.state = {
             isMenuActive : false,
             isRegistered : false,
@@ -20,7 +20,9 @@ class Nav extends React.Component {
 
     componentDidMount = () =>
     {
-        localStorage.getItem("token") == null ? this.setState({isRegistered : false}) : this.setState({isRegistered : true})
+        const token = localStorage.getItem("token");
+        console.log(token)
+        token === "null"? this.setState({isRegistered : false}) : this.setState({isRegistered : true})
         // if(localStorage.getItem("token") === "undefined")
         // {
         //     this.setState({isRegistered: false})
@@ -70,7 +72,7 @@ class Nav extends React.Component {
                     <li><NavLink to="/products" className={({ isActive }) => isActive ? "active" : "inactive"}>PRODUCTS</NavLink></li>
                     <li><NavLink to="/about" className={({ isActive }) => isActive ? "active" : "inactive"}>ABOUT</NavLink></li>
                 </ul>
-                <div className="logo-mobile"><b>GUITAR HERO</b></div>   
+                <div className="logo-mobile"><b>GUITAR HERO</b></div>
                 <Link to={"/login"} style={{display : this.state.isRegistered ? "none" : "flex"}} id="signup-button-link"><button id="signup-button">SIGN UP</button></Link>
                 <div id="icons-container" style={{display : this.state.isRegistered ? "flex" : "none"}}>
                     <div id="user-container">
