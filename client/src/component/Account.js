@@ -226,6 +226,7 @@ class Account extends React.Component {
                                 <p className="user-account-cred-title"><u>Address :</u></p>
                                 <p className="user-account-cred">
                                     {this.state.user.address.fline},<br/>
+                                    {this.state.user.address.sline},<br/>
                                     {this.state.user.address.city},<br/>
                                     {this.state.user.address.county},<br/>
                                     {this.state.user.address.eircode}
