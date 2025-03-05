@@ -22,7 +22,7 @@ app.use(require(`body-parser`).json())
 const createHttpError = require("http-errors");
 
 
-const port = process.env.PORT || 5001;
+const port = process.env.PORT || 5000;
 // Port
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
@@ -31,6 +31,7 @@ app.listen(port, () => {
 // Routers
 
 app.use(`/auth`, require('./routes/auth'));
+app.use(``, require('./routes/product'));
 
 // error-handling
 
