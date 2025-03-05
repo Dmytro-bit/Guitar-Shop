@@ -40,6 +40,7 @@ class Account extends React.Component {
             console.log(err);
         }
     }
+
     loadUserData = async () => {
         const email = localStorage.getItem("email");
         if (!email || email === "null" || email === "undefined") {
@@ -83,7 +84,7 @@ class Account extends React.Component {
         console.log("Address Set: "+noEmptyFields)
         if (noEmptyFields)
             this.setState({ isAddressSet: true });
-
+        return noEmptyFields
     }
     closeAccount = () => {
         this.setState({isEditable: false})
@@ -122,12 +123,27 @@ class Account extends React.Component {
         })
     }
 
-    handleAddressSave = () => {
+    handleAddressSave = async () => {
         const noEmptyFields = this.checkEmptyAddress()
-        if (noEmptyFields)
+        if (noEmptyFields){
             this.setState({isSettingAddressEnabled : false })
 
-        this.setState({addressWasSubmittedOnce : true})
+            try {
+                const {fline, sline, city, county, eircode} = this.state.user.address;
+                const email = this.state.user.email;
+                console.log("email sent to patch", email);
+                const sentData = {email: email, fline: fline, sline: sline, city: city, county: county, eircode: eircode};
+                console.log("sentData", sentData);
+                const res = await axios.patch(`/user/editAddress`, sentData)
+                const address = res.data.user.address;
+                console.log("address is ", address)
+            } catch (e){
+                console.log(e)
+            }
+
+            this.setState({addressWasSubmittedOnce : true})
+        }
+
     }
 
     handleFileChange = async (e) => {
@@ -153,6 +169,9 @@ class Account extends React.Component {
             }
         }
     }
+
+
+
 
     render() {
         return (
