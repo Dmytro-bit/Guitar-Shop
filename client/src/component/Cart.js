@@ -13,11 +13,11 @@ class Cart extends React.Component {
         this.state = {
             cartProducts: [],
             address : {
-                fline : "",
-                sline : "",
-                town : "",
-                county: "",
-                eircode: "",
+                fline : "asd",
+                sline : "asd",
+                town : "asd",
+                county: "asd",
+                eircode: "asd",
             },
             addressParse : {
                 "fline" : "First Line",
@@ -59,6 +59,7 @@ class Cart extends React.Component {
 
     async componentDidMount() {
         this.setState({isAddressEditable : !this.checkEmptyAddress()})
+        this.setState({isAddressSet : this.checkEmptyAddress()})
         try {
             const res = await axios.get("/shopping-cart", {
                 headers: {
@@ -202,7 +203,7 @@ class Cart extends React.Component {
                         <p className="cart-delivery-address-error-message" style={{display : (this.state.submittedOnce && !this.state.isAddressSet) ? "flex" : "none"}}>All address fields must be filled</p>
                     </div>
                     <div className="cart-delivery-address-image-container">
-                        <img src="../img/truck.png" className="cart-delivery-address-image"/>
+                        <img src="../img/truck.png" className="cart-delivery-address-image" alt="truck pictute"/>
                     </div>
                 </div>
             </>
