@@ -20,7 +20,6 @@ class Products extends React.Component {
                 name: "",
                 price: 0,
                 rating: 0,
-                inStock: true,
                 quantity: 0,
                 parameters: {}
             },
@@ -107,8 +106,8 @@ class Products extends React.Component {
                             <p className="product-shipping">Free Shipping</p>
                             <p
                                 className="product-stock"
-                                style={{color: this.state.product.inStock ? "green" : "red"}}
-                            >{this.state.product.inStock ? "In Stock" : "Not In Stock"}</p>
+                                style={{color: this.state.product.quantity > 0 ? "green" : "red"}}
+                            >{this.state.product.quantity > 0 ? "In Stock" : "Not In Stock"}</p>
                         </div>
                         <div className="product-rating">
                             <img src="../img/star_border.png" className="rating-star-border" alt="rating"></img>
@@ -139,7 +138,7 @@ class Products extends React.Component {
                                 </button>
                             </div>
                             <div className="product-buy">
-                                <Link to="/paypal" className="product-buy-button">BUY</Link>
+                                <Link to="/cart" className="product-buy-button">ADD TO CART</Link>
                             </div>
                             <div className="product-icons">
                                 <img src="../img/shopping-cart.png" alt="cart"></img>
