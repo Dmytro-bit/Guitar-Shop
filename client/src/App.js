@@ -14,15 +14,26 @@ import axios from "axios";
 
 axios.defaults.baseURL = SERVER_HOST;
 
-if (typeof localStorage.accessLevel === "undefined")
+if (typeof localStorage.accessLevel === "undefined" || localStorage.accessLevel === "null" || localStorage.accessLevel === 0)
 {
-  localStorage.name = "GUEST"
   localStorage.accessLevel = ACCESS_LEVEL_GUEST
   localStorage.token = null
-  localStorage.profilePhoto = null
+  localStorage.email = null
 }
 
-axios.interceptors.request.use(
+axios.interceptors.request.use(config => {
+  const token = localStorage.getItem("token");
+  console.log("token in App.js interceptor", token);
+  const protectedApi = config.url.includes("user/");
+  console.log("protectedApi", protectedApi);
+  const configUrl = config.url
+  console.log("configUrl ", configUrl);
+  if (token && protectedApi) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+})
+axios.interceptors.response.use(
     response => response,
     error => {
         if (error.response) {
@@ -33,7 +44,16 @@ axios.interceptors.request.use(
               break;
             case 401:
               //  401 Unauthorized
-              console.error('Unauthorized:', 'User is not authenticated.');
+                const url = error.response.config.url
+                console.log("response url ", url)
+                if(error.response.config.url.includes("user/")){
+                  localStorage.removeItem("token")
+                  localStorage.removeItem("accessLevel")
+                  localStorage.removeItem("email")
+                  window.location.reload();
+                }else{
+                  console.error('Unauthorized:', 'User is not authenticated.');
+                }
               break;
             case 403:
               //  403 Forbidden
@@ -52,13 +72,17 @@ axios.interceptors.request.use(
               console.error(`Error ${error.response.status}:`, error.response.data);
           }
         } else if (error.request) {
-          console.log('No response received: '.error.request);
+          console.log('No response received: ', error.request);
+          const url = error.response.config.url
+          console.log("response url ", url)
         } else {
           console.log('Axios error', error.message);
         }
       return Promise.reject(error);
     }
 )
+
+
 class App extends React.Component {
   render() {
     return (

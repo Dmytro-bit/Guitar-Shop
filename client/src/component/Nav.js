@@ -53,10 +53,8 @@ class Nav extends React.Component {
     handleLogOut = () =>
     {
         localStorage.removeItem("token")
-        localStorage.removeItem("name")
         localStorage.removeItem("accessLevel")
         localStorage.removeItem("email")
-        localStorage.removeItem("profilePhoto")
 
         this.setState({isRegistered : false})
     }
