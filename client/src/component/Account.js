@@ -41,6 +41,7 @@ class Account extends React.Component {
 
     loadUserData = async () => {
         const email = localStorage.getItem("email");
+        const token = localStorage.getItem("token");
         if (!email || email === "null" || email === "undefined") {
             console.log("No valid email found; user is not logged in.");
             return;
@@ -48,7 +49,7 @@ class Account extends React.Component {
         try {
 
             console.log(email)
-            const res = await axios.get(`user/getProfile`, {params: {email}})
+            const res = await axios.get(`/user/getProfile`, {params: {email}})
             console.log(res.data.user)
             const userData = res.data.user; // use the nested user object
             this.setState({
@@ -71,7 +72,7 @@ class Account extends React.Component {
             this.checkEmptyAddress()
 
         } catch (err) {
-            console.log(err)
+            console.log(err.response)
         }
     }
 
