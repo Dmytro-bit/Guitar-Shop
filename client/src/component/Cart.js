@@ -12,6 +12,21 @@ class Cart extends React.Component {
 
         this.state = {
             cartProducts: [],
+            address : {
+                fline : "Test Address",
+                sline : "Test Street",
+                town : "Testerstown",
+                county: "Countest",
+                eircode: "T1E51",
+            },
+            addressParse : {
+                "fline" : "First Line",
+                "sline" : "Second Line",
+                "town" : "Town",
+                "county" : "County",
+                "eircode" : "Eircode"
+            },
+            isAddressEditable: false,
             total: 0,
         }
     }
@@ -50,6 +65,22 @@ class Cart extends React.Component {
             console.error("Error fetching products:", error);
         }
     };
+
+    handleIsAddressEdittable = () => {
+        this.setState({isAddressEditable: !this.state.isAddressEditable});
+    }
+
+    handleDeliveryAddressSave = () => {
+        const newAddress = {
+            fline : document.getElementById("cart-delivery-address-fline").value,
+            sline : document.getElementById("cart-delivery-address-sline").value,
+            town : document.getElementById("cart-delivery-address-town").value,
+            county : document.getElementById("cart-delivery-address-county").value,
+            eircode : document.getElementById("cart-delivery-address-eircode").value,
+        }
+
+        this.setState({address : newAddress});
+    }
 
     render() {
         return (
@@ -132,6 +163,22 @@ class Cart extends React.Component {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <p className="cart-delivery-address-section-title">Delivery Address</p>
+                <div className="cart-delivery-address-section-container">
+                    <div className="cart-delivery-address-container">
+                        {Object.keys(this.state.address).map((line, index) => (
+                            <div className="cart-delivery-address-field-container" key={index}>
+                                <p className="cart-delivery-address-field-title">{this.state.addressParse[line]}</p>
+                                <input type="text" value={this.state.address[line]} id={`cart-delivery-address-${line}`} className={`cart-delivery-address-field ${this.state.isAddressEditable ? "edit-address" : ""}`}
+                                       disabled={this.state.isAddressEditable ? false : true} onChange={this.handleDeliveryAddressSave}/>
+                            </div>
+                        ))}
+                        <button className="cart-delivery-address-edit-button" onClick={this.handleIsAddressEdittable}>{this.state.isAddressEditable ? "SAVE" : "EDIT"}</button>
+                    </div>
+                    <div className="cart-delivery-address-image-container">
+                        <img src="../img/truck.png" className="cart-delivery-address-image"/>
                     </div>
                 </div>
             </>

@@ -210,7 +210,7 @@ class Account extends React.Component {
                     )}
                     <div className="user-account-cred-container">
                         <p className="user-account-cred-title"><u>Email :</u></p>
-                        <input type="text" defaultValue={this.state.user.email} disabled={!this.state.isEditable}
+                        <input type="text" value={this.state.user.email} disabled={!this.state.isEditable}
                                className="user-account-cred"></input>
                     </div>
                     <div className="user-account-cred-container">
