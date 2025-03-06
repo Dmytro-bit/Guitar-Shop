@@ -3,8 +3,6 @@ import axios from "axios";
 
 import "../styles/account.scss"
 
-import SERVER_HOST from "../config/global_constants"
-
 class Account extends React.Component {
     constructor(props) {
         super(props)
@@ -181,7 +179,7 @@ class Account extends React.Component {
                     this.closeAccount(this.clickOnPlaceholder)
                 }} className="user-account-close"/>
                 <div className="user-account-header">
-                    <div className="user-account-photo">
+                    <div className="user-account-photo-container">
                         <input id="imageHandler" className={"hidden-input"} ref={this.imageHandlerRef}
                                onChange={this.handleFileChange} type={"file"}/> <img
                         src={this.state.user.profilePhotoUrl} onClick={this.clickOnPlaceholder}
@@ -197,12 +195,12 @@ class Account extends React.Component {
                         <div>
                             <div className="user-account-cred-container">
                                 <p className="user-account-cred-title"><u>First Name :</u></p>
-                                <input type="text" value={this.state.user.fname} disabled={!this.state.isEditable}
+                                <input type="text" defaultValue={this.state.user.fname} disabled={!this.state.isEditable}
                                        className="user-account-cred"></input>
                             </div>
                             <div className="user-account-cred-container">
                                 <p className="user-account-cred-title"><u>Last Name :</u></p>
-                                <input type="text" value={this.state.user.lname} disabled={!this.state.isEditable}
+                                <input type="text" defaultValue={this.state.user.lname} disabled={!this.state.isEditable}
                                        className="user-account-cred"></input>
                             </div>
                         </div>
@@ -212,12 +210,12 @@ class Account extends React.Component {
                     )}
                     <div className="user-account-cred-container">
                         <p className="user-account-cred-title"><u>Email :</u></p>
-                        <input type="text" value={this.state.user.email} disabled={!this.state.isEditable}
+                        <input type="text" defaultValue={this.state.user.email} disabled={!this.state.isEditable}
                                className="user-account-cred"></input>
                     </div>
                     <div className="user-account-cred-container">
                         <p className="user-account-cred-title"><u>Phone :</u></p>
-                        <input type="text" value={this.state.user.phone} disabled={!this.state.isEditable}
+                        <input type="text" defaultValue={this.state.user.phone} disabled={!this.state.isEditable}
                                className="user-account-cred"></input>
                     </div>
                     <div className="user-account-cred-container" style={{display : this.state.isAddressSet ? "flex" : "none"}}>
