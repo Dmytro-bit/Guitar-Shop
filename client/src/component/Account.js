@@ -168,9 +168,6 @@ class Account extends React.Component {
         }
     }
 
-
-
-
     render() {
         return (
             <div className={`user-account-container ${this.props.isActive ? "active" : "inactive"}`}>

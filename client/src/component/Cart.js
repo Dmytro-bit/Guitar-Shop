@@ -13,11 +13,11 @@ class Cart extends React.Component {
         this.state = {
             cartProducts: [],
             address : {
-                fline : "Test Address",
-                sline : "Test Street",
-                town : "Testerstown",
-                county: "Countest",
-                eircode: "T1E51",
+                fline : "",
+                sline : "",
+                town : "",
+                county: "",
+                eircode: "",
             },
             addressParse : {
                 "fline" : "First Line",
@@ -27,9 +27,19 @@ class Cart extends React.Component {
                 "eircode" : "Eircode"
             },
             isAddressEditable: false,
+            isAddressSet : false,
+            submittedOnce : false,
             total: 0,
         }
     }
+    checkEmptyAddress = () => {
+        const noEmptyFields = Object.keys(this.state.address).map(key =>
+            this.state.address[key].trim()).every(value => value !== "")
+
+        console.log("Address Set: "+noEmptyFields)
+        return noEmptyFields
+    }
+
 
     handleQuantityIncrease = (i) => {
         const updatedCartProducts = [...this.state.cartProducts];
@@ -48,6 +58,7 @@ class Cart extends React.Component {
     }
 
     async componentDidMount() {
+        this.setState({isAddressEditable : !this.checkEmptyAddress()})
         try {
             const res = await axios.get("/shopping-cart", {
                 headers: {
@@ -66,11 +77,18 @@ class Cart extends React.Component {
         }
     };
 
-    handleIsAddressEdittable = () => {
-        this.setState({isAddressEditable: !this.state.isAddressEditable});
+    handleIsAddressEditable = () => {
+        if(this.checkEmptyAddress()) {
+            this.setState({isAddressEditable: !this.state.isAddressEditable});
+            this.setState({ isAddressSet: true });
+        }
+        else
+            this.setState({isAddressSet: false})
+        this.setState({submittedOnce: true});
     }
 
-    handleDeliveryAddressSave = () => {
+    handleDeliveryAddressSave = (e) => {
+        e.preventDefault()
         const newAddress = {
             fline : document.getElementById("cart-delivery-address-fline").value,
             sline : document.getElementById("cart-delivery-address-sline").value,
@@ -78,7 +96,6 @@ class Cart extends React.Component {
             county : document.getElementById("cart-delivery-address-county").value,
             eircode : document.getElementById("cart-delivery-address-eircode").value,
         }
-
         this.setState({address : newAddress});
     }
 
@@ -168,14 +185,21 @@ class Cart extends React.Component {
                 <p className="cart-delivery-address-section-title">Delivery Address</p>
                 <div className="cart-delivery-address-section-container">
                     <div className="cart-delivery-address-container">
+                        <p className="cart-delivery-address-unset-message" style={{display : (this.state.isAddressSet || this.state.submittedOnce) ? "none" : "flex"}}>
+                            You haven't set your delivery address yet. <b>Let's fix it now!</b>
+                        </p>
                         {Object.keys(this.state.address).map((line, index) => (
                             <div className="cart-delivery-address-field-container" key={index}>
                                 <p className="cart-delivery-address-field-title">{this.state.addressParse[line]}</p>
-                                <input type="text" value={this.state.address[line]} id={`cart-delivery-address-${line}`} className={`cart-delivery-address-field ${this.state.isAddressEditable ? "edit-address" : ""}`}
-                                       disabled={this.state.isAddressEditable ? false : true} onChange={this.handleDeliveryAddressSave}/>
+                                <input type="text" value={this.state.address[line]} id={`cart-delivery-address-${line}`}
+                                       className={`cart-delivery-address-field ${this.state.isAddressEditable ? "edit-address" : ""}`}
+                                       disabled={!(this.state.isAddressEditable || !this.state.isAddressSet)}
+                                       onChange={(e) => this.handleDeliveryAddressSave(e)}/>
                             </div>
                         ))}
-                        <button className="cart-delivery-address-edit-button" onClick={this.handleIsAddressEdittable}>{this.state.isAddressEditable ? "SAVE" : "EDIT"}</button>
+                        <button className="cart-delivery-address-edit-button"
+                                onClick={this.handleIsAddressEditable}>{this.state.isAddressEditable || !this.state.isAddressSet ? "SAVE" : "EDIT"}</button>
+                        <p className="cart-delivery-address-error-message" style={{display : (this.state.submittedOnce && !this.state.isAddressSet) ? "flex" : "none"}}>All address fields must be filled</p>
                     </div>
                     <div className="cart-delivery-address-image-container">
                         <img src="../img/truck.png" className="cart-delivery-address-image"/>

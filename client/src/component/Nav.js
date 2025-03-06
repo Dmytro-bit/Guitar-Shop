@@ -23,12 +23,6 @@ class Nav extends React.Component {
         const token = localStorage.getItem("token");
         console.log(token)
         token === "null"? this.setState({isRegistered : false}) : this.setState({isRegistered : true})
-        // if(localStorage.getItem("token") === "undefined")
-        // {
-        //     this.setState({isRegistered: false})
-        // }
-        // else
-        //     this.setState({isRegistered : true})
     }
 
     showMobileNavBar = () => {
