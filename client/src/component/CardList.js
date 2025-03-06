@@ -33,6 +33,8 @@ class CardList extends React.Component {
                         _id={product._id}
                         images={product.images}
                         name={product.name}
+                        brand={product.brand}
+                        model={product.model}
                         price={product.price}
                         inStock={product.quantity > 0}
                         parameters={product.parameters}
