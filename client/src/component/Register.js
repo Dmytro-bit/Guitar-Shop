@@ -15,7 +15,8 @@ class Register extends React.Component
         this.state =
         {
             wasSubmittedOnce : false,
-            name: "",
+            fname: "",
+            lname: "",
             email : "",
             password: "",
             phone: "",
@@ -54,10 +55,15 @@ class Register extends React.Component
         return pattern.test(String(this.state.phone))
     }
 
-    validateName = () =>
+    validateFname = () =>
     {
-        const pattern =/^[a-zA-Z ]{2,30}$/;
-        return pattern.test(String(this.state.name))
+        const pattern =/^[a-zA-Z]{2,30}$/;
+        return pattern.test(String(this.state.fname))
+    }
+    validateLname = () =>
+    {
+        const pattern =/^[a-zA-Z]{2,30}$/;
+        return pattern.test(String(this.state.lname))
     }
 
     validateConfirmPassword = () =>
@@ -68,7 +74,8 @@ class Register extends React.Component
     validate = () =>
     {
         return {
-            name: this.validateName(),
+            fname: this.validateFname(),
+            lname: this.validateLname(),
             email: this.validateEmail(),
             phone: this.validatePhone(),
             password: this.validatePassword(),
@@ -78,11 +85,23 @@ class Register extends React.Component
 
     formData = () =>
     {
+        // const nameParts = this.state.name.split(' ');
+        // let fname = "";
+        // let lname ="";
+        // if (nameParts.length > 2) {
+        //     fname = nameParts[0];
+        //     lname = nameParts.slice(1).join(' ');
+        // } else if (nameParts.length === 2) {
+        //     fname = nameParts[0];
+        //     lname = nameParts[1];
+        // }
         return {
-            name: this.state.name,
+            fname: this.state.fname,
+            lname: this.state.lname,
             email: this.state.email,
             phone: this.state.phone,
-            password: this.state.password
+            password: this.state.password,
+            confirmPassword: this.state.confirmPassword
         }
     }
 
@@ -99,10 +118,10 @@ class Register extends React.Component
             try {
                 const res = await axios.post(`auth/register`, inputs)
                 if (res.status === 201){
-                    const{name, token, accessLevel} = res.data
+                    const{email, token, accessLevel} = res.data
 
                     localStorage.setItem("token", token)
-                    localStorage.setItem("username", name)
+                    localStorage.setItem("email", email)
                     localStorage.setItem("accessLevel", accessLevel)
 
                     this.setState({ registrationSuccessfull : true })
@@ -120,6 +139,7 @@ class Register extends React.Component
     render()
     {
         const formInputsState = this.validate()
+        console.log(formInputsState)
 
         if (this.state.registrationSuccessfull)
             return <Navigate to="/" />;
@@ -132,69 +152,90 @@ class Register extends React.Component
                 <form id="register" onSubmit={this.handleSubmit}>
                     <>
                         <div className="register-cred-container">
-                            <label htmlFor="name">Name:</label><br/>
-                            <input type="text" id="register-name" name="name" onChange={this.handleChange} className={!formInputsState.name && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                            <label htmlFor="fname">First Name:</label><br/>
+                            <input type="text" id="register-first-name" name="fname" onChange={this.handleChange}
+                                   className={!formInputsState.fname && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
                         </div>
                         <div className="error">
-                            {!formInputsState.name && this.state.wasSubmittedOnce &&
-                            (
-                                <i><p className="error-message">
-                                    {this.state.errorMessage["name"]}
-                                </p></i>
-                            )}
+                            {!formInputsState.fname && this.state.wasSubmittedOnce &&
+                                (
+                                    <i><p className="error-message">
+                                        {this.state.errorMessage["name"]}
+                                    </p></i>
+                                )}
+                        </div>
+                        <div className="register-cred-container">
+                            <label htmlFor="lname">Last Name:</label><br/>
+                            <input type="text" id="register-last-name" name="lname" onChange={this.handleChange}
+                                   className={!formInputsState.lname && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                        </div>
+                        <div className="error">
+                            {!formInputsState.lname && this.state.wasSubmittedOnce &&
+                                (
+                                    <i><p className="error-message">
+                                        {this.state.errorMessage["name"]}
+                                    </p></i>
+                                )}
                         </div>
                         <div className="register-cred-container">
                             <label htmlFor="email">Email:</label><br/>
-                            <input type="text" id="register-email" name="email" onChange={this.handleChange} className={!formInputsState.email && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                            <input type="text" id="register-email" name="email" onChange={this.handleChange}
+                                   className={!formInputsState.email && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
                         </div>
                         <div className="error">
                             {!formInputsState.email && this.state.wasSubmittedOnce &&
-                            (
-                                <i><p className="error-message">
-                                    {this.state.errorMessage["email"]}
-                                </p></i>
-                            )}
+                                (
+                                    <i><p className="error-message">
+                                        {this.state.errorMessage["email"]}
+                                    </p></i>
+                                )}
                         </div>
                         <div className="register-cred-container">
                             <label htmlFor="phone">Phone:</label><br/>
-                            <input type="text" id="register-phone" name="phone" onChange={this.handleChange} className={!formInputsState.phone && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                            <input type="text" id="register-phone" name="phone" onChange={this.handleChange}
+                                   className={!formInputsState.phone && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
                         </div>
                         <div className="error">
                             {!formInputsState.phone && this.state.wasSubmittedOnce &&
-                            (
-                                <i><p className="error-message">
-                                    {this.state.errorMessage["phone"]}
-                                </p></i>
-                            )}
+                                (
+                                    <i><p className="error-message">
+                                        {this.state.errorMessage["phone"]}
+                                    </p></i>
+                                )}
                         </div>
                         <div className="register-cred-container">
                             <label htmlFor="password">Password:</label><br/>
-                            <input type="password" id="register-password" name="password" onChange={this.handleChange} className={!formInputsState.password && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                            <input type="password" id="register-password" name="password" onChange={this.handleChange}
+                                   className={!formInputsState.password && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
                         </div>
                         <div className="error">
                             {!formInputsState.password && this.state.wasSubmittedOnce &&
-                            (
-                                <i><p className="error-message">
-                                    {this.state.errorMessage["password"]}
-                                </p></i>
-                            )}
+                                (
+                                    <i><p className="error-message">
+                                        {this.state.errorMessage["password"]}
+                                    </p></i>
+                                )}
                         </div>
                         <div className="register-cred-container">
                             <label htmlFor="confirm-password">Confirm Password:</label><br/>
-                            <input type="password" id="register-confirm-password" name="confirmPassword" onChange={this.handleChange} className={!formInputsState.confirmPassword && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
+                            <input type="password" id="register-confirm-password" name="confirmPassword"
+                                   onChange={this.handleChange}
+                                   className={!formInputsState.confirmPassword && this.state.wasSubmittedOnce ? 'invalid' : ''}></input><br/>
                         </div>
                         <div className="error">
                             {!formInputsState.confirmPassword && this.state.wasSubmittedOnce &&
-                            (
-                                <i><p className="error-message">
-                                    {this.state.errorMessage["confirmPassword"]}
-                                </p></i>
-                            )}
+                                (
+                                    <i><p className="error-message">
+                                        {this.state.errorMessage["confirmPassword"]}
+                                    </p></i>
+                                )}
                         </div>
                     </>
                     <input type="submit" value="SIGN UP"/>
                 </form>
-            </div></div></div>
+            </div>
+            </div>
+            </div>
         )
     }
 }

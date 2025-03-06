@@ -1,6 +1,7 @@
 import React from "react";
 
 import Nav from "./Nav"
+import CatalogCardList from "./CatalogCardList"
 
 import "../styles/home.scss"
 
@@ -36,7 +37,15 @@ class Home extends React.Component
                     </video>
                     <div className="video-overlay"></div>
                 </div>
-            </div></>
+            </div>
+           <div className="separator">Check out our stock!</div>
+               <div className="catalog-container">
+                   <div className="catalog-title-container">
+                       <p className="catalog-title">OUR PRODUCTS</p>
+                   </div>
+                   <CatalogCardList/>
+               </div>
+           </>
         )
     }
 

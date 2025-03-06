@@ -20,7 +20,6 @@ class Login extends React.Component
                             "password" : "Password can not be an empty string"
             },
             loggedInSuccessfully : false,
-
         }
     }
 
@@ -56,16 +55,22 @@ class Login extends React.Component
 
         if(Object.keys(formInputsState).every(key => formInputsState[key]))
         {
-            const {email, password} = this.state
-            const data = {email:email, password:password}
+
             //Axios post request
             try{
+                const {email, password} = this.state
+                const data = {email:email, password:password}
                 const res = await axios.post(`/auth/login`, data)
                 console.log("Successfully logined")
                 console.log(res)
-                const {name, accessLevel, token} = res.data
+                const accessLevel = res.data.accessLevel;
+                const token = res.data.token;
+                const resultEmail = res.data.email
+                console.log(accessLevel)
+                console.log(token)
+                console.log(resultEmail)
                 localStorage.setItem("token", token)
-                localStorage.setItem("username", name)
+                localStorage.setItem("email", resultEmail)
                 localStorage.setItem("accessLevel", accessLevel)
 
                 this.setState({loggedInSuccessfully : true})

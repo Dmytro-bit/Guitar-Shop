@@ -44,9 +44,10 @@ class Products extends React.Component {
             this.setState({quantity: this.state.quantity + 1});
     }
 
-    handleQuantityDecrease = () => {
-        if (this.state.quantity > 1)
-            this.setState({quantity: this.state.quantity - 1});
+    handleQuantityDecrease = () =>
+    {
+        if(this.state.quantity > 1)
+            this.setState({quantity : this.state.quantity - 1});
     }
 
     async componentDidMount() {

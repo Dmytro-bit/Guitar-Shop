@@ -1,46 +1,55 @@
 const router = require("express").Router();
-const {orderModel, itemModel, shoppingCartModel} = require("../models/order");
+const usersModel = require("../models/users");
+const {verifyLogin} = require("./auth");
 
 
-router.get(`/shopping-cart`, async (req, res) => {
+router.get(``, verifyLogin, async (req, res) => {
     try {
-        let data = await shoppingCartModel.findOne({user_id: req.user.id});
-        res.status(200).json(data)
+        const user = await usersModel.findOne({_id: req.user_id}).populate({
+            path: "shopping_cart.product",
+            populate: {path: "category"}
+        })
+
+        let totalPrice = 0;
+        let shopping_cart = user.shopping_cart
+
+        shopping_cart.forEach(item => {
+            const product = item.product;
+            const productPrice = product.price || 0
+            const quantity = item.quantity || 0
+
+            totalPrice += productPrice * quantity
+        });
+
+        res.status(200).json({shopping_cart: shopping_cart, total: totalPrice});
     } catch (err) {
         res.status(500).json({error: err})
     }
 })
 
-router.patch(`/shopping-cart`, async (req, res) => {
+router.patch(``, verifyLogin, async (req, res) => {
     try {
-        const {user_id, product_id, quantity} = req.body;
+        const data = req.body;
+        const user = await usersModel.findOneAndUpdate(
+            {_id: req.user_id},
+            {
+                $set: {shopping_cart: data}
+            },
+            {new: true}
+        ).populate("shopping_cart.product");
 
-        if (!user_id || !product_id) {
-            return res.status(400).json({error: "Missing user_id or product_id"});
-        }
+        let totalPrice = 0;
+        let shopping_cart = user.shopping_cart
 
-        let cart = await shoppingCartModel.findOne({user_id});
+        shopping_cart.forEach(item => {
+            const product = item.product;
+            const productPrice = product.price || 0
+            const quantity = item.quantity || 0
 
-        if (!cart) {
-            cart = new shoppingCartModel({user_id, products: []});
-        }
+            totalPrice += productPrice * quantity
+        });
 
-        const productIndex = cart.products.findIndex(item => item.product_id.equals(product_id));
-
-        if (productIndex > -1) {
-            if (quantity > 0) {
-                cart.products[productIndex].quantity = quantity;
-            } else {
-                cart.products.splice(productIndex, 1);
-            }
-        } else {
-            if (quantity > 0) {
-                cart.products.push({product_id, quantity});
-            }
-        }
-
-        await cart.save();
-        res.json({message: "Cart updated successfully", cart});
+        res.status(200).json({shopping_cart: shopping_cart, total: totalPrice});
 
     } catch (err) {
         res.status(500).json({error: err.message});
