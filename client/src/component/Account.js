@@ -24,9 +24,9 @@ class Account extends React.Component {
             },
             selectedFile: null,
             isEditable: false,
-            isAddressSet: false,
-            isSettingAddressEnabled: false,
-            addressWasSubmittedOnce: false,
+            isAddressSet : false,
+            isSettingAddressEnabled : false,
+            addressWasSubmittedOnce : false,
         }
         this.imageHandlerRef = React.createRef();
     }
@@ -41,7 +41,6 @@ class Account extends React.Component {
 
     loadUserData = async () => {
         const email = localStorage.getItem("email");
-        const token = localStorage.getItem("token");
         if (!email || email === "null" || email === "undefined") {
             console.log("No valid email found; user is not logged in.");
             return;
@@ -49,34 +48,30 @@ class Account extends React.Component {
         try {
 
             console.log(email)
-            const res = await axios.get(`/user/getProfile`, {params: {email}})
+            const res = await axios.get(`user/getProfile`, {params: {email}})
             console.log(res.data.user)
-            const userData = res.data.user;
-            // use the nested user object
+            const userData = res.data.user; // use the nested user object
             this.setState({
-                    user: {
-                        fname: userData.fname,
-                        lname: userData.lname,
-                        email: userData.email,
-                        phone: userData.phone,
-                        address: {
-                            fline: userData.address.fline,
-                            sline: userData.address.sline, // corrected sline mapping
-                            city: userData.address.city,
-                            county: userData.address.county,
-                            eircode: userData.address.eircode,
-                        },
-                        profilePhotoUrl: userData.profilePhotoUrl ? userData.profilePhotoUrl : "../icons/user.png"
-                    }
-                }, () => {
-                    this.checkEmptyAddress()
+                user: {
+                    fname: userData.fname,
+                    lname: userData.lname,
+                    email: userData.email,
+                    phone: userData.phone,
+                    address: {
+                        fline: userData.address.fline,
+                        sline: userData.address.sline, // corrected sline mapping
+                        city: userData.address.city,
+                        county: userData.address.county,
+                        eircode: userData.address.eircode,
+                    },
+                    profilePhotoUrl: userData.profilePhotoUrl ? userData.profilePhotoUrl : "../icons/user.png"
                 }
-            );
-
+            });
+            console.log(this.state.user.address.fline);
+            this.checkEmptyAddress()
 
         } catch (err) {
-
-            console.log(err.response)
+            console.log(err)
         }
     }
 
@@ -84,52 +79,22 @@ class Account extends React.Component {
         const noEmptyFields = Object.keys(this.state.user.address).map(key =>
             this.state.user.address[key].trim()).every(value => value !== "")
 
-        console.log("Address Set: " + noEmptyFields)
+        console.log("Address Set: "+noEmptyFields)
         if (noEmptyFields)
-            this.setState({isAddressSet: true});
+            this.setState({ isAddressSet: true });
         return noEmptyFields
     }
     closeAccount = () => {
         this.setState({isEditable: false})
     }
 
-    handleEditMode = async () => {
+    handleEditMode = () => {
         this.setState({isEditable: !this.state.isEditable})
-        this.setState({isSettingAddressEnabled: false})
-        try {
-            const email = localStorage.getItem("email");
-            const user = this.state.user;
-            // Send the complete updated user object to the server.
-            const res = await axios.patch('/user/updateProfile', {email, user});
+        this.setState({isSettingAddressEnabled : false })
 
-            const userData = res.data.user;
-            console.log(userData.email)
-            // use the nested user object
-            this.setState((prevState) => ({
-                user: {
-                    fname: prevState.user.fname !== userData.fname ? userData.fname : prevState.user.fname,
-                    lname: prevState.user.lname !== userData.lname ? userData.lname : prevState.user.lname,
-                    email: prevState.user.email !== userData.email ? userData.email : prevState.user.email,
-                    phone: prevState.user.phone !== userData.phone ? userData.phone : prevState.user.phone,
-                    address: {
-                        fline: userData.address.fline !== prevState.user.address.fline ? userData.address.fline : prevState.user.address.fline,
-                        sline: userData.address.sline !== prevState.user.address.sline ? userData.address.sline : prevState.user.address.sline , // corrected sline mapping
-                        city: userData.address.city !== prevState.user.address.city ? userData.address.city : prevState.user.address.city,
-                        county: userData.address.county !== prevState.user.address.county ? userData.address.county : prevState.user.address.county,
-                        eircode: userData.address.eircode !== prevState.user.address.eircode ? userData.address.eircode : prevState.user.address.eircode,
-                    },
-                    profilePhotoUrl: userData.profilePhotoUrl ? userData.profilePhotoUrl : "../icons/user.png"
-                }
-            }));
 
-            console.log('Profile updated', res.data);
-        } catch (err) {
-            console.error('Error updating profile', err);
-        }
-
+        //Write a put request ro update the data
     }
-
-
     clickOnPlaceholder = () => {
         if (this.imageHandlerRef.current) {
             this.imageHandlerRef.current.click()
@@ -138,37 +103,13 @@ class Account extends React.Component {
     }
 
     handleEnablingSettingAddress = () => {
-        this.setState({isSettingAddressEnabled: true})
+        this.setState({isSettingAddressEnabled : true })
     }
 
-    handleInputChange = (e) => {
-        const user = this.state.user;
-        const {name, value} = e.target;
-        const addressFields = ['fline', 'sline', 'city', 'county', 'eircode'];
-        if(addressFields.includes(name)){
-            this.setState({
-                user:{
-                    ...user,
-                    address: {
-                        ...user.address,
-                        [name]: value,
-                    }
-                }
-            })
-        }else{
-            this.setState({
-                user:{
-                    ...user,
-                    [name]: value
-                }
-            })
-        }
-
-    }
     handleAddressChange = (e) => {
         e.preventDefault();
-        const {user} = this.state;
-        const {name, value} = e.target;
+        const { user } = this.state;
+        const { name, value } = e.target;
         this.setState({
             user: {
                 ...user,
@@ -182,30 +123,23 @@ class Account extends React.Component {
 
     handleAddressSave = async () => {
         const noEmptyFields = this.checkEmptyAddress()
-        if (noEmptyFields) {
-            this.setState({isSettingAddressEnabled: false})
+        if (noEmptyFields){
+            this.setState({isSettingAddressEnabled : false })
 
             try {
                 const {fline, sline, city, county, eircode} = this.state.user.address;
                 const email = this.state.user.email;
                 console.log("email sent to patch", email);
-                const sentData = {
-                    email: email,
-                    fline: fline,
-                    sline: sline,
-                    city: city,
-                    county: county,
-                    eircode: eircode
-                };
+                const sentData = {email: email, fline: fline, sline: sline, city: city, county: county, eircode: eircode};
                 console.log("sentData", sentData);
                 const res = await axios.patch(`/user/editAddress`, sentData)
                 const address = res.data.user.address;
                 console.log("address is ", address)
-            } catch (e) {
+            } catch (e){
                 console.log(e)
             }
 
-            this.setState({addressWasSubmittedOnce: true})
+            this.setState({addressWasSubmittedOnce : true})
         }
 
     }
@@ -233,6 +167,8 @@ class Account extends React.Component {
             }
         }
     }
+
+
 
 
     render() {
@@ -264,7 +200,7 @@ class Account extends React.Component {
                             </div>
                             <div className="user-account-cred-container">
                                 <p className="user-account-cred-title"><u>Last Name :</u></p>
-                                <input type="text"  name="lname" value={this.state.user.lname} disabled={!this.state.isEditable}  onChange={this.handleInputChange}
+                                <input type="text" defaultValue={this.state.user.lname} disabled={!this.state.isEditable}
                                        className="user-account-cred"></input>
                             </div>
                         </div>
@@ -299,23 +235,23 @@ class Account extends React.Component {
                             <div>
                                 <p className={`user-account-cred-title ${this.state.isEditable ? "editable" : ""}`}><u>First
                                     Address Line :</u></p>
-                                <input type="text" name="fline" value={this.state.user.address.fline} onChange={this.handleInputChange}
+                                <input type="text" defaultValue={this.state.user.address.fline}
                                        className={`user-account-cred ${this.state.isEditable ? "editable" : ""}`}/>
                                 <p className={`user-account-cred-title ${this.state.isEditable ? "editable" : ""}`}><u>Second
                                     Address Line :</u></p>
-                                <input type="text" name="sline" value={this.state.user.address.sline} onChange={this.handleInputChange}
+                                <input type="text" defaultValue={this.state.user.address.sline}
                                        className={`user-account-cred ${this.state.isEditable ? "editable" : ""}`}/>
                                 <p className={`user-account-cred-title ${this.state.isEditable ? "editable" : ""}`}><u>City/Town
                                     :</u></p>
-                                <input type="text"  name="city" value={this.state.user.address.city} onChange={this.handleInputChange}
+                                <input type="text" defaultValue={this.state.user.address.city}
                                        className={`user-account-cred ${this.state.isEditable ? "editable" : ""}`}/>
                                 <p className={`user-account-cred-title ${this.state.isEditable ? "editable" : ""}`}><u>County
                                     :</u></p>
-                                <input type="text" name="county" value={this.state.user.address.county} onChange={this.handleInputChange}
+                                <input type="text" defaultValue={this.state.user.address.county}
                                        className={`user-account-cred ${this.state.isEditable ? "editable" : ""}`}/>
                                 <p className={`user-account-cred-title ${this.state.isEditable ? "editable" : ""}`}>
                                     <u>Eircode</u></p>
-                                <input type="text" name="eircode" value={this.state.user.address.eircode} onChange={this.handleInputChange}
+                                <input type="text" defaultValue={this.state.user.address.eircode}
                                        className={`user-account-cred ${this.state.isEditable ? "editable" : ""}`}/>
                             </div>
                         )
@@ -338,36 +274,27 @@ class Account extends React.Component {
                                     <p className={`user-account-cred-title`}>
                                         <u>First Address Line :</u></p>
                                     <input type="text" name="fline"
-                                           className={`user-account-cred`} value={this.state.user.address.fline}
-                                           onChange={(e) => this.handleAddressChange(e)}/>
+                                           className={`user-account-cred`} onChange={(e) => this.handleAddressChange(e)}/>
                                     <p className={`user-account-cred-title`}>
                                         <u>Second Address Line :</u></p>
                                     <input type="text" name="sline"
-                                           className={`user-account-cred`} value={this.state.user.address.sline}
-                                           onChange={(e) => this.handleAddressChange(e)}/>
+                                           className={`user-account-cred`} onChange={(e) => this.handleAddressChange(e)}/>
                                     <p className={`user-account-cred-title`}>
                                         <u>City/Town :</u></p>
-                                    <input type="text" name="city" value={this.state.user.address.city}
-                                           className={`user-account-cred`}
-                                           onChange={(e) => this.handleAddressChange(e)}/>
+                                    <input type="text" name="city"
+                                           className={`user-account-cred`} onChange={(e) => this.handleAddressChange(e)}/>
                                     <p className={`user-account-cred-title`}>
                                         <u>County :</u></p>
-                                    <input type="text" name="county" value={this.state.user.address.county}
-                                           className={`user-account-cred`}
-                                           onChange={(e) => this.handleAddressChange(e)}/>
+                                    <input type="text" name="county"
+                                           className={`user-account-cred`} onChange={(e) => this.handleAddressChange(e)}/>
                                     <p className={`user-account-cred-title`}>
                                         <u>Eircode</u></p>
-                                    <input type="text" name="eircode" value={this.state.user.address.eircode}
-                                           onChange={(e) => this.handleAddressChange(e)}
+                                    <input type="text" name="eircode" onChange={(e) => this.handleAddressChange(e)}
                                            className={`user-account-cred`}/>
 
-                                    <button className="set-address-button" onClick={this.handleAddressSave}>SET
-                                        ADDRESS
-                                    </button>
+                                    <button className="set-address-button" onClick={this.handleAddressSave}>SET ADDRESS</button>
 
-                                    <p className="address-error"
-                                       style={{display: this.state.addressWasSubmittedOnce ? "flex" : "none"}}>All
-                                        Fields Should Be Filled</p>
+                                    <p className="address-error" style={{display : this.state.addressWasSubmittedOnce ? "flex" : "none"}}>All Fields Should Be Filled</p>
                                 </>
                             )}
                     </div>

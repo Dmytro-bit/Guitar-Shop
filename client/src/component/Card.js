@@ -19,7 +19,7 @@ class Card extends React.Component {
                     <div className="card-main-container">
                         <div className="card-description">
                             <div className="card-name">
-                                <Link to={`/products/${this.props.name}`}
+                                <Link to={`/products/${this.props._id}`}
                                       style={{color: "black", textDecoration: "none"}}>{this.props.name}
                                 </Link>
                                 <img src="../icons/heart.png" className="heart-icon"/>
@@ -42,7 +42,7 @@ class Card extends React.Component {
                                     <p style={{color: this.props.inStock ? "green" : "red"}}
                                        className="inStock">{this.props.inStock ? "In Stock" : "Not In Stock"}</p>
                                 </div>
-                                <button className="card-buy-button">BUY</button>
+                                <button className="card-buy-button">ADD TO CART</button>
                             </div>
                         </div>
                     </div>
