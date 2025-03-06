@@ -4,7 +4,9 @@ const usersModel = require("../models/users");
 const multer = require('multer')
 const upload = multer({dest: `${process.env.UPLOADED_FILES_FOLDER}`})
 const emptyFolder = require('empty-folder')
-
+const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
 // upload image to profile
 const uploadImage = (req, res, next) => {
     const fileUrl = `http://localhost:${process.env.PORT}/uploads/${req.file.filename}`
@@ -28,21 +30,7 @@ const addImageToProfile = async (req, res, next) => {
 
 }
 
-// get profile data
-const checkUserExists = async (req, res, next) => {
-    try {
-        const email = req.query.email;
-        let user = await usersModel.findOne({email: email}, '-password -accessLevel -_id -__v', undefined)
-        if (!user) {
-            return res.status(404).send({message: `User not found`})
-        }
-        req.user = user
-        res.status(200).json({user})
 
-    } catch (err) {
-        next(err)
-    }
-}
 
 // edit address
 const editAddress = async (req, res, next) => {
@@ -69,8 +57,65 @@ const editAddress = async (req, res, next) => {
 
 }
 
-router.get('/getProfile', checkUserExists)
-router.patch('/upload', upload.single('file'), uploadImage, addImageToProfile);
-router.patch('/editAddress', editAddress);
+// get profile data
+const checkUserExists = async (req, res, next) => {
+    try {
+        const email = req.query.email;
+        let user = await usersModel.findOne({email: email}, '-password -accessLevel -_id -__v', undefined)
+        if (!user) {
+            return res.status(404).send({message: `User not found`})
+        }
+        req.user = user
+        next()
+
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+
+
+const verifyLogin = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).json({error: "No token provided"});
+    }
+
+    const token = authHeader.split(" ")[1];
+    let decoded;
+    try {
+        // Synchronously verify the token. This will throw if the token is invalid.
+        decoded = jwt.verify(token, JWT_PRIVATE_KEY);
+    } catch (err) {
+        console.error("Token verification error:", err);
+        return res.status(401).json({error: "Invalid or expired token"});
+    }
+
+    const expiryTimeStamp = decoded.exp;
+    const expiryDate = new Date(expiryTimeStamp * 1000);
+    console.log("expiry date", expiryDate.getTime());
+    console.log("now", Date.now());
+
+    if (expiryDate.getTime() < Date.now()) {
+        return res.status(401).json({error: "Token expired"});
+    }
+
+
+    next();
+}
+const returnUserData = async (req, res, next) => {
+    try {
+        const user = req.user;
+        console.log(user.email);
+        res.status(200).json({user})
+    }catch(err) {
+        next(err)
+    }
+}
+
+router.get('/getProfile', checkUserExists, verifyLogin, returnUserData);
+router.patch('/upload', upload.single('file'),verifyLogin, uploadImage, addImageToProfile);
+router.patch('/editAddress',verifyLogin, editAddress);
 
 module.exports = router;
