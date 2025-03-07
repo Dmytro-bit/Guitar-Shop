@@ -106,6 +106,7 @@ class Login extends React.Component
                 {this.state.showNotification && (
                     <Notification
                         message={this.state.loginResponseError}
+                        type={"error"}
                         onClose={this.closeNotification}
                     />
                 )}

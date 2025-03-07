@@ -27,7 +27,7 @@ class Notification extends React.Component {
                 <div className="notification-close-container">
                     <img src="../icons/close.png" className="notification-close" onClick={() => {this.props.onClose()}} />
                 </div>
-                <p className="notification-text">{this.props.message}</p>
+                <p className={`notification-text ${this.props.type}`}>{this.props.message}</p>
             </div>
         )
     }
