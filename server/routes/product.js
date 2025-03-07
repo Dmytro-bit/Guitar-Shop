@@ -36,9 +36,9 @@ router.get(`/products/:id`, async (req, res) => {
 
 router.post(`/products`, async (req, res) => {
     try {
-        const {name, category, images, rating, quantity, props} = req.body;
+        const {name, brand, model, category, images, rating, quantity, props} = req.body;
 
-        const newProduct = new Product({name, description, category, images, rating, quantity, props});
+        const newProduct = new Product({name, brand, model, description, category, images, rating, quantity, props});
         const savedProduct = await newProduct.save();
 
         return res.status(200).send({data: savedProduct});

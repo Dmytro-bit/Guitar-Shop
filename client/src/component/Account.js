@@ -192,7 +192,7 @@ class Account extends React.Component {
                         <div>
                             <div className="user-account-cred-container">
                                 <p className="user-account-cred-title"><u>First Name :</u></p>
-                                <input type="text" defaultValue={this.state.user.fname} disabled={!this.state.isEditable}
+                                <input type="text" name="fname" value={this.state.user.fname} disabled={!this.state.isEditable}  onChange={this.handleInputChange}
                                        className="user-account-cred"></input>
                             </div>
                             <div className="user-account-cred-container">
@@ -207,15 +207,16 @@ class Account extends React.Component {
                     )}
                     <div className="user-account-cred-container">
                         <p className="user-account-cred-title"><u>Email :</u></p>
-                        <input type="text" value={this.state.user.email} disabled={!this.state.isEditable}
+                        <input type="text" name="email" value={this.state.user.email} disabled={!this.state.isEditable}  onChange={this.handleInputChange}
                                className="user-account-cred"></input>
                     </div>
                     <div className="user-account-cred-container">
                         <p className="user-account-cred-title"><u>Phone :</u></p>
-                        <input type="text" defaultValue={this.state.user.phone} disabled={!this.state.isEditable}
+                        <input type="text" name="phone" value={this.state.user.phone} disabled={!this.state.isEditable}  onChange={this.handleInputChange}
                                className="user-account-cred"></input>
                     </div>
-                    <div className="user-account-cred-container" style={{display : this.state.isAddressSet ? "flex" : "none"}}>
+                    <div className="user-account-cred-container"
+                         style={{display: this.state.isAddressSet ? "flex" : "none"}}>
                         {!this.state.isEditable ? (
                             <div>
                                 <p className="user-account-cred-title"><u>Address :</u></p>
@@ -253,14 +254,17 @@ class Account extends React.Component {
                         )
                         }
                     </div>
-                    <div className="set-address-container" style={{display : this.state.isAddressSet ? "none" : "flex"}}>
+                    <div className="set-address-container" style={{display: this.state.isAddressSet ? "none" : "flex"}}>
                         {!this.state.isSettingAddressEnabled ?
                             (
                                 <>
                                     <div className="set-address-text-container">
-                                        <p className="set-address-text">It looks like you haven't set your delivery address yet. Let's fix it straight away!</p>
+                                        <p className="set-address-text">It looks like you haven't set your delivery
+                                            address yet. Let's fix it straight away!</p>
                                     </div>
-                                    <button className="set-address-button" onClick={this.handleEnablingSettingAddress}>SET ADDRESS</button>
+                                    <button className="set-address-button"
+                                            onClick={this.handleEnablingSettingAddress}>SET ADDRESS
+                                    </button>
                                 </>
                             ) : (
                                 <>
