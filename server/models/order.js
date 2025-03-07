@@ -27,7 +27,13 @@ let orderSchema = new mongoose.Schema(
         customer_info: {
             name: String,
             phone: String,
-            address: String,
+            address: {
+                fline: {type: String, required: true},
+                sline: {type: String, required: true},
+                city: {type: String, required: true},
+                county: {type: String, required: true},
+                eircode: {type: String, required: true}
+            },
             email: String,
         },
 
