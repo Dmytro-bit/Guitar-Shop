@@ -22,7 +22,7 @@ class Login extends React.Component
             },
             loggedInSuccessfully : false,
             loginResponseError : "",
-            showNotification: false,
+            showNotifications: false,
         }
     }
 
@@ -73,22 +73,32 @@ class Login extends React.Component
                 localStorage.setItem("token", token)
                 localStorage.setItem("email", resultEmail)
                 localStorage.setItem("accessLevel", accessLevel)
+                const orderAddress =
+                    {
+                        fline: "",
+                        sline: "",
+                        city: "",
+                        county: "",
+                        eircode: "",
+                    }
+                localStorage.setItem("isAddressSet", "false");
 
-                this.setState({loggedInSuccessfully : true})
+                localStorage.setItem("orderAddress", JSON.stringify(orderAddress))
+                this.setState({loggedInSuccessfully: true})
 
                 console.log("User data saved to localStorage")
 
 
             }catch(err){
-                this.setState({loginResponseError : err.message, showNotification: true})
-                console.log(err)
+                this.setState({loginResponseError : err.message, showNotifications: true})
+                console.log("this error ", err.message)
             }
 
         }
     }
 
     closeNotification = () => {
-        this.setState({ showNotification: false });
+        this.setState({ showNotifications: false });
     };
 
     render() 
@@ -101,7 +111,7 @@ class Login extends React.Component
 
         return(
             <div className="login-bg">
-                {this.state.showNotification && (
+                {this.state.showNotifications && (
                     <Notification
                         message={this.state.loginResponseError}
                         type={"error"}

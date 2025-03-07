@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const {MEDIA_DIR} = require("../server");
 
-const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const passwordPattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[£!#€$%^&*¬`@=)(-_:;'{}/\\ \[\].,<>?~|]).{8,}$/
 const phonePattern = /^\+3538\d\d{3,4}\d{4}$/;
 const namePattern = /^[a-zA-Z ]{2,30}$/;
@@ -57,7 +57,8 @@ let userSchema = new mongoose.Schema(
                 product: {type: 'ObjectId', ref: 'products', required: true},
                 quantity: {type: Number, required: true, default: 1} // Item quantity in Cart
             }
-        ]
+        ],
+        liked_products: [{type: 'ObjectId', ref: 'products'}],
     }
 )
 

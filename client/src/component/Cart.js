@@ -12,19 +12,19 @@ class Cart extends React.Component {
 
         this.state = {
             cartProducts: [],
-            address : {
-                fline : "asd",
-                sline : "asd",
-                town : "asd",
-                county: "asd",
-                eircode: "asd",
+            address: {
+                fline: "",
+                sline: "",
+                city: "",
+                county: "",
+                eircode: "",
             },
-            addressParse : {
-                "fline" : "First Line",
-                "sline" : "Second Line",
-                "town" : "Town",
-                "county" : "County",
-                "eircode" : "Eircode"
+            addressParse: {
+                "fline": "First Line",
+                "sline": "Second Line",
+                "city": "City",
+                "county": "County",
+                "eircode": "Eircode"
             },
             isAddressEditable: false,
             isAddressSet : false,
@@ -58,8 +58,21 @@ class Cart extends React.Component {
     }
 
     async componentDidMount() {
-        this.setState({isAddressEditable : !this.checkEmptyAddress()})
-        this.setState({isAddressSet : this.checkEmptyAddress()})
+
+
+
+
+        const savedAddress = localStorage.getItem("orderAddress");
+        const isAddressSetStored = localStorage.getItem("isAddressSet") === "true";
+        if (savedAddress && isAddressSetStored) {
+            this.setState({
+                address: JSON.parse(savedAddress),
+                isAddressSet: true
+            });
+        }
+        await this.getCart();
+        await this.getDefaultAddress();
+
         try {
             const res = await axios.get("/shopping-cart", {
                 headers: {
@@ -76,6 +89,52 @@ class Cart extends React.Component {
         } catch (error) {
             console.error("Error fetching products:", error);
         }
+
+
+    };
+
+
+
+    getCart = async () => {
+        try {
+            const res = await axios.get("/shopping-cart", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                }
+            });
+            console.log(res.data)
+            const {shopping_cart, total} = res.data
+
+            console.log("Shopping cart:", shopping_cart, "Total:", total)
+            if (res.status === 200) {
+                this.setState({cartProducts: shopping_cart, total: total});
+            }
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
+    }
+
+    getDefaultAddress = async () => {
+        this.checkEmptyAddress()
+
+        const token = localStorage.getItem("token");
+        if (token) {
+            // Only proceed if the order address has not been finalized
+            if (!this.state.isAddressSet) {
+                const email = localStorage.getItem("email");
+                try {
+                    const res = await axios.get("/user/getUserAddress", { params: { email } });
+                    const fetchedAddress = res.data.address;  // User's current profile address
+                    // Set the order address only once, then set the flag
+                    this.setState({ address: fetchedAddress, isAddressSet: true }, () => {
+                        localStorage.setItem("orderAddress", JSON.stringify(fetchedAddress));
+                        localStorage.setItem("isAddressSet", "true");
+                    });
+                } catch (error) {
+                    console.error("Error fetching default address:", error.message);
+                }
+            }
+        }
     };
 
     handleIsAddressEditable = () => {
@@ -91,13 +150,14 @@ class Cart extends React.Component {
     handleDeliveryAddressSave = (e) => {
         e.preventDefault()
         const newAddress = {
-            fline : document.getElementById("cart-delivery-address-fline").value,
-            sline : document.getElementById("cart-delivery-address-sline").value,
-            town : document.getElementById("cart-delivery-address-town").value,
-            county : document.getElementById("cart-delivery-address-county").value,
-            eircode : document.getElementById("cart-delivery-address-eircode").value,
+            fline: document.getElementById("cart-delivery-address-fline").value,
+            sline: document.getElementById("cart-delivery-address-sline").value,
+            city: document.getElementById("cart-delivery-address-city").value,
+            county: document.getElementById("cart-delivery-address-county").value,
+            eircode: document.getElementById("cart-delivery-address-eircode").value,
         }
-        this.setState({address : newAddress});
+
+        this.setState({address: newAddress}, ()=>(localStorage.setItem("orderAddress", JSON.stringify(newAddress))));
     }
 
     render() {

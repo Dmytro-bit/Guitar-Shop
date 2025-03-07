@@ -230,15 +230,18 @@ const verifyLogin = async (req, res, next) => {
         if (err) {
             return res.status(403).json({error: "Forbidden"})
         }
+
         user_data = decoded;
+        const {email, user_id, accessLevel} = user_data
+
+        req.user_id = user_id
+        req.accessLevel = accessLevel
+        req.user_email = email
+        next()
+
     })
 
-    const {email, user_id, accessLevel} = user_data
 
-    req.user_id = user_id
-    req.accessLevel = accessLevel
-    req.user_email = email
-    next()
 }
 // ==============================================================================================================
 // ============================================ URL =============================================================

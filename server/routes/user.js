@@ -119,16 +119,27 @@ const updateProfile = async (req, res, next) => {
 
         const newUser = await usersModel.findOneAndUpdate({email: email}, user, {returnDocument:`after`})
 
-        res.status(200).json({user})
+        res.status(200).json({newUser})
     } catch (e) {
         next(e)
     }
 
 
 }
+
+
+const getUserAddress = async (req, res, next) => {
+    try{
+        const address = req.user.address
+        res.status(200).json({address})
+    }catch(err) {
+        next(err)
+    }
+}
 router.get('/getProfile', checkUserExists, verifyLogin, returnUserData);
 router.patch('/upload', upload.single('file'),verifyLogin, uploadImage, addImageToProfile);
 router.patch('/editAddress',verifyLogin, editAddress);
 router.patch('/updateProfile',verifyLogin, updateProfile);
+router.get('/getUserAddress',checkUserExists,verifyLogin, getUserAddress);
 
 module.exports = router;
