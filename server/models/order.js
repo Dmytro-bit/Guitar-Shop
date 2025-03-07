@@ -28,11 +28,11 @@ let orderSchema = new mongoose.Schema(
             name: String,
             phone: String,
             address: {
-                fline: {type: String, default: ""},
-                sline: {type: String, default: ""},
-                city: {type: String, default: ""},
-                county: {type: String, default: ""},
-                eircode: {type: String, default: ""}
+                fline: {type: String, required: true},
+                sline: {type: String, required: true},
+                city: {type: String, required: true},
+                county: {type: String, required: true},
+                eircode: {type: String, required: true}
             },
             email: String,
         },
