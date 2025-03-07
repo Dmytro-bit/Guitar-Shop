@@ -51,7 +51,18 @@ axios.interceptors.response.use(
                   localStorage.removeItem("token")
                   localStorage.removeItem("accessLevel")
                   localStorage.removeItem("email")
-                  window.location.reload();
+                    const orderAddress =
+                         {
+                            fline: "",
+                            sline: "",
+                            city: "",
+                            county: "",
+                            eircode: "",
+                        }
+                    localStorage.setItem("isAddressSet", "false");
+
+                    localStorage.setItem("orderAddress", JSON.stringify(orderAddress))
+                    window.location.reload();
                 }else{
                   console.error('Unauthorized:', 'User is not authenticated.');
                 }

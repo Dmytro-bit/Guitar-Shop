@@ -12,24 +12,27 @@ class Cart extends React.Component {
 
         this.state = {
             cartProducts: [],
-            address : {
-                fline : "Test Address",
-                sline : "Test Street",
-                town : "Testerstown",
-                county: "Countest",
-                eircode: "T1E51",
+            address: {
+                fline: "",
+                sline: "",
+                city: "",
+                county: "",
+                eircode: "",
             },
-            addressParse : {
-                "fline" : "First Line",
-                "sline" : "Second Line",
-                "town" : "Town",
-                "county" : "County",
-                "eircode" : "Eircode"
+            addressParse: {
+                "fline": "First Line",
+                "sline": "Second Line",
+                "city": "City",
+                "county": "County",
+                "eircode": "Eircode"
             },
             isAddressEditable: false,
+            isAddressSet: false,
             total: 0,
         }
     }
+
+
 
     handleQuantityIncrease = (i) => {
         const updatedCartProducts = [...this.state.cartProducts];
@@ -48,6 +51,24 @@ class Cart extends React.Component {
     }
 
     async componentDidMount() {
+
+        const savedAddress = localStorage.getItem("orderAddress");
+        const isAddressSetStored = localStorage.getItem("isAddressSet") === "true";
+        if (savedAddress && isAddressSetStored) {
+            this.setState({
+                address: JSON.parse(savedAddress),
+                isAddressSet: true
+            });
+        }
+        await this.getCart();
+        await this.getDefaultAddress();
+
+
+    };
+
+
+
+    getCart = async () => {
         try {
             const res = await axios.get("/shopping-cart", {
                 headers: {
@@ -64,7 +85,43 @@ class Cart extends React.Component {
         } catch (error) {
             console.error("Error fetching products:", error);
         }
+    }
+
+    getDefaultAddress = async () => {
+        this.checkEmptyAddress()
+
+        const token = localStorage.getItem("token");
+        if (token) {
+            // Only proceed if the order address has not been finalized
+            if (!this.state.isAddressSet) {
+                const email = localStorage.getItem("email");
+                try {
+                    const res = await axios.get("/user/getUserAddress", { params: { email } });
+                    const fetchedAddress = res.data.address;  // User's current profile address
+                    // Set the order address only once, then set the flag
+                    this.setState({ address: fetchedAddress, isAddressSet: true }, () => {
+                        localStorage.setItem("orderAddress", JSON.stringify(fetchedAddress));
+                        localStorage.setItem("isAddressSet", "true");
+                    });
+                } catch (error) {
+                    console.error("Error fetching default address:", error.message);
+                }
+            }
+        }
     };
+
+
+
+
+    checkEmptyAddress = () => {
+        const noEmptyFields = Object.keys(this.state.address).map(key =>
+            this.state.address[key].trim()).every(value => value !== "")
+
+        console.log("Address Set: --" + noEmptyFields)
+        if (noEmptyFields)
+            this.setState({isAddressSet: true});
+        return noEmptyFields
+    }
 
     handleIsAddressEdittable = () => {
         this.setState({isAddressEditable: !this.state.isAddressEditable});
@@ -72,14 +129,14 @@ class Cart extends React.Component {
 
     handleDeliveryAddressSave = () => {
         const newAddress = {
-            fline : document.getElementById("cart-delivery-address-fline").value,
-            sline : document.getElementById("cart-delivery-address-sline").value,
-            town : document.getElementById("cart-delivery-address-town").value,
-            county : document.getElementById("cart-delivery-address-county").value,
-            eircode : document.getElementById("cart-delivery-address-eircode").value,
+            fline: document.getElementById("cart-delivery-address-fline").value,
+            sline: document.getElementById("cart-delivery-address-sline").value,
+            city: document.getElementById("cart-delivery-address-city").value,
+            county: document.getElementById("cart-delivery-address-county").value,
+            eircode: document.getElementById("cart-delivery-address-eircode").value,
         }
 
-        this.setState({address : newAddress});
+        this.setState({address: newAddress}, ()=>(localStorage.setItem("orderAddress", JSON.stringify(newAddress))));
     }
 
     render() {
@@ -171,11 +228,14 @@ class Cart extends React.Component {
                         {Object.keys(this.state.address).map((line, index) => (
                             <div className="cart-delivery-address-field-container" key={index}>
                                 <p className="cart-delivery-address-field-title">{this.state.addressParse[line]}</p>
-                                <input type="text" value={this.state.address[line]} id={`cart-delivery-address-${line}`} className={`cart-delivery-address-field ${this.state.isAddressEditable ? "edit-address" : ""}`}
-                                       disabled={this.state.isAddressEditable ? false : true} onChange={this.handleDeliveryAddressSave}/>
+                                <input type="text" value={this.state.address[line]} id={`cart-delivery-address-${line}`}
+                                       className={`cart-delivery-address-field ${this.state.isAddressEditable ? "edit-address" : ""}`}
+                                       disabled={this.state.isAddressEditable ? false : true}
+                                       onChange={this.handleDeliveryAddressSave}/>
                             </div>
                         ))}
-                        <button className="cart-delivery-address-edit-button" onClick={this.handleIsAddressEdittable}>{this.state.isAddressEditable ? "SAVE" : "EDIT"}</button>
+                        <button className="cart-delivery-address-edit-button"
+                                onClick={this.handleIsAddressEdittable}>{this.state.isAddressEditable ? "SAVE" : "EDIT"}</button>
                     </div>
                     <div className="cart-delivery-address-image-container">
                         <img src="../img/truck.png" className="cart-delivery-address-image"/>
