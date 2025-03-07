@@ -1,6 +1,6 @@
 import React from "react"
 
-import { Navigate, Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Notification from "./Notification";
 
 import "../styles/login.scss"
@@ -58,8 +58,6 @@ class Login extends React.Component
 
         if(Object.keys(formInputsState).every(key => formInputsState[key]))
         {
-
-            //Axios post request
             try{
                 const {email, password} = this.state
                 const data = {email:email, password:password}
@@ -98,7 +96,7 @@ class Login extends React.Component
         let formInputsState = this.validate()
 
         if (this.state.loggedInSuccessfully) {
-            return <Navigate to="/" />;
+            return <Redirect to="/" />;
         }
 
         return(

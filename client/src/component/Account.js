@@ -67,7 +67,6 @@ class Account extends React.Component {
                     profilePhotoUrl: userData.profilePhotoUrl ? userData.profilePhotoUrl : "../icons/user.png"
                 }
             });
-            console.log(this.state.user.address.fline);
             this.checkEmptyAddress()
 
         } catch (err) {
