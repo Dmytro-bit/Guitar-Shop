@@ -22,7 +22,7 @@ class Login extends React.Component
             },
             loggedInSuccessfully : false,
             loginResponseError : "",
-            showNotification: false,
+            showNotifications: false,
         }
     }
 
@@ -92,15 +92,15 @@ class Login extends React.Component
 
 
             }catch(err){
-                this.setState({loginResponseError : err.message, showNotification: true})
-                console.log(err)
+                this.setState({loginResponseError : err.message, showNotifications: true})
+                console.log("this error ", err.message)
             }
 
         }
     }
 
     closeNotification = () => {
-        this.setState({ showNotification: false });
+        this.setState({ showNotifications: false });
     };
 
     render() 
@@ -113,7 +113,7 @@ class Login extends React.Component
 
         return(
             <div className="login-bg">
-                {this.state.showNotification && (
+                {this.state.showNotifications && (
                     <Notification
                         message={this.state.loginResponseError}
                         type={"error"}
