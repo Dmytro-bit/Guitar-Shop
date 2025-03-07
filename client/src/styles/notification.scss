@@ -1,0 +1,69 @@
+.notification-container {
+  position: fixed;
+  top: 1em;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30vw;
+  min-width: 300px;
+  background-color: white;
+  box-sizing: border-box;
+  padding: 1em;
+  border-radius: 15px;
+  z-index: 10;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+
+  &.fade-in {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &.fade-out {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .notification-close-container {
+    position: absolute;
+    right: calc(0px + 1em);
+    width: 1.7vw;
+    height: 1.7vw;
+    min-width: 20px;
+    min-height: 20px;
+    box-sizing: border-box;
+    padding: 0.4em;
+    border-radius: 50%;
+    background-color: lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+
+    .notification-close {
+      width: 80%;
+      object-fit: cover;
+    }
+
+    &:hover {
+      background-color: darkgray;
+      transform: scale(1.1);
+    }
+  }
+
+  .notification-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(13px, 1.1vw, 30px);
+
+    &.error {
+      color: red;
+    }
+
+    &.success {
+      color: green;
+    }
+  }
+
+}

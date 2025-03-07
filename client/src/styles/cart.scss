@@ -440,6 +440,14 @@
       }
     }
 
+    .cart-delivery-address-unset-message {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      align-items: center;
+      font-size: clamp(16px, 1.1vw, 32px);
+    }
+
     .cart-delivery-address-edit-button {
       background-color: rgb(55, 55, 55);
       border: none;
@@ -456,8 +464,17 @@
       &:hover {
         background-color: rgb(41, 41, 41);
         transform : scale(1.05);
+      }
     }
-    }
+
+    .cart-delivery-address-error-message {
+      width: 100%;
+      color: red;
+      display: flex;
+      justify-content: center;
+      font-style: italic;
+      font-size: clamp(16px, 1vw, 30px);
+          }
   }
 
   .cart-delivery-address-image-container
