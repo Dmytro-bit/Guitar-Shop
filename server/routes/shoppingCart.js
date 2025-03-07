@@ -5,10 +5,10 @@ const {verifyLogin} = require("./auth");
 
 router.get(``, verifyLogin, async (req, res) => {
     try {
-        const user = await usersModel.findOne({_id: req.user_id}).populate({
+        const user = await usersModel.findOne({_id: req.user_id}, undefined, undefined).populate({
             path: "shopping_cart.product",
             populate: {path: "category"}
-        })
+        }).lean()
 
         let totalPrice = 0;
         let shopping_cart = user.shopping_cart
