@@ -1,6 +1,7 @@
 import React from "react"
 
 import { Navigate, Link } from "react-router-dom";
+import Notification from "./Notification";
 
 import "../styles/login.scss"
 import axios from "axios";
@@ -20,6 +21,8 @@ class Login extends React.Component
                             "password" : "Password can not be an empty string"
             },
             loggedInSuccessfully : false,
+            loginResponseError : "",
+            showNotification: false,
         }
     }
 
@@ -79,12 +82,16 @@ class Login extends React.Component
 
 
             }catch(err){
+                this.setState({loginResponseError : err.message, showNotification: true})
                 console.log(err)
             }
 
         }
-
     }
+
+    closeNotification = () => {
+        this.setState({ showNotification: false });
+    };
 
     render() 
     {
@@ -96,7 +103,12 @@ class Login extends React.Component
 
         return(
             <div className="login-bg">
-
+                {this.state.showNotification && (
+                    <Notification
+                        message={this.state.loginResponseError}
+                        onClose={this.closeNotification}
+                    />
+                )}
             <div id="login-form-container"><Link to="/"><p id="login-back">&#8592; BACK</p></Link>
             <div id="login-container">
                 <p id="login-heading">Login</p>
