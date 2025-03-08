@@ -4,6 +4,7 @@ import "../styles/catalogCard.scss"
 import CategoryModal from "./CategoryModal";
 import ApprovalModal from "./ApprovalModal";
 import axios from "axios";
+import {Navigate} from "react-router-dom";
 
 class CatalogCard extends React.Component {
     constructor(props) {
@@ -11,7 +12,9 @@ class CatalogCard extends React.Component {
 
         this.state = {
             isEditModalOpen: false,
-            isDeleteModalOpen: false
+            isDeleteModalOpen: false,
+            toFilter: ""
+
         }
     }
 
@@ -34,7 +37,17 @@ class CatalogCard extends React.Component {
         await this.props.handleRefresh()
     }
 
+    sendToFilter = (e, category_name) => {
+        e.preventDefault();
+        this.setState({toFilter: category_name});
+    };
+
     render() {
+        if (this.state.toFilter) {
+            return <Navigate to={`/products?category=${this.props.category_id}`}/>;
+        }
+
+
         return (
             <>
                 {this.state.isEditModalOpen && <CategoryModal
@@ -54,11 +67,19 @@ class CatalogCard extends React.Component {
                 {this.state.isEditModalOpen && <div className="modal-bg"></div>}
                 <div className={`catalog-card-container ${this.props.isAdmin ? "no-hover" : ""}`}>
                     <div className="catalog-card-name">{this.props.name}</div>
-                    <div className="catalog-card-image-container"><img className="catalog-card-image"
-                                                                       src={this.props.cover_image}
-                                                                       alt="Category cover Image"/></div>
-                    <img src={this.props.background_image} className="catalog-card-hover-bg"
-                         alt="Category background Image"/>
+                    <div className="catalog-card-image-container">
+                        <img className="catalog-card-image"
+                             src={this.props.cover_image}
+                             alt="Category cover Image"/>
+                    </div>
+
+                    <img
+                        src={this.props.background_image}
+                        className="catalog-card-hover-bg"
+                        alt="Category background Image"
+                        onClick={(e) => this.sendToFilter(e, this.props.category_id)}
+                    />
+
                     <div className="catalog-card-controls-container"
                          style={{display: this.props.isAdmin ? "flex" : "none"}}>
                         <button className="catalog-card-control-button" onClick={this.handleDeleteModal}>DELETE</button>

@@ -1,4 +1,4 @@
-const {Product, Categories} = require("../models/product");
+const {Product} = require("../models/product");
 const {verifyLogin, verifyAdmin} = require("./auth");
 
 
@@ -23,9 +23,8 @@ router.get(`/products`, async (req, res) => {
         // https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
         if (name) filter_dict.name = {"$regex": name, "$options": "i"}
         if (brand) filter_dict.brand = brand
-        if (category) {
-            filter_dict.category = await Categories.findOne({name: category}, undefined, undefined)
-        }
+        if (category) filter_dict.category = category
+
 
         if (minPrice || maxPrice) {
             filter_dict.price = {}
