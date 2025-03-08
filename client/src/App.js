@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 
 import Home from "./component/Home";
 import Catalog from "./component/Catalog";
@@ -15,93 +15,92 @@ import axios from "axios";
 
 axios.defaults.baseURL = SERVER_HOST;
 
-if (typeof localStorage.accessLevel === "undefined" || localStorage.accessLevel === "null" || localStorage.accessLevel === 0)
-{
-  localStorage.accessLevel = ACCESS_LEVEL_GUEST
-  localStorage.token = null
-  localStorage.email = null
+if (typeof localStorage.accessLevel === "undefined" || localStorage.accessLevel === "null" || localStorage.accessLevel === 0) {
+    localStorage.accessLevel = ACCESS_LEVEL_GUEST
+    localStorage.token = null
+    localStorage.email = null
 }
 
 axios.interceptors.request.use(config => {
-  const token = localStorage.getItem("token");
-  console.log("token in App.js interceptor", token);
-  const protectedApi = config.url.includes("user/");
-  console.log("protectedApi", protectedApi);
-  const configUrl = config.url
-  console.log("configUrl ", configUrl);
-  if (token && protectedApi) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+    const token = localStorage.getItem("token");
+    console.log("token in App.js interceptor", token);
+    const protectedApi = config.url.includes("user/");
+    console.log("protectedApi", protectedApi);
+    const configUrl = config.url
+    console.log("configUrl ", configUrl);
+    if (token && protectedApi) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
 })
 axios.interceptors.response.use(
     response => response,
     error => {
         if (error.response) {
-          switch (error.response.status) {
-            case 400:
-              // 400 Bad Request
-              console.error('Bad Request:', error.response.data.message || 'Invalid request.');
-              break;
-            case 401:
-              //  401 Unauthorized
-                const url = error.response.config.url
-                console.log("response url ", url)
-                if(error.response.config.url.includes("user/")){
-                  localStorage.removeItem("token")
-                  localStorage.removeItem("accessLevel")
-                  localStorage.removeItem("email")
-                  window.location.reload();
-                }else{
-                  console.error('Unauthorized:', 'User is not authenticated.');
-                }
-              break;
-            case 403:
-              //  403 Forbidden
-              console.error('Forbidden:', 'User does not have the necessary permissions.');
-              break;
-            case 404:
-              // 404 Not Found
-              console.error('Not Found:', 'Requested resource not found.');
-              break;
-            case 500:
-              // 500 Internal Server Error
-              console.error('Server Error:', 'Internal server error occurred.');
-              break;
-            default:
-              // Handle other status codes
-              console.error(`Error ${error.response.status}:`, error.response.data);
-          }
+            switch (error.response.status) {
+                case 400:
+                    // 400 Bad Request
+                    console.error('Bad Request:', error.response.data.message || 'Invalid request.');
+                    break;
+                case 401:
+                    //  401 Unauthorized
+                    const url = error.response.config.url
+                    console.log("response url ", url)
+                    if (error.response.config.url.includes("user/")) {
+                        localStorage.removeItem("token")
+                        localStorage.removeItem("accessLevel")
+                        localStorage.removeItem("email")
+                        window.location.reload();
+                    } else {
+                        console.error('Unauthorized:', 'User is not authenticated.');
+                    }
+                    break;
+                case 403:
+                    //  403 Forbidden
+                    console.error('Forbidden:', 'User does not have the necessary permissions.');
+                    break;
+                case 404:
+                    // 404 Not Found
+                    console.error('Not Found:', 'Requested resource not found.');
+                    break;
+                case 500:
+                    // 500 Internal Server Error
+                    console.error('Server Error:', 'Internal server error occurred.');
+                    break;
+                default:
+                    // Handle other status codes
+                    console.error(`Error ${error.response.status}:`, error.response.data);
+            }
         } else if (error.request) {
-          console.log('No response received: ', error.request);
-          const url = error.response.config.url
-          console.log("response url ", url)
+            console.log('No response received: ', error.request);
+            const url = error.response.config.url
+            console.log("response url ", url)
         } else {
-          console.log('Axios error', error.message);
+            console.log('Axios error', error.message);
         }
-      return Promise.reject(error);
+        return Promise.reject(error);
     }
 )
 
 
 class App extends React.Component {
-  render() {
-    return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/catalog" element={<Catalog />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<Product />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/cart" element={<Cart />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    );
-  }
+    render() {
+        return (
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/catalog" element={<Catalog/>}/>
+                    <Route path="/products" element={<Products/>}/>
+                    <Route path="/products/:id" element={<Product/>}/>
+                    <Route path="/about" element={<About/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/register" element={<Register/>}/>
+                    <Route path="/cart" element={<Cart/>}/>
+                </Routes>
+                <Footer/>
+            </BrowserRouter>
+        );
+    }
 }
 
 export default App;

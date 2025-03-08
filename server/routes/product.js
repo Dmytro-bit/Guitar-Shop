@@ -16,7 +16,7 @@ router.patch(`/products/:id`, async (req, res) => {
 
 router.get(`/products`, async (req, res) => {
     try {
-        let {name, brand, category, minPrice, maxPrice, minRating, maxRating} = req.query
+        let {name, brand, category, minPrice, maxPrice, minRating, maxRating, ...parameters} = req.query
         let filter_dict = {}
 
         // https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
@@ -38,6 +38,13 @@ router.get(`/products`, async (req, res) => {
             if (maxRating) filter_dict.rating.$lte = Number(maxRating)
         }
 
+        for (const key in parameters) {
+            if (Array.isArray(parameters[key])) {
+                filter_dict[`parameters.${key}`] = {$in: parameters[key]}
+            } else {
+                filter_dict[`parameters.${key}`] = parameters[key]
+            }
+        }
 
         const data = await Product.find(filter_dict).populate("category").lean()
 
