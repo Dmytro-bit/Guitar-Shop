@@ -18,10 +18,6 @@ class Products extends React.Component
             data: {},
             parameters: {},
         };
-
-        this.state = {
-
-        }
     }
 
     componentDidMount = async () =>
