@@ -12,17 +12,17 @@ class Products extends React.Component {
         super(props);
 
         this.state = {
-            search: "",
-            sort: "Price: Low to High",
-            data: {},
-            parameters: {},
+            data : {},
+            parameters : {},
+            brands : {},
+            categories : {}
         }
     }
 
     componentDidMount = async () => {
         try {
             const res = await axios.get("/products/filter")
-            this.setState({data: res.data.data, parameters: res.data.data.parameters});
+            this.setState({data: res.data.data, parameters : res.data.data.parameters, brands : res.data.data.brands, categories : res.data.data.categories});
             console.log("Response data:", this.state.parameters);
         } catch (e) {
             console.log(e.message);
@@ -101,24 +101,49 @@ class Products extends React.Component {
                     </div>
                     <div className="products-filter-container">
                         <div className="products-filter">
-                            <div className="products-filter-brands-container">BRANDS</div>
-                            <div className="products-filter-categories-container">CATEGORIES</div>
+                            <div className="products-filter-brands-container">
+                                <input className="products-filter-input" type="checkbox" id="filter-brands-toggle"/>
+                                <label className="products-filters-title" htmlFor={"filter-brands-toggle"}>BRANDS</label>
+                                <div className="filter-dropdown-container">
+                                    {Object.keys(this.state.brands).map((brand, index) => (
+                                        <div className="filter-brand-dropdown-option" key={index}>
+                                            <input type="checkbox" id={`filter-brand-${brand}`} className="filter-brand-checkbox"/>
+                                            <label className={`filter-brand-label`}>{this.state.brands[brand]}</label>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="products-filter-categories-container">
+                                <input className="products-filter-input" type="checkbox" id="filter-categories-toggle"/>
+                                <label className="products-filter-title" htmlFor={"filter-categories-toggle"}>CATEGORIES</label>
+                                <div className="filter-dropdown-container">
+                                    {Object.keys(this.state.categories).map((category, index) => (
+                                        <div className="filter-categories-dropdown-option" key={index}>
+                                            <input type="checkbox" id={`filter-category-${category}`}
+                                                   className="filter-category-checkbox"/>
+                                            <label
+                                                className={`filter-category-label`}>{this.state.categories[category]}</label>
+                                        </div>
+                                    ))}
+                                </div>
+                                </div>
                             <div className="products-filter-parameters-container">
-                                <p className="products-filter-parameters-title">PARAMETERS</p>
-                                <div className="filter-parameters-container">
-                                    {console.log(this.state)}
+                                <input className="products-filter-input" type="checkbox" id="filter-parameters-toggle"/>
+                                <label className="products-filter-title" htmlFor={"filter-parameters-toggle"}>PARAMETERS</label>
+                                <div className="filter-dropdown-container">
                                     {Object.keys(this.state.parameters).map((parameter, index) => (
                                         <div className="filter-parameter-container" key={index}>
-                                            <input type="checkbox" className="filter-parameter-input"
+                                            <input type="checkbox" className="products-filter-input"
                                                    id={`filter-parameter-${parameter}`} key={index}/>
                                             <label htmlFor={`filter-parameter-${parameter}`}
                                                    className="filter-parameter-title"><b>{parameter}</b></label>
-                                            <div className="filter-parameter-dropdown">
+                                            <div className="filter-dropdown-container">
                                                 {this.state.parameters[parameter].map((option, index) => (
                                                     <div className="filter-parameter-dropdown-option" key={index}>
                                                         <input type="checkbox" id={`filter-parameter-${option}`}
                                                                className="filter-parameter-checkbox"/>
-                                                        <label htmlFor={`filter-parameter-${option}`}>{option}</label>
+                                                        <label
+                                                            htmlFor={`filter-parameter-${option}`}>{option}</label>
                                                     </div>
                                                 ))}
                                             </div>
@@ -129,7 +154,7 @@ class Products extends React.Component {
                         </div>
                     </div>
                     <div className="products-category-name">All Products</div>
-                    {/*Make it display currently viewed category*/}
+                    {/*TODO Make it display currently viewed category*/}
                     <div className="cardlist-container"><CardList sort={this.state.sort} search={this.state.search}/>
                     </div>
                 </div>
