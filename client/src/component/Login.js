@@ -83,6 +83,8 @@ class Login extends React.Component
                     }
                 localStorage.setItem("isAddressSet", "false");
 
+
+                localStorage.setItem("shopping_cart", JSON.stringify([]));
                 localStorage.setItem("orderAddress", JSON.stringify(orderAddress))
                 this.setState({loggedInSuccessfully: true})
 

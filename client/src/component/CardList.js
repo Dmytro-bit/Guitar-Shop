@@ -56,7 +56,7 @@ class CardList extends React.Component {
     render() {
         const {search, sort} = this.props;
         const filteredData = this.state.data.filter(product => {
-            return product.name.toLowerCase().includes(search.toLowerCase()) && product.brand.toLowerCase().includes(search.toLowerCase()) ;
+            return product.name.toLowerCase().includes(search.toLowerCase())  ;
         });
 
         const sortedData = this.sortProducts(filteredData, sort);

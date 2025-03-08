@@ -51,7 +51,16 @@ class Nav extends React.Component {
         localStorage.removeItem("accessLevel")
         localStorage.removeItem("email")
         localStorage.removeItem("profilePhoto")
-
+        const orderAddress =
+            {
+                fline: "",
+                sline: "",
+                city: "",
+                county: "",
+                eircode: "",
+            }
+        localStorage.setItem("orderAddress", JSON.stringify(orderAddress));
+        localStorage.setItem("shopping_cart", JSON.stringify([]));
         this.setState({isRegistered : false})
         window.location.reload(false); //refresh the page
     }
