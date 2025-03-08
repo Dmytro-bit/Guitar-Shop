@@ -1,6 +1,7 @@
 import React from "react"
 import {Link} from "react-router-dom";
-
+import {PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js"
+import {SANDBOX_CLIENT_ID} from "../config/global_constants"
 import Nav from "./Nav"
 
 import "../styles/cart.scss"
@@ -160,6 +161,23 @@ class Cart extends React.Component {
         this.setState({address: newAddress}, ()=>(localStorage.setItem("orderAddress", JSON.stringify(newAddress))));
     }
 
+    onError = errorData => {
+        console.log(errorData);
+    }
+
+
+    onCancel = cancelData => {
+        console.log(cancelData);
+    }
+
+    onApprove = paymentData => {
+        console.log(paymentData);
+    }
+    createOrder = (data, actions) => {
+        return actions.order.create({purchase_units: [{amount: {value: this.state.total}}]})
+    }
+
+
     render() {
         return (
             <><Nav></Nav>
@@ -215,8 +233,13 @@ class Cart extends React.Component {
                                     <p className="cart-total-price">{this.state.total}$</p>
                                 </div>
                                 <div className="cart-total-additional-container">VAT included in the price</div>
+                                {/*FIXME first CHECKOUT?*/}
                                 <div className="cart-total-checkout-container">
-                                    <button className="cart-total-checkout-button">CHECKOUT</button>
+                                    <PayPalScriptProvider options={{currency: "EUR", "client-id": SANDBOX_CLIENT_ID}}>
+                                        <PayPalButtons style={{layout: "horizontal"}} createOrder={this.createOrder}
+                                                       onApprove={this.onApprove} onError={this.onError}
+                                                       onCancel={this.onCancel}/>
+                                    </PayPalScriptProvider>
                                 </div>
                             </div>
                             <div className="cart-total-container-alt">
@@ -236,6 +259,7 @@ class Cart extends React.Component {
                                     <p className="cart-total-title">Total: </p>
                                     <p className="cart-total-price">{this.state.total}$</p>
                                 </div>
+                                {/*FIXME second CHECKOUT?*/}
                                 <div className="cart-total-checkout-container">
                                     <button className="cart-total-checkout-button">CHECKOUT</button>
                                 </div>
