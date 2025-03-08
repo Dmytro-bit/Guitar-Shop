@@ -123,7 +123,16 @@ class Register extends React.Component
                     localStorage.setItem("token", token)
                     localStorage.setItem("email", email)
                     localStorage.setItem("accessLevel", accessLevel)
-
+                    const orderAddress =
+                        {
+                            fline: "",
+                            sline: "",
+                            city: "",
+                            county: "",
+                            eircode: "",
+                        }
+                    localStorage.setItem("shopping_cart", JSON.stringify([]));
+                    localStorage.setItem("orderAddress", JSON.stringify(orderAddress))
                     this.setState({ registrationSuccessfull : true })
 
                     console.log("Successfully registered and logined")

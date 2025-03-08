@@ -47,7 +47,36 @@ class Cart extends React.Component {
         const updatedCartProducts = [...this.state.cartProducts];
         if (updatedCartProducts[i].quantity < updatedCartProducts[i].product.quantity) {
             updatedCartProducts[i].quantity += 1;
-            this.setState({cartProducts: updatedCartProducts});
+            this.setState({cartProducts: updatedCartProducts}, async ()=>{
+                try{
+                    const token = localStorage.getItem("token");
+                    if (token) {
+                        const quantity = updatedCartProducts[i].quantity;
+                        console.log(updatedCartProducts[i].product);
+                        const id = updatedCartProducts[i].product._id;
+
+
+                        const data = JSON.parse(localStorage.getItem("shopping_cart"))
+
+                        const index = data.findIndex(obj => obj.product === id);
+                        if (index !== -1) {
+                            data[index] = {
+                                ...data[index],
+                                quantity: quantity
+                            };
+                        }
+                        localStorage.setItem("shopping_cart", JSON.stringify(data));
+                        const res = await axios.patch("/shopping-cart", data, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                    }
+                }catch(error) {
+                    console.log("____________________________________________________________________")
+                    console.error(error);
+                }
+            });
         }
     }
 
@@ -55,9 +84,67 @@ class Cart extends React.Component {
         const updatedCartProducts = [...this.state.cartProducts];
         if (updatedCartProducts[i].quantity > 1) {
             updatedCartProducts[i].quantity -= 1;
-            this.setState({cartProducts: updatedCartProducts});
+            this.setState({cartProducts: updatedCartProducts},async ()=>{
+                try{
+                    const token = localStorage.getItem("token");
+                    if (token) {
+                        const id = updatedCartProducts[i].product._id;
+                        const quantity = updatedCartProducts[i].quantity;
+
+                        const data = JSON.parse(localStorage.getItem("shopping_cart"))
+
+
+
+                        const index = data.findIndex(obj => obj.product === id);
+                        if (index !== -1) {
+                            data[index] = {
+                                ...data[index],
+                                quantity: quantity
+                            };
+                        }
+                        localStorage.setItem("shopping_cart", JSON.stringify(data));
+                        const res = await axios.patch("/shopping-cart", data, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                    }
+                }catch(error) {
+                    console.error(error);
+                }
+            });
         }
     }
+
+
+    deleteItem = async (i) => {
+        try {
+            const updatedCartProducts = [...this.state.cartProducts];
+            updatedCartProducts.splice(i, 1);
+
+            this.setState({ cartProducts: updatedCartProducts }, async () => {
+
+                const localCart = updatedCartProducts.map(item => ({
+                    product: item.product._id, // convert product to its id string
+                    quantity: item.quantity
+                }));
+
+                localStorage.setItem("shopping_cart", JSON.stringify(localCart));
+
+                const token = localStorage.getItem("token");
+                if (token) {
+                    await axios.patch("/shopping-cart", localCart, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    window.location.reload();
+                }
+            });
+        } catch (error) {
+            console.error("Error deleting item from cart:", error);
+        }
+    };
 
     async componentDidMount() {
 
@@ -72,45 +159,29 @@ class Cart extends React.Component {
         }
         await this.getCart();
         await this.getDefaultAddress();
-
-        try {
-            const res = await axios.get("/shopping-cart", {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                }
-            });
-            console.log(res.data)
-            const {shopping_cart, total} = res.data
-
-            console.log("Shopping cart:", shopping_cart, "Total:", total)
-            if (res.status === 200) {
-                this.setState({cartProducts: shopping_cart, total: total});
-            }
-        } catch (error) {
-            console.error("Error fetching products:", error);
-        }
-
-
     };
 
 
     getCart = async () => {
-        try {
-            const res = await axios.get("/shopping-cart", {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                }
-            });
-            console.log(res.data)
-            const {shopping_cart, total} = res.data
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const res = await axios.get("/shopping-cart", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                const {shopping_cart, total} = res.data
 
-            console.log("Shopping cart:", shopping_cart, "Total:", total)
-            if (res.status === 200) {
-                this.setState({cartProducts: shopping_cart, total: total});
+                console.log("Shopping cart:", shopping_cart, "Total:", total)
+                if (res.status === 200) {
+                    this.setState({cartProducts: shopping_cart, total: total});
+                }
+            } catch (error) {
+                console.error("Error fetching products:", error);
             }
-        } catch (error) {
-            console.error("Error fetching products:", error);
         }
+
     }
 
     getDefaultAddress = async () => {
@@ -197,7 +268,7 @@ class Cart extends React.Component {
                                             <div className="top-row">
                                                 <p className="cart-product-name">{cartProduct.product.name}</p>
                                                 <img src="../icons/bin.png" className="cart-delete-product-icon"
-                                                     alt="delete product"/>
+                                                     alt="delete product" onClick={() => this.deleteItem(index)} />
                                             </div>
                                             <div className="middle-row">
                                                 <p className="cart-product-delivery">Free Delivery</p>

@@ -27,9 +27,11 @@ router.get(``, verifyLogin, async (req, res) => {
     }
 })
 
-router.patch(``, verifyLogin, async (req, res) => {
+
+router.patch(``, verifyLogin, async (req, res, next) => {
     try {
         const data = req.body;
+        console.log("received data is ", data);
         const user = await usersModel.findOneAndUpdate(
             {_id: req.user_id},
             {
@@ -52,7 +54,7 @@ router.patch(``, verifyLogin, async (req, res) => {
         res.status(200).json({shopping_cart: shopping_cart, total: totalPrice});
 
     } catch (err) {
-        res.status(500).json({error: err.message});
+        next(err);
     }
 });
 

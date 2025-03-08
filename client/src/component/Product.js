@@ -25,6 +25,7 @@ class Products extends React.Component {
             },
             currImage: 0,
             quantity: 1,
+
         }
     }
 
@@ -43,10 +44,9 @@ class Products extends React.Component {
             this.setState({quantity: this.state.quantity + 1});
     }
 
-    handleQuantityDecrease = () =>
-    {
-        if(this.state.quantity > 1)
-            this.setState({quantity : this.state.quantity - 1});
+    handleQuantityDecrease = () => {
+        if (this.state.quantity > 1)
+            this.setState({quantity: this.state.quantity - 1});
     }
 
     async componentDidMount() {
@@ -62,6 +62,44 @@ class Products extends React.Component {
 
         } catch (error) {
             console.error("Error fetching product:", error);
+        }
+    }
+
+    addToCart = async () => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const {id} = this.props.params;
+                const data = JSON.parse(localStorage.getItem("shopping_cart"));
+                const item =
+                    {
+                        "product": id,
+                        "quantity": this.state.quantity,
+                    }
+
+                const index = data.findIndex(obj => obj.product === this.props.params);
+                if (index !== -1) {
+                    data[index] = {
+                        ...data[index],
+                        quantity: this.state.quantity
+                    };
+                } else {
+                    data.push(item)
+                }
+
+                localStorage.setItem("shopping_cart", JSON.stringify(data));
+                const res = await axios.patch("/shopping-cart", data, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                console.log("Response data:", res.data);
+            } catch
+                (error) {
+                console.error("Error creating cart:", error);
+            }
+
         }
     }
 
@@ -92,8 +130,9 @@ class Products extends React.Component {
                                 {Object.entries(this.state.product.parameters)
                                     .map(([key, value], index) => (
                                         <li className="product-chars-list-element" key={index}><p
-                                            className="product-chars-list-element-key"><strong>{key}:</strong></p> <p
-                                            className="product-chars-list-element-value">{value}</p></li>
+                                            className="product-chars-list-element-key"><strong>{key}:</strong></p>
+                                            <p
+                                                className="product-chars-list-element-value">{value}</p></li>
                                     ))
                                 }
                             </ul>
@@ -138,7 +177,8 @@ class Products extends React.Component {
                                 </button>
                             </div>
                             <div className="product-buy">
-                                <Link to="/cart" className="product-buy-button">ADD TO CART</Link>
+                                <Link to="/cart" className="product-buy-button" onClick={this.addToCart}>ADD TO
+                                    CART</Link>
                             </div>
                             <div className="product-icons">
                                 <img src="../img/shopping-cart.png" alt="cart"></img>
