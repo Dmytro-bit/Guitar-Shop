@@ -70,7 +70,7 @@ class CardList extends React.Component {
                         brand={product.brand}
                         model={product.model}
                         price={product.price}
-                        inStock={product.quantity > 0}
+                        quantity={product.quantity}
                         parameters={product.parameters}
                     /></div>
                 ))}

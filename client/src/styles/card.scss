@@ -65,17 +65,23 @@
                     display: flex;
                     justify-content: space-between;
 
+                    .admin-controls-container{
+                        display: flex;
+                        //width: 100%;
+                        gap: 1em;
+                    }
+
                     .heart-icon {
                         margin-right: 0.5em;
                         object-fit: cover;
-                        width: clamp(28px, 2vw, 3vw);
-                        height: clamp(2vw, 100%, 2.5vw                                                                                                                                                                                                                                                                              );
+                        width: clamp(28px, 1.4vw, 3vw);
+                        height: clamp(28px, 1.4vw, 2.5vw);
                         transition: all 0.3s ease-in-out;
 
-                        @media screen and (max-width: 768px) {                                                                                                                                                          
+                        @media screen and (max-width: 768px) {
                             width: 5vw;
                             height: 5vw;
-                            
+
                         }
 
                         &:hover {
