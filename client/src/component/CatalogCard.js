@@ -3,9 +3,10 @@ import React from "react";
 import "../styles/catalogCard.scss"
 import CategoryModal from "./CategoryModal";
 import ApprovalModal from "./ApprovalModal";
+import axios from "axios";
 
 class CatalogCard extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props)
 
         this.state = {
@@ -22,27 +23,44 @@ class CatalogCard extends React.Component {
         this.setState({isDeleteModalOpen: !this.state.isDeleteModalOpen});
     }
 
-    render () {
-        return(
+    handleDeleteCategory = async () => {
+
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+        };
+        await axios.delete(`/categories/${this.props.category_id}`, {headers});
+
+        this.handleDeleteModal();
+        await this.props.handleRefresh()
+    }
+
+    render() {
+        return (
             <>
                 {this.state.isEditModalOpen && <CategoryModal
-                                                type="edit"
-                                                name={this.props.name}
-                                                imageURL={this.props.imageURL}
-                                                hoverImageURL={this.props.hoverImageURL}
-                                                handleClose={this.handleEditModal}/>}
+                    type="edit"
+                    name={this.props.name}
+                    cover_image={this.props.cover_image}
+                    background_image={this.props.background_image}
+                    handleClose={this.handleEditModal}
+                    category_id={this.props.category_id}
+                />}
 
                 {this.state.isDeleteModalOpen && <ApprovalModal
                     text="Are you sure you want to delete category?"
                     color="red"
-                    handleClick={this.handleDeleteModal}
+                    handleClick={this.handleDeleteCategory}
                     handleClose={this.handleDeleteModal}/>}
                 {this.state.isEditModalOpen && <div className="modal-bg"></div>}
                 <div className={`catalog-card-container ${this.props.isAdmin ? "no-hover" : ""}`}>
                     <div className="catalog-card-name">{this.props.name}</div>
-                    <div className="catalog-card-image-container"><img className="catalog-card-image" src={this.props.imageURL}/></div>
-                    <img src={this.props.hoverImageURL} className="catalog-card-hover-bg"/>
-                    <div className="catalog-card-controls-container" style={{display : this.props.isAdmin ? "flex" : "none"}}>
+                    <div className="catalog-card-image-container"><img className="catalog-card-image"
+                                                                       src={this.props.cover_image}
+                                                                       alt="Category cover Image"/></div>
+                    <img src={this.props.background_image} className="catalog-card-hover-bg"
+                         alt="Category background Image"/>
+                    <div className="catalog-card-controls-container"
+                         style={{display: this.props.isAdmin ? "flex" : "none"}}>
                         <button className="catalog-card-control-button" onClick={this.handleDeleteModal}>DELETE</button>
                         <button className="catalog-card-control-button" onClick={this.handleEditModal}>EDIT</button>
                     </div>

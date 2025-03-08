@@ -73,4 +73,13 @@ router.patch("/:id", verifyLogin, verifyAdmin, upload.fields([{name: "cover_imag
 
 })
 
+router.delete("/:id", verifyLogin, verifyAdmin, async (req, res, next) => {
+    try {
+        const data =  await  Categories.findOneAndDelete({_id: req.params.id}, undefined)
+        res.status(200).json({data: data})
+    } catch (e) {
+        next(e);
+    }
+})
+
 module.exports = router;
