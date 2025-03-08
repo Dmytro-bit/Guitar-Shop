@@ -313,3 +313,18 @@
   }
 }
 
+.products-filter-input {
+  display: none;
+}
+
+.filter-dropdown-container {
+  display: none;
+}
+
+.products-filter-input:checked ~ .filter-dropdown-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
