@@ -15,24 +15,23 @@ import axios from "axios";
 
 axios.defaults.baseURL = SERVER_HOST;
 
-if (typeof localStorage.accessLevel === "undefined" || localStorage.accessLevel === "null" || localStorage.accessLevel === 0)
-{
-  localStorage.accessLevel = ACCESS_LEVEL_GUEST
-  localStorage.token = null
-  localStorage.email = null
+if (typeof localStorage.accessLevel === "undefined" || localStorage.accessLevel === "null" || localStorage.accessLevel === 0) {
+    localStorage.accessLevel = ACCESS_LEVEL_GUEST
+    localStorage.token = null
+    localStorage.email = null
 }
 
 axios.interceptors.request.use(config => {
-  const token = localStorage.getItem("token");
-  console.log("token in App.js interceptor", token);
-  const protectedApi = config.url.includes("user/");
-  console.log("protectedApi", protectedApi);
-  const configUrl = config.url
-  console.log("configUrl ", configUrl);
-  if (token && protectedApi) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+    const token = localStorage.getItem("token");
+    console.log("token in App.js interceptor", token);
+    const protectedApi = config.url.includes("user/");
+    console.log("protectedApi", protectedApi);
+    const configUrl = config.url
+    console.log("configUrl ", configUrl);
+    if (token && protectedApi) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
 })
 axios.interceptors.response.use(
     response => response,
@@ -73,13 +72,13 @@ axios.interceptors.response.use(
               console.error(`Error ${error.response.status}:`, error.response.data);
           }
         } else if (error.request) {
-          console.log('No response received: ', error.request);
-          const url = error.response.config.url
-          console.log("response url ", url)
+            console.log('No response received: ', error.request);
+            const url = error.response.config.url
+            console.log("response url ", url)
         } else {
-          console.log('Axios error', error.message);
+            console.log('Axios error', error.message);
         }
-      return Promise.reject(error);
+        return Promise.reject(error);
     }
 )
 

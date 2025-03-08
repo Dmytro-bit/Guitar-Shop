@@ -1,9 +1,10 @@
 const {Product, Categories} = require("../models/product");
+const {verifyLogin, verifyAdmin} = require("./auth");
 
 
 const router = require("express").Router();
 
-router.patch(`/products/:id`, async (req, res) => {
+router.patch(`/products/:id`, verifyLogin, verifyAdmin, async (req, res) => {
     try {
         const data = await Product.findOne({_id: req.params.id}).populate("category")
         return res.status(200).send({data: data})
@@ -16,7 +17,7 @@ router.patch(`/products/:id`, async (req, res) => {
 
 router.get(`/products`, async (req, res) => {
     try {
-        let {name, brand, category, minPrice, maxPrice, minRating, maxRating} = req.query
+        let {name, brand, category, minPrice, maxPrice, minRating, maxRating, ...parameters} = req.query
         let filter_dict = {}
 
         // https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
@@ -38,6 +39,13 @@ router.get(`/products`, async (req, res) => {
             if (maxRating) filter_dict.rating.$lte = Number(maxRating)
         }
 
+        for (const key in parameters) {
+            if (Array.isArray(parameters[key])) {
+                filter_dict[`parameters.${key}`] = {$in: parameters[key]}
+            } else {
+                filter_dict[`parameters.${key}`] = parameters[key]
+            }
+        }
 
         const data = await Product.find(filter_dict).populate("category").lean()
 
@@ -93,8 +101,9 @@ router.get(`/products/:id`, async (req, res) => {
 })
 
 
-router.post(`/products`, async (req, res) => {
+router.post(`/products`, verifyLogin, verifyAdmin, async (req, res) => {
     try {
+
         const {name, brand, model, category, images, rating, quantity, props} = req.body;
 
         const newProduct = new Product({name, brand, model, category, images, rating, quantity, props});
@@ -106,4 +115,14 @@ router.post(`/products`, async (req, res) => {
     }
 })
 
+
+router.delete(`/products/:id`, verifyLogin, verifyAdmin, async (req, res, next) => {
+    try {
+
+        const result = Product.findByIdAndDelete(req.params.id, undefined);
+        return res.status(200).send({data: result});
+    } catch (e) {
+        next(e);
+    }
+})
 module.exports = router;
