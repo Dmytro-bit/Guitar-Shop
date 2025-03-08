@@ -263,6 +263,37 @@
     border-radius: 10px;
     top: 0;
     box-shadow: 0 0.3em 10px rgb(133, 132, 132);
+    overflow: scroll;
+
+    .products-filter {
+      width: 100%;
+
+      .products-filter-parameters-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .filter-parameters-container {
+          .filter-parameter-container {
+            .filter-parameter-input{
+              display: none;
+            }
+
+            .filter-parameter-dropdown {
+              display: none;
+            }
+
+            .filter-parameter-input:checked ~ .filter-parameter-dropdown {
+              display: flex;
+              flex-direction: column;
+              width: 100%;
+              justify-content: flex-start;
+              box-sizing: border-box;
+            }
+          }
+        }
+      }
+    }
 
     @media screen and (max-width: 908px) {
       display: none;

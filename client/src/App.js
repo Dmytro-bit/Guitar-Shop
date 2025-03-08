@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./component/Home";
 import Catalog from "./component/Catalog";
@@ -37,40 +37,40 @@ axios.interceptors.response.use(
     response => response,
     error => {
         if (error.response) {
-            switch (error.response.status) {
-                case 400:
-                    // 400 Bad Request
-                    console.error('Bad Request:', error.response.data.message || 'Invalid request.');
-                    break;
-                case 401:
-                    //  401 Unauthorized
-                    const url = error.response.config.url
-                    console.log("response url ", url)
-                    if (error.response.config.url.includes("user/")) {
-                        localStorage.removeItem("token")
-                        localStorage.removeItem("accessLevel")
-                        localStorage.removeItem("email")
-                        window.location.reload();
-                    } else {
-                        console.error('Unauthorized:', 'User is not authenticated.');
-                    }
-                    break;
-                case 403:
-                    //  403 Forbidden
-                    console.error('Forbidden:', 'User does not have the necessary permissions.');
-                    break;
-                case 404:
-                    // 404 Not Found
-                    console.error('Not Found:', 'Requested resource not found.');
-                    break;
-                case 500:
-                    // 500 Internal Server Error
-                    console.error('Server Error:', 'Internal server error occurred.');
-                    break;
-                default:
-                    // Handle other status codes
-                    console.error(`Error ${error.response.status}:`, error.response.data);
-            }
+          switch (error.response.status) {
+            case 400:
+              // 400 Bad Request
+              console.error('Bad Request:', error.response.data.message || 'Invalid request.');
+              break;
+            case 401:
+              //  401 Unauthorized
+                const url = error.response.config.url
+                console.log("response url ", url)
+                if(error.response.config.url.includes("user/")){
+                  localStorage.removeItem("token")
+                  localStorage.removeItem("accessLevel")
+                  localStorage.removeItem("email")
+                  window.location.reload();
+                }else{
+                  console.error('Unauthorized:', 'User is not authenticated.');
+                }
+              break;
+            case 403:
+              //  403 Forbidden
+              console.error('Forbidden:', 'User does not have the necessary permissions.');
+              break;
+            case 404:
+              // 404 Not Found
+              console.error('Not Found:', 'Requested resource not found.');
+              break;
+            case 500:
+              // 500 Internal Server Error
+              console.error('Server Error:', 'Internal server error occurred.');
+              break;
+            default:
+              // Handle other status codes
+              console.error(`Error ${error.response.status}:`, error.response.data);
+          }
         } else if (error.request) {
             console.log('No response received: ', error.request);
             const url = error.response.config.url
@@ -84,23 +84,23 @@ axios.interceptors.response.use(
 
 
 class App extends React.Component {
-    render() {
-        return (
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<Home/>}/>
-                    <Route path="/catalog" element={<Catalog/>}/>
-                    <Route path="/products" element={<Products/>}/>
-                    <Route path="/products/:id" element={<Product/>}/>
-                    <Route path="/about" element={<About/>}/>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/register" element={<Register/>}/>
-                    <Route path="/cart" element={<Cart/>}/>
-                </Routes>
-                <Footer/>
-            </BrowserRouter>
-        );
-    }
+  render() {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<Product />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/cart" element={<Cart />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    );
+  }
 }
 
 export default App;
