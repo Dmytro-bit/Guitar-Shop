@@ -12,6 +12,8 @@ class Products extends React.Component {
         super(props);
 
         this.state = {
+            search: "",
+            sort: "Price: Low to High",
             data : {},
             parameters : {},
             brands : {},
