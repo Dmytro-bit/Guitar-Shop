@@ -219,6 +219,8 @@
               transform-origin: left;
               transition: all 0.3s ease;
               z-index: 3;
+              box-sizing: border-box;
+              padding: 3em;
 
               .filter-dropdown-close {
                 position: absolute;
@@ -274,44 +276,6 @@
         flex-direction: column;
         box-sizing: border-box;
         padding: 1em;
-      }
-
-      .products-filter-pricerange-container {
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-        box-sizing: border-box;
-        padding: 1em;
-        flex-direction: column;
-
-        .products-filter-pricerange-title {
-          width: 100%;
-          font-size: clamp(24px, 2vw, 84px);
-          border-bottom: 3px solid rgb(55,55,55);
-        }
-
-        .pricerange-container {
-          display: flex;
-          width: 100%;
-          justify-content: space-between;
-          align-items: center;
-
-          .pricerange-box {
-            width: 35%;
-            border: none;
-            border-radius: 10px;
-            -webkit-appearance: none;
-            -moz-appearance: textfield;
-            box-sizing: border-box;
-            padding: 1em;
-          }
-
-          .pricerange-devider {
-            width: 3vw;
-            height: 0;
-            border: 2px solid rgb(55,55,55);
-          }
-        }
       }
     }
 
@@ -413,4 +377,46 @@
 
 .products-filter-input:checked ~ .filter-parameter-title .filter-arrow {
   transform: rotate(90deg);
+}
+
+.products-filter-pricerange-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 1em;
+  flex-direction: column;
+
+  .products-filter-pricerange-title {
+    width: 100%;
+    font-size: clamp(24px, 2vw, 84px);
+    border-bottom: 3px solid rgb(55,55,55);
+  }
+
+  .pricerange-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+
+    .pricerange-box {
+      width: 35%;
+      border: none;
+      border-radius: 10px;
+      -webkit-appearance: none;
+      -moz-appearance: textfield;
+      box-sizing: border-box;
+      padding: 1em;
+    }
+
+    .pricerange-devider {
+      width: 3vw;
+      height: 0;
+      border: 2px solid rgb(55,55,55);
+    }
+  }
+
+  @media screen and (max-width: 908px) {
+    padding: 0;
+  }
 }
