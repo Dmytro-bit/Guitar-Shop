@@ -1,7 +1,7 @@
 import React from "react"
 // import axios from "axios"
 
-import { Redirect, Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 
 import "../styles/register.scss"
 import axios from "axios";
@@ -142,7 +142,7 @@ class Register extends React.Component
         console.log(formInputsState)
 
         if (this.state.registrationSuccessfull)
-            return <Redirect to="/" />;
+            return <Navigate to="/" />;
 
         return(
             <div className="register-bg">
