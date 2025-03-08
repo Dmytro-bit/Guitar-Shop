@@ -1,4 +1,5 @@
 const {Product, Categories} = require("../models/product");
+const {verifyLogin} = require("./auth");
 
 
 const router = require("express").Router();
@@ -100,8 +101,12 @@ router.get(`/products/:id`, async (req, res) => {
 })
 
 
-router.post(`/products`, async (req, res) => {
+router.post(`/products`, verifyLogin, async (req, res) => {
     try {
+        if (req.accessLevel !== parseInt(process.env.ACCESS_LEVEL_ADMIN)) {
+            res.status(403).send({error: 'Forbidden'});
+        }
+
         const {name, brand, model, category, images, rating, quantity, props} = req.body;
 
         const newProduct = new Product({name, brand, model, category, images, rating, quantity, props});
@@ -113,4 +118,17 @@ router.post(`/products`, async (req, res) => {
     }
 })
 
+
+router.delete(`/products/:id`, verifyLogin, async (req, res, next) => {
+    try {
+        if (req.accessLevel !== parseInt(process.env.ACCESS_LEVEL_ADMIN)) {
+            res.status(403).send({error: 'Forbidden'});
+        }
+
+        const result = Product.findByIdAndDelete(req.params.id, undefined);
+        return res.status(200).send({data: result});
+    } catch (e) {
+        next(e);
+    }
+})
 module.exports = router;
