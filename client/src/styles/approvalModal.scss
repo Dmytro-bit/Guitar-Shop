@@ -8,18 +8,72 @@
 }
 
 .approval-modal-container {
-  position: absolute;
-  transform: translateY(-50%) translateX(-50%);
-  width: 20vw;
+  position: fixed;
+  width: 30vw;
+  min-width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   border-radius: 15px;
   box-sizing: border-box;
+  top: calc(40%);
   padding: 1em;
+  z-index: 12;
+  gap: 1em;
+  background-color: white;
+
+  @media screen and (max-width: 768px) {
+    padding: 0.5em;
+  }
 
   .approval-modal-text {
+    text-align: center;
     font-size: clamp(16px, 1.1vw, 32px);
+  }
+
+  .approval-modal-buttons-container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.5em;
+
+    .approval-modal-button {
+      width: 30%;
+      border-radius: 5px;
+      background-color: transparent;
+      border: 2px solid rgb(55,55,55);
+      color: rgb(55,55,55);
+      font-size: clamp(13px, 1.1vw, 32px);
+      box-sizing: border-box;
+      padding: 0.5em;
+      transition: all 0.3s ease;
+
+      &:hover{
+        background-color: rgb(55, 55, 55);
+        color: white;
+      }
+    }
+
+    .green {
+      color: green;
+      border-color: green;
+
+      &:hover{
+        background-color: green;
+        color: white;
+      }
+    }
+
+    .red {
+      border-color: red;
+      color: red;
+
+      &:hover{
+        background-color: red;
+        color: white;
+      }
+    }
   }
 
 }
