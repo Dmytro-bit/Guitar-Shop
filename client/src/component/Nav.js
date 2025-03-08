@@ -53,6 +53,7 @@ class Nav extends React.Component {
         localStorage.removeItem("profilePhoto")
 
         this.setState({isRegistered : false})
+        window.location.reload(false); //refresh the page
     }
 
     render() {

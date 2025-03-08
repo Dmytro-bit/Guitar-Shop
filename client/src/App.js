@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import Home from "./component/Home";
 import Catalog from "./component/Catalog";
@@ -118,16 +118,16 @@ class App extends React.Component {
   render() {
     return (
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/catalog" element={<Catalog />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<Product />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/cart" element={<Cart />} />
-        </Routes>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/catalog" component={Catalog} />
+          <Route exact path="/products" component={Products} />
+          <Route path="/products/:id" component={Product} />
+          <Route exact path="/about" component={About} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/cart" component={Cart} />
+        </Switch>
         <Footer />
       </BrowserRouter>
     );

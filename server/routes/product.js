@@ -43,16 +43,52 @@ router.get(`/products`, async (req, res) => {
 
         res.status(200).json({data: data});
     } catch (error) {
-        res.status(400).send({error: error});
+        res.status(400).json({error: error});
     }
 })
+router.get("/products/filter", async (req, res, next) => {
+    try {
+
+        const brands = await Product.distinct("brand");
+        const categories = await Product.distinct("category");
+
+
+        const parametersData = await Product.aggregate([
+            {$project: {parameters: {$objectToArray: "$parameters"}}},
+            {$unwind: "$parameters"},
+            {
+                $group: {
+                    _id: "$parameters.k",
+                    values: {$addToSet: "$parameters.v"}
+                }
+            }
+        ])
+        const parameters = {}
+
+        parametersData.forEach(param => {
+            parameters[param._id] = param.values;
+        });
+
+
+        res.status(200).json({
+            data: {
+                brands: brands,
+                categories: categories,
+                parameters: parameters
+            }
+        });
+    } catch (err) {
+        next(err)
+    }
+})
+
 
 router.get(`/products/:id`, async (req, res) => {
     try {
         const data = await Product.findOne({_id: req.params.id}).populate("category").lean();
         res.status(200).json({data: data});
     } catch (e) {
-        res.status(400).send({error: e});
+        res.status(400).json({error: e});
     }
 })
 
@@ -66,7 +102,7 @@ router.post(`/products`, async (req, res) => {
 
         return res.status(200).send({data: savedProduct});
     } catch (e) {
-        res.status(400).send({error: e});
+        res.status(400).json({error: e});
     }
 })
 
