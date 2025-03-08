@@ -3,6 +3,7 @@ import React from "react";
 import "../styles/card.scss"
 import {Link} from "react-router-dom";
 import ProductModal from "./ProductModal";
+import ApprovalModal from "./ApprovalModal";
 
 class Card extends React.Component {
     constructor(props) {
@@ -11,6 +12,7 @@ class Card extends React.Component {
         this.state = {
                 isAdmin : false,
                 isEditModalOpen: false,
+                isDeleteModalOpen: false
             }
     }
 
@@ -22,9 +24,18 @@ class Card extends React.Component {
         this.setState({isEditModalOpen: !this.state.isEditModalOpen});
     }
 
+    handleDeleteModal = () => {
+        this.setState({isDeleteModalOpen: !this.state.isDeleteModalOpen});
+    }
+
     render() {
         return (
             <>
+                {this.state.isDeleteModalOpen && <ApprovalModal
+                    text="Are you sure you want to delete this product?"
+                    handleClick={this.handleDeleteModal}
+                    handleClose={this.handleDeleteModal}
+                    color="red"/>}
                 {this.state.isEditModalOpen && <ProductModal
                     type="edit"
                     name={this.props.name}
@@ -47,7 +58,7 @@ class Card extends React.Component {
                                 </Link>
                                 {this.state.isAdmin ? (
                                     <div className="admin-controls-container">
-                                        <img src="../icons/bin.png" className="heart-icon"/>
+                                        <img src="../icons/bin.png" className="heart-icon" onClick={this.handleDeleteModal}/>
                                         <img src="../icons/editing.png" className="heart-icon" onClick={this.handleEditModal}/>
                                     </div>
                                     ) : (<img src="../icons/heart.png" className="heart-icon"/>)}
@@ -75,7 +86,8 @@ class Card extends React.Component {
                         </div>
                     </div>
                 </div>
-            </div></>
+            </div>
+            </>
         )
     }
 }

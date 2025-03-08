@@ -1,10 +1,10 @@
 import React from "react";
 
 import Nav from "./Nav"
+import ProductModal from "./ProductModal";
 import CardList from "./CardList"
 
 import "../styles/products.scss"
-
 import axios from "axios";
 
 class Products extends React.Component {
@@ -20,6 +20,8 @@ class Products extends React.Component {
             categories : {},
             minPrice : 0,
             maxPrice : 100,
+            isAdmin : false,
+            isAddModalOpen: false,
         }
     }
 
@@ -31,6 +33,7 @@ class Products extends React.Component {
         } catch (e) {
             console.log(e.message);
         }
+        this.setState({isAdmin: localStorage.getItem("accessLevel") === "2"});
     }
 
     handleSortChange = (sortOption) => {
@@ -49,10 +52,22 @@ class Products extends React.Component {
         this.setState({[key] : value});
     }
 
+    handleAddModal = () => {
+        this.setState({isAddModalOpen: !this.state.isAddModalOpen});
+    }
+
     render()
     {
         return(
             <><Nav />
+                {this.state.isAddModalOpen && <ProductModal
+                    type="add"
+                    name=""
+                    images=""
+                    price=""
+                    quantity=""
+                    parameters=""
+                    handleClose={this.handleAddModal}/>}
                 <div className="products-container">
                     <div className="products-controls-container">
                         <div className="products-controls">
@@ -182,6 +197,9 @@ class Products extends React.Component {
                                     </ul>
                                 </div>
                             </div>
+                            {this.state.isAdmin && <div className="add-product-button-container">
+                                <button className="add-product-button" onClick={this.handleAddModal}>+</button>
+                            </div>}
                         </div>
                     </div>
                     <div className="products-filter-container">
