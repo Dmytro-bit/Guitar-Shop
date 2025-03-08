@@ -10,10 +10,28 @@ class Products extends React.Component
     constructor(props)
     {
         super(props);
+        this.state = {
+            search: "",
+            sort: "Price: Low to High"  // default sort option
+        };
     }
+
+    handleSortChange = (sortOption) => {
+        this.setState({ sort: sortOption });
+    };
+
+
+    handleInputChange = (e) =>{
+        const value = e.target.value;
+        const name = e.target.name;
+
+        this.setState({[name]:value});
+    }
+
 
     render()
     {
+
         return(
             <><Nav />
                 <div className="products-container">
@@ -21,7 +39,7 @@ class Products extends React.Component
                         <div className="products-controls">
                             <div className="product-search-container">
                                 <img src="../icons/search-icon.png" alt="search-icon" className="product-search-icon"/>
-                                <input type="text" className="product-search" placeholder="Search..."/>
+                                <input name="search" type="text" onChange={this.handleInputChange} className="product-search" placeholder="Search..."/>
                             </div>
                             <div className="dropdowns">
                                 <div className="filter-dropdown">
@@ -38,12 +56,12 @@ class Products extends React.Component
                                     <label htmlFor="sort-dropdown-toggle" className="sort-dropdown-label">SORT</label>
 
                                     <ul className="sort-dropdown-menu">
-                                        <li className="sort-dropdown-item">Price: Low to High</li>
-                                        <li className="sort-dropdown-item">Price: High to Low</li>
-                                        <li className="sort-dropdown-item">Rating: Low to High</li>
-                                        <li className="sort-dropdown-item">Rating: High to Low</li>
-                                        <li className="sort-dropdown-item">Alphabetically: A-Z</li>
-                                        <li className="sort-dropdown-item">Alphabetically: Z-A</li>
+                                        <li className="sort-dropdown-item" onClick={() => this.handleSortChange("Price: Low to High")}>Price: Low to High</li>
+                                        <li className="sort-dropdown-item" onClick={() => this.handleSortChange("Price: High to Low")}>Price: High to Low</li>
+                                        <li className="sort-dropdown-item" onClick={() => this.handleSortChange("Rating: Low to High")}>Rating: Low to High</li>
+                                        <li className="sort-dropdown-item" onClick={() => this.handleSortChange("Rating: High to Low")}>Rating: High to Low</li>
+                                        <li className="sort-dropdown-item " onClick={() => this.handleSortChange("Alphabetically: A-Z")}>Alphabetically: A-Z</li>
+                                        <li className="sort-dropdown-item" onClick={() => this.handleSortChange("Alphabetically: Z-A")}>Alphabetically: Z-A</li>
                                     </ul>
                                 </div>
                             </div>
@@ -54,7 +72,7 @@ class Products extends React.Component
                     </div>
                     <div className="products-category-name">All Products</div>
                     {/*Make it display currently viewed category*/}
-                    <div className="cardlist-container"><CardList /></div>
+                    <div className="cardlist-container"><CardList sort={this.state.sort}  search={this.state.search}/></div>
                 </div>
             </>
         )
