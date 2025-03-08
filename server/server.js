@@ -37,6 +37,7 @@ app.use(`/getProfile`, require('./routes/user'));
 app.use('/editAddress', require('./routes/user'));
 app.use('/shopping-cart', require('./routes/shoppingCart'));
 app.use('/order', require('./routes/order'));
+app.use('/categories', require('./routes/category'));
 // app.use(`/getUserAddress`, require('./routes/user'));
 // const orderRoutes = require('./routes/order');
 // app.use('/order', orderRoutes);

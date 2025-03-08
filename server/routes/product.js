@@ -1,10 +1,10 @@
 const {Product, Categories} = require("../models/product");
-const {verifyLogin} = require("./auth");
+const {verifyLogin, verifyAdmin} = require("./auth");
 
 
 const router = require("express").Router();
 
-router.patch(`/products/:id`, async (req, res) => {
+router.patch(`/products/:id`, verifyLogin, verifyAdmin, async (req, res) => {
     try {
         const data = await Product.findOne({_id: req.params.id}).populate("category")
         return res.status(200).send({data: data})
@@ -101,11 +101,8 @@ router.get(`/products/:id`, async (req, res) => {
 })
 
 
-router.post(`/products`, verifyLogin, async (req, res) => {
+router.post(`/products`, verifyLogin, verifyAdmin, async (req, res) => {
     try {
-        if (req.accessLevel !== parseInt(process.env.ACCESS_LEVEL_ADMIN)) {
-            res.status(403).send({error: 'Forbidden'});
-        }
 
         const {name, brand, model, category, images, rating, quantity, props} = req.body;
 
@@ -119,11 +116,8 @@ router.post(`/products`, verifyLogin, async (req, res) => {
 })
 
 
-router.delete(`/products/:id`, verifyLogin, async (req, res, next) => {
+router.delete(`/products/:id`, verifyLogin, verifyAdmin, async (req, res, next) => {
     try {
-        if (req.accessLevel !== parseInt(process.env.ACCESS_LEVEL_ADMIN)) {
-            res.status(403).send({error: 'Forbidden'});
-        }
 
         const result = Product.findByIdAndDelete(req.params.id, undefined);
         return res.status(200).send({data: result});

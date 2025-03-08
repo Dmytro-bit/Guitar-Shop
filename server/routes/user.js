@@ -3,7 +3,6 @@ const router = require("express").Router();
 const usersModel = require("../models/users");
 const multer = require('multer')
 const upload = multer({dest: `${process.env.UPLOADED_FILES_FOLDER}`})
-const emptyFolder = require('empty-folder')
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const e = require("express");
@@ -11,8 +10,7 @@ const {response} = require("express");
 const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
 // upload image to profile
 const uploadImage = (req, res, next) => {
-    const fileUrl = `http://localhost:${process.env.PORT}/uploads/${req.file.filename}`
-    req.imageUrl = fileUrl
+    req.imageUrl = `http://localhost:${process.env.PORT}/uploads/${req.file.filename}`
     next()
 }
 
@@ -31,7 +29,6 @@ const addImageToProfile = async (req, res, next) => {
     }
 
 }
-
 
 
 // edit address
@@ -53,7 +50,7 @@ const editAddress = async (req, res, next) => {
             return res.status(404).send({message: `User not found`})
         }
         res.status(200).json({user})
-    } catch (e){
+    } catch (e) {
         next(e)
     }
 
@@ -75,7 +72,6 @@ const checkUserExists = async (req, res, next) => {
         next(err)
     }
 }
-
 
 
 const verifyLogin = async (req, res, next) => {
@@ -109,15 +105,15 @@ const returnUserData = async (req, res, next) => {
         const user = req.user;
         console.log(user.email);
         res.status(200).json({user})
-    }catch(err) {
+    } catch (err) {
         next(err)
     }
 }
 const updateProfile = async (req, res, next) => {
-    try{
-        const {email,user} = req.body;
+    try {
+        const {email, user} = req.body;
 
-        const newUser = await usersModel.findOneAndUpdate({email: email}, user, {returnDocument:`after`})
+        const newUser = await usersModel.findOneAndUpdate({email: email}, user, {returnDocument: `after`})
 
         res.status(200).json({newUser})
     } catch (e) {
@@ -129,17 +125,17 @@ const updateProfile = async (req, res, next) => {
 
 
 const getUserAddress = async (req, res, next) => {
-    try{
+    try {
         const address = req.user.address
         res.status(200).json({address})
-    }catch(err) {
+    } catch (err) {
         next(err)
     }
 }
 router.get('/getProfile', checkUserExists, verifyLogin, returnUserData);
-router.patch('/upload', upload.single('file'),verifyLogin, uploadImage, addImageToProfile);
-router.patch('/editAddress',verifyLogin, editAddress);
-router.patch('/updateProfile',verifyLogin, updateProfile);
-router.get('/getUserAddress',checkUserExists,verifyLogin, getUserAddress);
+router.patch('/upload', upload.single('file'), verifyLogin, uploadImage, addImageToProfile);
+router.patch('/editAddress', verifyLogin, editAddress);
+router.patch('/updateProfile', verifyLogin, updateProfile);
+router.get('/getUserAddress', checkUserExists, verifyLogin, getUserAddress);
 
 module.exports = router;
