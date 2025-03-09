@@ -1,0 +1,110 @@
+.users-container {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 0 20em 3em 20em;
+  width: 100%;
+  gap: 1rem;
+
+  @media screen and (max-width: 992px) {
+    padding: 0 10em 3em 10em;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 0 1em 3em 1em;
+  }
+
+  .user-container {
+    display: flex;
+    box-sizing: border-box;
+    background: white;
+    border-radius: 10px;
+    align-items: center;
+    padding: 0.5em 2em;
+    gap: 2rem;
+
+    .user-image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 6vw;
+      aspect-ratio: 1/1;
+      min-width: 60px;
+      min-height: 60px;
+      border-radius: 50%;
+      border: 3px solid rgb(55, 55, 55);
+
+      .user-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+    }
+
+    .user-main-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+
+      .user-description-container {
+        display: flex;
+        flex-direction: column;
+        width: 85%;
+        justify-content: space-evenly;
+        gap: 0.5rem;
+
+        .user-name-container, .user-email-container, .user-phone-container {
+          display: flex;
+          width: 100%;
+
+          .user-name {
+            font-size: clamp(18px, 1.2vw, 34px);
+            margin: 0;
+            font-weight: bolder;
+          }
+
+          .user-email {
+            margin: 0;
+            font-size: clamp(15px, 1vw, 30px);
+            //font-weight: lighter;
+            font-style: italic;
+          }
+
+          .user-phone {
+            margin: 0;
+            font-size: clamp(15px, 1vw, 30px);
+            font-style: italic;
+          }
+        }
+      }
+
+      .user-delete-button-category {
+        display: flex;
+
+        .user-delete-button {
+          width: 100%;
+          background-color: transparent;
+          border: 2px solid red;
+          color: red;
+          border-radius: 5px;
+          box-sizing: border-box;
+          padding: 0.5em;
+          font-size: clamp(13px, 1vw, 30px);
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: all 0.3s ease-in-out;
+
+          &:hover {
+            background-color: red;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
