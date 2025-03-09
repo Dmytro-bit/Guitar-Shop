@@ -41,6 +41,8 @@ class Products extends React.Component {
     };
 
 
+
+
     handleInputChange = (e) => {
         const value = e.target.value;
         const name = e.target.name;
