@@ -11,6 +11,15 @@ class Home extends React.Component
     constructor(props)
     {
         super(props);
+
+        this.state ={
+            isAdmin: false
+        }
+    }
+
+    componentDidMount = () =>
+    {
+        this.setState({isAdmin: localStorage.getItem("accessLevel") === "2"});
     }
 
     render()
@@ -43,7 +52,7 @@ class Home extends React.Component
                    <div className="catalog-title-container">
                        <p className="catalog-title">OUR PRODUCTS</p>
                    </div>
-                   <CatalogCardList/>
+                   <CatalogCardList isAdmin={this.state.isAdmin} />
                </div>
            </>
         )

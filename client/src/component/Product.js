@@ -20,12 +20,12 @@ class Products extends React.Component {
                 name: "",
                 price: 0,
                 rating: 0,
-                inStock: true,
                 quantity: 0,
                 parameters: {}
             },
             currImage: 0,
             quantity: 1,
+
         }
     }
 
@@ -44,10 +44,9 @@ class Products extends React.Component {
             this.setState({quantity: this.state.quantity + 1});
     }
 
-    handleQuantityDecrease = () =>
-    {
-        if(this.state.quantity > 1)
-            this.setState({quantity : this.state.quantity - 1});
+    handleQuantityDecrease = () => {
+        if (this.state.quantity > 1)
+            this.setState({quantity: this.state.quantity - 1});
     }
 
     async componentDidMount() {
@@ -64,6 +63,47 @@ class Products extends React.Component {
         } catch (error) {
             console.error("Error fetching product:", error);
         }
+    }
+
+    addToCart = async () => {
+        const token = localStorage.getItem("token");
+        let data = JSON.parse(localStorage.getItem("shopping_cart"));
+
+        if (data === null) {
+            data = []
+        }
+        const {id} = this.props.params;
+
+        const item =
+            {
+                "product": id,
+                "quantity": this.state.quantity,
+            }
+        const index = data.findIndex(obj => obj.product === this.props.params);
+        if (index !== -1) {
+            data[index] = {
+                ...data[index],
+                quantity: this.state.quantity
+            };
+        } else {
+            data.push(item)
+        }
+        localStorage.setItem("shopping_cart", JSON.stringify(data));
+        if (token !== "null") {
+            try {
+                const res = await axios.patch("/shopping-cart", data, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                console.log("Response data:", res.data);
+            } catch
+                (error) {
+                console.error("Error creating cart:", error);
+            }
+        }
+
     }
 
     render() {
@@ -93,8 +133,9 @@ class Products extends React.Component {
                                 {Object.entries(this.state.product.parameters)
                                     .map(([key, value], index) => (
                                         <li className="product-chars-list-element" key={index}><p
-                                            className="product-chars-list-element-key"><strong>{key}:</strong></p> <p
-                                            className="product-chars-list-element-value">{value}</p></li>
+                                            className="product-chars-list-element-key"><strong>{key}:</strong></p>
+                                            <p
+                                                className="product-chars-list-element-value">{value}</p></li>
                                     ))
                                 }
                             </ul>
@@ -107,8 +148,8 @@ class Products extends React.Component {
                             <p className="product-shipping">Free Shipping</p>
                             <p
                                 className="product-stock"
-                                style={{color: this.state.product.inStock ? "green" : "red"}}
-                            >{this.state.product.inStock ? "In Stock" : "Not In Stock"}</p>
+                                style={{color: this.state.product.quantity > 0 ? "green" : "red"}}
+                            >{this.state.product.quantity > 0 ? "In Stock" : "Not In Stock"}</p>
                         </div>
                         <div className="product-rating">
                             <img src="../img/star_border.png" className="rating-star-border" alt="rating"></img>
@@ -139,7 +180,8 @@ class Products extends React.Component {
                                 </button>
                             </div>
                             <div className="product-buy">
-                                <Link to="/paypal" className="product-buy-button">BUY</Link>
+                                <Link to="/cart" className="product-buy-button" onClick={this.addToCart}>ADD TO
+                                    CART</Link>
                             </div>
                             <div className="product-icons">
                                 <img src="../img/shopping-cart.png" alt="cart"></img>

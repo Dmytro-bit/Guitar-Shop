@@ -200,8 +200,8 @@
           font-size: 1em;
         }
       }
-
     }
+    
     .product-rating {
       position: relative;
       display: flex;
@@ -310,7 +310,7 @@
           color: white;
           text-decoration: none;
           background-color: rgb(55,55,55);
-          font-size: 2em;
+          font-size: clamp(18px, 1.4vw, 30px);
           font-weight: bold;
           border-radius: 15px;
           width: 100%;

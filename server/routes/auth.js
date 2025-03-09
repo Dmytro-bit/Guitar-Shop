@@ -230,16 +230,25 @@ const verifyLogin = async (req, res, next) => {
         if (err) {
             return res.status(403).json({error: "Forbidden"})
         }
+
         user_data = decoded;
+        const {email, user_id, accessLevel} = user_data
+
+        req.user_id = user_id
+        req.accessLevel = accessLevel
+        req.user_email = email
+        next()
+
     })
-
-    const {email, user_id, accessLevel} = user_data
-
-    req.user_id = user_id
-    req.accessLevel = accessLevel
-    req.user_email = email
-    next()
 }
+
+const verifyAdmin = async (req, res, next) => {
+    if (!req.accessLevel || req.accessLevel !== parseInt(process.env.ACCESS_LEVEL_ADMIN)) {
+        return res.status(403).json({error: "Access denied"})
+    }
+    next();
+}
+
 // ==============================================================================================================
 // ============================================ URL =============================================================
 // ==============================================================================================================
@@ -248,4 +257,4 @@ router.post("/login", validateUserLoginInput, checkUserExists, checkPasswordIsMa
 router.post(`/register`, validateUserRegistrationInput, checkDuplicateUser, registerUser);
 
 
-module.exports = {router, verifyLogin};
+module.exports = {router, verifyLogin, verifyAdmin};

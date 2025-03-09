@@ -15,6 +15,7 @@ class Nav extends React.Component {
             isMenuActive : false,
             isRegistered : false,
             isUserAccountActive : false,
+            isAdmin : false,
         }
     }
 
@@ -23,12 +24,7 @@ class Nav extends React.Component {
         const token = localStorage.getItem("token");
         console.log(token)
         token === "null"? this.setState({isRegistered : false}) : this.setState({isRegistered : true})
-        // if(localStorage.getItem("token") === "undefined")
-        // {
-        //     this.setState({isRegistered: false})
-        // }
-        // else
-        //     this.setState({isRegistered : true})
+        this.setState({isAdmin : localStorage.getItem("accessLevel") === "2"});
     }
 
     showMobileNavBar = () => {
@@ -53,10 +49,22 @@ class Nav extends React.Component {
     handleLogOut = () =>
     {
         localStorage.removeItem("token")
+        localStorage.removeItem("name")
         localStorage.removeItem("accessLevel")
         localStorage.removeItem("email")
-
+        localStorage.removeItem("profilePhoto")
+        const orderAddress =
+            {
+                fline: "",
+                sline: "",
+                city: "",
+                county: "",
+                eircode: "",
+            }
+        localStorage.setItem("orderAddress", JSON.stringify(orderAddress));
+        localStorage.setItem("shopping_cart", JSON.stringify([]));
         this.setState({isRegistered : false})
+        window.location.reload(false); //refresh the page
     }
 
     render() {
@@ -78,7 +86,10 @@ class Nav extends React.Component {
                         <div id="dropdown" style={{display : this.state.isMenuActive ? "flex" : "none"}}>
                             <div className="dropdown-option" onClick={this.handleUserAccount}><b>ACCOUNT</b></div>
                             <hr />
-                            <div className="dropdown-option"><b>ORDERS</b></div>
+                            {this.state.isAdmin ?
+                                (<Link to="/users" className="dropdown-option"><b>USERS</b></Link>)
+                                :
+                                (<Link to="/orders" className="dropdown-option"><b>ORDERS</b></Link>)}
                             <hr />
                             <div className="dropdown-option" style={{color:"#db3d45"}} onClick={this.handleLogOut}><b>LOG OUT</b></div>
                         </div>

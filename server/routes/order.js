@@ -1,38 +1,66 @@
 const router = require("express").Router();
-const validateOrder = require("./middleware");
+const fs = require("fs");
+const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
+const orderModel = require("../models/order");
+const jwt = require("jsonwebtoken");
+const {verifyLogin} = require("./auth")
 
-const {orderModel, itemModel, shoppingCartModel} = require("../models/order");
 
-router.post(`/order`, validateOrder, async (req, res) => {
+const checkUser = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {
+        const token = authHeader.split(" ")[1];
+        let user_data
+
+        jwt.verify(token, JWT_PRIVATE_KEY, (err, decoded) => {
+            if (!err) {
+
+                user_data = decoded;
+                const {email, user_id, accessLevel} = user_data
+
+                req.user_id = user_id
+                req.accessLevel = accessLevel
+                req.user_email = email
+
+            }
+        })
+    }
+    next()
+}
+
+
+router.post(``, checkUser, async (req, res, next) => {
     try {
+        let {total_price, items, customer_info, payment_id} = req.body;
+
+        let data = {}
+
+        if (req.user_id) data.user_id = req.user_id;
 
 
-        // if (!items || !items.length || !delivery_method || !total_price) {
-        //     return res.status(400).json({error: "Missing required fields"});
-        // }
-        //
-        // const newOrder = new orderModel({
-        //     user_id: user_id,
-        //     items: items,
-        //     delivery_method: delivery_method,
-        //     total_price: total_price,
-        //     paid: false,
-        //     customer_info: customer_info
-        // });
-        //
-        // const savedOrder = await newOrder.save();
-        // res.status(201).json(savedOrder);
-    } catch (error) {
-        res.status(500).json({error: error});
+        data.items = items
+        data.total_price = total_price
+        data.paid = true
+        data.customer_info = customer_info
+        data.payment_id = payment_id
+
+        const newOrder = new orderModel(data);
+
+        const savedOrder = await newOrder.save();
+        res.status(201).json(savedOrder);
+    } catch
+        (error) {
+        next(error)
     }
 })
 
-router.get(`/order`, async (req, res) => {
+router.get(`/orders/:id`, async (req, res, next) => {
     try {
         let data
 
         if (req.user != null) {
-            data = await orderModel.findOne({_id: req.params.id, user_id: req.user.id});
+            data = await orderModel.findOne({_id: req.params.id});
         } else {
             data = await orderModel.findOne({_id: req.params.id, user_id: null});
         }
@@ -44,9 +72,22 @@ router.get(`/order`, async (req, res) => {
         res.status(200).json(data)
 
     } catch (err) {
-        res.status(500).json({error: err})
+        next(err)
     }
 })
 
 
+router.get(``, verifyLogin, async (req, res, next) => {
+    try {
+        let data
+        if (req.accessLevel === process.env.ACCESS_LEVEL_ADMIN) {
+            data = await orderModel.find().populate("user_id").populate("items.product").sort({createdAt: -1})
+        } else {
+            data = await orderModel.find({user_id: req.user_id}).populate("user_id").populate("items.product").sort({createdAt: -1})
+        }
+        res.status(200).json({data: data})
+    } catch (e) {
+        next(e)
+    }
+})
 module.exports = router;

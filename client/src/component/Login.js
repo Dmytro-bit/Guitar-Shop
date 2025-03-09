@@ -1,6 +1,7 @@
 import React from "react"
 
-import { Navigate, Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import Notification from "./Notification";
 
 import "../styles/login.scss"
 import axios from "axios";
@@ -20,6 +21,8 @@ class Login extends React.Component
                             "password" : "Password can not be an empty string"
             },
             loggedInSuccessfully : false,
+            loginResponseError : "",
+            showNotifications: false,
         }
     }
 
@@ -55,8 +58,6 @@ class Login extends React.Component
 
         if(Object.keys(formInputsState).every(key => formInputsState[key]))
         {
-
-            //Axios post request
             try{
                 const {email, password} = this.state
                 const data = {email:email, password:password}
@@ -72,19 +73,35 @@ class Login extends React.Component
                 localStorage.setItem("token", token)
                 localStorage.setItem("email", resultEmail)
                 localStorage.setItem("accessLevel", accessLevel)
+                const orderAddress =
+                    {
+                        fline: "",
+                        sline: "",
+                        city: "",
+                        county: "",
+                        eircode: "",
+                    }
+                localStorage.setItem("isAddressSet", "false");
 
-                this.setState({loggedInSuccessfully : true})
+
+                localStorage.setItem("shopping_cart", JSON.stringify([]));
+                localStorage.setItem("orderAddress", JSON.stringify(orderAddress))
+                this.setState({loggedInSuccessfully: true})
 
                 console.log("User data saved to localStorage")
 
 
             }catch(err){
-                console.log(err)
+                this.setState({loginResponseError : err.message, showNotifications: true})
+                console.log("this error ", err.message)
             }
 
         }
-
     }
+
+    closeNotification = () => {
+        this.setState({ showNotifications: false });
+    };
 
     render() 
     {
@@ -96,7 +113,13 @@ class Login extends React.Component
 
         return(
             <div className="login-bg">
-
+                {this.state.showNotifications && (
+                    <Notification
+                        message={this.state.loginResponseError}
+                        type={"error"}
+                        onClose={this.closeNotification}
+                    />
+                )}
             <div id="login-form-container"><Link to="/"><p id="login-back">&#8592; BACK</p></Link>
             <div id="login-container">
                 <p id="login-heading">Login</p>
