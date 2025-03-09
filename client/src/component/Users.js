@@ -65,7 +65,7 @@ class Users extends React.Component {
                     {this.state.users.map((user, index) => (
                         <div className="user-container" key={index}>
                             <div className="user-image-container">
-                                <img src={user.profilePhotoUrl} className="user-image"/>
+                                <img style={{filter : user.profilePhotoUrl === "../icons/user.png" ? "invert(100%)" : "invert(0%)"}} src={user.profilePhotoUrl} className="user-image"/>
                             </div>
                             <div className="user-main-container">
                                 <div className="user-description-container">
