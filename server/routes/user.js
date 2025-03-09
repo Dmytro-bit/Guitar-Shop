@@ -1,5 +1,6 @@
 const router = require("express").Router();
 
+const {verifyAdmin} = require("./auth");
 const usersModel = require("../models/users");
 const multer = require('multer')
 const upload = multer({dest: `${process.env.UPLOADED_FILES_FOLDER}`})
@@ -132,10 +133,21 @@ const getUserAddress = async (req, res, next) => {
         next(err)
     }
 }
+
 router.get('/getProfile', checkUserExists, verifyLogin, returnUserData);
 router.patch('/upload', upload.single('file'), verifyLogin, uploadImage, addImageToProfile);
 router.patch('/editAddress', verifyLogin, editAddress);
 router.patch('/updateProfile', verifyLogin, updateProfile);
 router.get('/getUserAddress', checkUserExists, verifyLogin, getUserAddress);
+
+router.get('', verifyLogin, async (req, res, next) => {
+    try {
+        const data = await usersModel.find(undefined, undefined, undefined)
+
+        res.status(200).json({data: data})
+    } catch (e) {
+        next(e)
+    }
+})
 
 module.exports = router;

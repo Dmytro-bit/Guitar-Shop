@@ -166,12 +166,12 @@ class Orders extends React.Component {
         return (
             <>
             <Nav/>
-                <div className="orders-controls-container">
-                    <div className="orders-search-container">
+                <div className="controls-container">
+                    <div className="search-container">
                         <img src="../icons/search-icon.png" alt="search-icon" className="product-search-icon"/>
-                        <input type="text" className="orders-search" placeholder="Seacrch.."/>
+                        <input type="text" className="search" placeholder="Seacrch.."/>
                     </div>
-                    <div className="orders-sort-dropdown-container">
+                    <div className="sort-dropdown-container">
                         <input type="checkbox" className="sort-dropdown-toggle" id="sort-dropdown-toggle"/>
                         <label htmlFor="sort-dropdown-toggle" className="sort-dropdown-label">SORT</label>
 

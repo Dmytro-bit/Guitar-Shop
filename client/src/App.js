@@ -10,6 +10,7 @@ import Login from "./component/Login"
 import Register from "./component/Register";
 import Cart from "./component/Cart"
 import Orders from "./component/Orders";
+import Users from "./component/Users";
 import Footer from "./component/Footer";
 import {ACCESS_LEVEL_GUEST, SERVER_HOST} from "./config/global_constants";
 import axios from "axios";
@@ -98,6 +99,7 @@ class App extends React.Component {
           <Route path="/register" element={<Register />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/orders" element={<Orders />}></Route>
+          <Route path="/users" element={<Users />}></Route>
         </Routes>
         <Footer />
       </BrowserRouter>
