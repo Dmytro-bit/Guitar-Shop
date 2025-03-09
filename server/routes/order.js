@@ -3,7 +3,7 @@ const fs = require("fs");
 const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
 const orderModel = require("../models/order");
 const jwt = require("jsonwebtoken");
-const {verifyLogin} = require("./auth")
+const {verifyLogin, verifyAdmin} = require("./auth")
 
 
 const checkUser = async (req, res, next) => {
@@ -88,6 +88,16 @@ router.get(``, verifyLogin, async (req, res, next) => {
         res.status(200).json({data: data})
     } catch (e) {
         next(e)
+    }
+})
+
+router.get('/user/:id', verifyLogin, verifyAdmin,async (req, res, next) => {
+    try {
+        let data = await orderModel.find({user_id: req.params.id} , undefined, undefined).populate("user_id").populate("items.product").sort({createdAt: -1})
+
+        res.status(200).json({data: data})
+    }catch (e) {
+        next(e);
     }
 })
 module.exports = router;

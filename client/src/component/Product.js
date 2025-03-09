@@ -1,13 +1,9 @@
-import React from "react";
-import {Link, useParams} from "react-router-dom";
+import React, {Component} from "react";
+import {Link} from "react-router-dom";
 
 import Nav from "./Nav";
 import "../styles/product.scss"
 import axios from "axios";
-
-function withParams(Component) {
-    return (props) => <Component {...props} params={useParams()}/>;
-}
 
 class Products extends React.Component {
 
@@ -51,7 +47,7 @@ class Products extends React.Component {
 
     async componentDidMount() {
         try {
-            const {id} = this.props.params;
+            const {id} = this.props.match.params;
             console.log("componentDidMount is called");
 
             const res = await axios.get(`/products/${id}`);
@@ -72,14 +68,14 @@ class Products extends React.Component {
         if (data === null) {
             data = []
         }
-        const {id} = this.props.params;
+        const {id} = this.props.match.params;
 
         const item =
             {
                 "product": id,
                 "quantity": this.state.quantity,
             }
-        const index = data.findIndex(obj => obj.product === this.props.params);
+        const index = data.findIndex(obj => obj.product === id);
         if (index !== -1) {
             data[index] = {
                 ...data[index],
@@ -195,4 +191,4 @@ class Products extends React.Component {
     }
 }
 
-export default withParams(Products);
+export default Products;

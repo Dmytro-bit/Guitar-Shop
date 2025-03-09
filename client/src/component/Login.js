@@ -1,6 +1,6 @@
 import React from "react"
 
-import { Link, Navigate } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Notification from "./Notification";
 
 import "../styles/login.scss"
@@ -108,7 +108,7 @@ class Login extends React.Component
         let formInputsState = this.validate()
 
         if (this.state.loggedInSuccessfully) {
-            return <Navigate to="/" />;
+            return <Redirect to="/" />;
         }
 
         return(

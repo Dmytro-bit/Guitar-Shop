@@ -12,18 +12,27 @@ class Orders extends React.Component {
         super(props);
 
         this.state = {
-            orders: []
+            orders: [],
+            ID: ""
         }
     }
 
     componentDidMount = async () => {
         try {
+            const {id} = this.props.match.params;
+
             const headers = {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             };
-            const res = await axios.get("/order", {headers});
+            let res
+            if (id) {
+                res = await axios.get(`/order/user/${id}`, {headers});
+            } else {
+                res = await axios.get("/order", {headers});
+            }
 
-            this.setState({orders: res.data.data});
+
+            this.setState({orders: res.data.data, ID: id});
         } catch (e) {
             console.log(e.message);
         }

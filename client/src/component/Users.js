@@ -3,13 +3,14 @@ import React from "react";
 import Nav from "./Nav";
 import "../styles/users.scss"
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 class Users extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            users: []
+            users: [],
         };
     }
 
@@ -37,6 +38,10 @@ class Users extends React.Component {
         } catch (e) {
             console.error(e);
         }
+    }
+
+    handleToUserOrders = (id) => {
+        this.setState({toUserOrders: !this.state.toUserOrders, ID : id});
     }
 
     render() {
@@ -78,13 +83,13 @@ class Users extends React.Component {
                 <div className="users-container">
                     {this.state.users.map((user, index) => (
                         <div className="user-container" key={index}>
-                            <div className="user-image-container">
+                            <Link to={`/orders/${user._id}`} className="user-image-container">
                                 <img
                                     style={{filter: user.profilePhotoUrl === "../icons/user.png" ? "invert(100%)" : "invert(0%)"}}
                                     src={user.profilePhotoUrl} className="user-image"/>
-                            </div>
+                            </Link>
                             <div className="user-main-container">
-                                <div className="user-description-container">
+                                <Link to={`/orders/${user._id}`} className="user-description-container">
                                     <div className="user-name-container">
                                         <p className="user-name">{user.fname} {user.lname}</p>
                                     </div>
@@ -94,7 +99,7 @@ class Users extends React.Component {
                                     <div className="user-phone-container">
                                         <p className="user-phone">{user.phone}</p>
                                     </div>
-                                </div>
+                                </Link>
                                 <div className="user-delete-button-category">
                                     <button className="user-delete-button"
                                             onClick={() => this.handleDeleteUser(user._id)}>DELETE
