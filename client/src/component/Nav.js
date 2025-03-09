@@ -15,6 +15,7 @@ class Nav extends React.Component {
             isMenuActive : false,
             isRegistered : false,
             isUserAccountActive : false,
+            isAdmin : false,
         }
     }
 
@@ -23,6 +24,7 @@ class Nav extends React.Component {
         const token = localStorage.getItem("token");
         console.log(token)
         token === "null"? this.setState({isRegistered : false}) : this.setState({isRegistered : true})
+        this.setState({isAdmin : localStorage.getItem("accessLevel") === "2"});
     }
 
     showMobileNavBar = () => {

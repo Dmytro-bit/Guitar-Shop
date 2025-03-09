@@ -63,6 +63,7 @@ class Products extends React.Component {
                 {this.state.isAddModalOpen && <ProductModal
                     type="add"
                     name=""
+                    brand=""
                     images=""
                     price=""
                     quantity=""

@@ -39,6 +39,7 @@ class Card extends React.Component {
                 {this.state.isEditModalOpen && <ProductModal
                     type="edit"
                     name={this.props.name}
+                    brand={this.props.brand}
                     images={this.props.images}
                     price={this.props.price}
                     quantity={this.props.quantity}

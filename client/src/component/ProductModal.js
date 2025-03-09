@@ -83,6 +83,10 @@ class ProductModal extends React.Component {
                             <p className="product-modal-name-title"><b>Product Name:</b></p>
                             <input type="text" className="product-modal-name-input" defaultValue={this.props.name}/>
                         </div>
+                        <div className="product-modal-name-container">
+                            <p className="product-modal-name-title"><b>Product Brand:</b></p>
+                            <input type="text" className="product-modal-name-input" defaultValue={this.props.brand}/>
+                        </div>
                         <div className="product-modal-images-container">
                             {this.state.images.length > 0 && this.state.images.map((image, index) => (
                                 <div className="product-modal-image-container" key={index}>
