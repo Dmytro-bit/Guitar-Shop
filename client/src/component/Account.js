@@ -372,15 +372,15 @@ class Account extends React.Component {
                                        className={`user-account-cred ${this.state.isEditable ? "editable" : ""}`}/>
                                 <p className={`user-account-cred-title ${this.state.isEditable ? "editable" : ""}`}><u>City/Town
                                     :</u></p>
-                                <input name="city" type="text" defaultValue={this.state.user.address.city} onChange={this.handleInputChange}
+                                <input name="city" type="text" value={this.state.user.address.city} onChange={this.handleInputChange}
                                        className={`user-account-cred ${this.state.isEditable ? "editable" : ""}`}/>
                                 <p className={`user-account-cred-title ${this.state.isEditable ? "editable" : ""}`}><u>County
                                     :</u></p>
-                                <input name="county" type="text" defaultValue={this.state.user.address.county} onChange={this.handleInputChange}
+                                <input name="county" type="text" value={this.state.user.address.county} onChange={this.handleInputChange}
                                        className={`user-account-cred ${this.state.isEditable ? "editable" : ""}`}/>
                                 <p className={`user-account-cred-title ${this.state.isEditable ? "editable" : ""}`}>
                                     <u>Eircode</u></p>
-                                <input  name="eircode" type="text" defaultValue={this.state.user.address.eircode} onChange={this.handleInputChange}
+                                <input  name="eircode" type="text" value={this.state.user.address.eircode} onChange={this.handleInputChange}
                                        className={`user-account-cred ${this.state.isEditable ? "editable" : ""}`}/>
                             </div>
                         )
