@@ -1,6 +1,7 @@
 import React from "react"
 import {Link} from "react-router-dom";
-import {PayPalButtons} from "@paypal/react-paypal-js"
+import {PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js"
+import {SANDBOX_CLIENT_ID} from "../config/global_constants";
 import Nav from "./Nav"
 
 import "../styles/cart.scss"
@@ -294,19 +295,19 @@ class Cart extends React.Component {
             const res = await axios.post("/order", order_data, {headers})
 
 
-                localStorage.setItem('shopping_cart', '[]');
+            localStorage.setItem('shopping_cart', '[]');
 
-                let token = localStorage.getItem("token");
-                if (token !== "null") {
+            let token = localStorage.getItem("token");
+            if (token !== "null") {
 
-                    const res = await axios.patch("/shopping-cart", [], {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
-                }
-                this.forceUpdate();
-                window.location.reload();
+                const res = await axios.patch("/shopping-cart", [], {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+            }
+            this.forceUpdate();
+            window.location.reload();
 
 
             console.log("Payment processed successfully:", res.data)
@@ -378,11 +379,12 @@ class Cart extends React.Component {
                                 <div className="cart-total-additional-container">VAT included in the price</div>
                                 {/*FIXME first CHECKOUT?*/}
                                 <div className="cart-total-checkout-container">
-                                    {/*<PayPalScriptProvider options={{currency: "EUR", "client-id": SANDBOX_CLIENT_ID}}>*/}
-                                    <PayPalButtons style={{layout: "horizontal"}} createOrder={this.createOrder}
-                                                   onApprove={this.onApprove} onError={this.onError}
-                                                   onCancel={this.onCancel}/>
-                                    {/*</PayPalScriptProvider>*/}
+
+                                    <PayPalScriptProvider options={{currency: "EUR", "client-id": SANDBOX_CLIENT_ID}}>
+                                        <PayPalButtons style={{layout: "horizontal"}} createOrder={this.createOrder}
+                                                       onApprove={this.onApprove} onError={this.onError}
+                                                       onCancel={this.onCancel}/>
+                                    </PayPalScriptProvider>
                                 </div>
                             </div>
                             <div className="cart-total-container-alt">

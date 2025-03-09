@@ -12,9 +12,9 @@ import Cart from "./component/Cart";
 import Orders from "./component/Orders";
 import Users from "./component/Users";
 import Footer from "./component/Footer";
-import { ACCESS_LEVEL_GUEST, SERVER_HOST, SANDBOX_CLIENT_ID } from "./config/global_constants";
+import {ACCESS_LEVEL_GUEST, SERVER_HOST} from "./config/global_constants";
 import axios from "axios";
-import { showNotifications } from "./ShowNotifications";
+import {showNotifications} from "./ShowNotifications";
 
 axios.defaults.baseURL = SERVER_HOST;
 
@@ -82,24 +82,23 @@ axios.interceptors.response.use(
 class App extends React.Component {
     render() {
         return (
-            <PayPalScriptProvider options={{ currency: "EUR", "client-id": SANDBOX_CLIENT_ID }}>
-                <Router>
-                    <Switch>
-                        <Route exact path="/" component={Home} />
-                        <Route exact path="/catalog" component={Catalog} />
-                        <Route exact path="/products" component={Products} />
-                        <Route path="/products/:id" component={Product} />
-                        <Route exact path="/about" component={About} />
-                        <Route exact path="/login" component={Login} />
-                        <Route exact path="/register" component={Register} />
-                        <Route exact path="/cart" component={Cart} />
-                        <Route path="/orders/:id" component={Orders} />
-                        <Route exact path="/orders" component={Orders} />
-                        <Route exact path="/users" component={Users} />
-                    </Switch>
-                    <Footer />
-                </Router>
-            </PayPalScriptProvider>
+            <Router>
+                <Switch>
+                    <Route exact path="/" component={Home}/>
+                    <Route exact path="/catalog" component={Catalog}/>
+                    <Route exact path="/products" component={Products}/>
+                    <Route path="/products/:id" component={Product}/>
+                    <Route exact path="/about" component={About}/>
+                    <Route exact path="/login" component={Login}/>
+                    <Route exact path="/register" component={Register}/>
+                    <Route exact path="/cart" component={Cart}/>
+                    <Route path="/orders/:id" component={Orders}/>
+                    <Route exact path="/orders" component={Orders}/>
+                    <Route exact path="/users" component={Users}/>
+                </Switch>
+                <Footer/>
+            </Router>
+
         );
     }
 }
