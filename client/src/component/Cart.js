@@ -31,6 +31,7 @@ class Cart extends React.Component {
             isAddressSet: false,
             submittedOnce: false,
             total: 0,
+            order_id: null,
         }
     }
 
@@ -205,17 +206,17 @@ class Cart extends React.Component {
         if (token && token !== "null") {
             this.checkEmptyAddress()
             if (!this.state.isAddressSet) {
-                const email = localStorage.getItem("email");
+                const email = localStorage.getItem("email")
                 try {
                     const res = await axios.get("/user/getUserAddress", {params: {email}});
                     const fetchedAddress = res.data.address;  // User's current profile address
 
                     this.setState({address: fetchedAddress, isAddressSet: true}, () => {
-                        localStorage.setItem("orderAddress", JSON.stringify(fetchedAddress));
-                        localStorage.setItem("isAddressSet", "true");
+                        localStorage.setItem("orderAddress", JSON.stringify(fetchedAddress))
+                        localStorage.setItem("isAddressSet", "true")
                     });
                 } catch (error) {
-                    console.error("Error fetching default address:", error.message);
+                    console.error("Error fetching default address:", error.message)
                 }
             }
         }
@@ -252,9 +253,29 @@ class Cart extends React.Component {
         console.log(cancelData);
     }
 
-    onApprove = paymentData => {
-        console.log(paymentData);
-    }
+    onApprove = async (paymentData) => {
+        try {
+            console.log("Successfully approved")
+            console.log(paymentData)
+
+            let customer_info = {}
+
+
+            const res = await axios.post("/order", {
+                paymentId: paymentData.paymentID,
+                total_price: this.state.total,
+                items: this.state.cartProducts,
+                customer_info: customer_info
+            })
+            console.log(res)
+
+            console.log("Payment processed successfully:", res.data)
+        } catch (error) {
+            console.error("Error processing payment:", error)
+        }
+    };
+
+
     createOrder = (data, actions) => {
         return actions.order.create({purchase_units: [{amount: {value: this.state.total}}]})
     }

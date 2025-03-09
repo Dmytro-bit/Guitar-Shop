@@ -1,22 +1,27 @@
 import React from "react";
 
 import Nav from "./Nav"
+import ProductModal from "./ProductModal";
 import CardList from "./CardList"
 
 import "../styles/products.scss"
-
 import axios from "axios";
 
 class Products extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             search: "",
             sort: "Price: Low to High",
             data: {},
             parameters: {},
             brands : {},
-            categories : {}
+            categories : {},
+            minPrice : 0,
+            maxPrice : 100,
+            isAdmin : false,
+            isAddModalOpen: false,
         }
     }
 
@@ -28,11 +33,14 @@ class Products extends React.Component {
         } catch (e) {
             console.log(e.message);
         }
+        this.setState({isAdmin: localStorage.getItem("accessLevel") === "2"});
     }
 
     handleSortChange = (sortOption) => {
         this.setState({sort: sortOption});
     };
+
+
 
 
     handleInputChange = (e) => {
@@ -42,11 +50,26 @@ class Products extends React.Component {
         this.setState({[name]: value});
     }
 
+    handlePriceChange = (key, value) => {
+        this.setState({[key] : value});
+    }
 
-    render() {
+    handleAddModal = () => {
+        this.setState({isAddModalOpen: !this.state.isAddModalOpen});
+    }
 
-        return (
-            <><Nav/>
+    render()
+    {
+        return(
+            <><Nav />
+                {this.state.isAddModalOpen && <ProductModal
+                    type="add"
+                    name=""
+                    images=""
+                    price=""
+                    quantity=""
+                    parameters=""
+                    handleClose={this.handleAddModal}/>}
                 <div className="products-container">
                     <div className="products-controls-container">
                         <div className="products-controls">
@@ -62,6 +85,84 @@ class Products extends React.Component {
                                     <label htmlFor="filter-dropdown-toggle"
                                            className="filter-dropdown-label">FILTER</label>
                                     <div className="filter-window">
+                                        <div className="products-filter">
+                                            <div className="products-filter-pricerange-container">
+                                                <p className="products-filter-pricerange-title">PRICE RANGE</p>
+                                                <div className="pricerange-container">
+                                                    <input type="number" className="pricerange-box" id="pricerange-min"
+                                                           min="0" placeholder="MIN"
+                                                           onChange={(e) => this.handlePriceChange('minPrice', e.target.value)}></input>
+                                                    <div className="pricerange-devider"></div>
+                                                    <input type="number" className="pricerange-box" id="pricerange-max"
+                                                           min="0" placeholder="MAX"
+                                                           onChange={(e) => this.handlePriceChange('maxPrice', e.target.value)}></input>
+                                                </div>
+                                            </div>
+                                            <div className="products-filter-brands-container">
+                                                <input className="products-filter-input" type="checkbox"
+                                                       id="filter-brands-toggle-mobile"/>
+                                                <label className="products-filter-title"
+                                                       htmlFor={"filter-brands-toggle-mobile"}>BRANDS
+                                                    <img src="../img/right-arrow.png" className="filter-arrow"/></label>
+                                                <div className="filter-dropdown-container">
+                                                    {Object.keys(this.state.brands).map((brand, index) => (
+                                                        <div className="filter-dropdown-option" key={index}>
+                                                            <input type="checkbox" id={`filter-brand-${brand}-mobile`}
+                                                                   className="filter-option-checkbox"/>
+                                                            <label className={`filter-brand-label`}
+                                                                   htmlFor={`filter-brand-${brand}-mobile`}>{this.state.brands[brand]}</label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className="products-filter-categories-container">
+                                                <input className="products-filter-input" type="checkbox"
+                                                       id="filter-categories-toggle-mobile"/>
+                                                <label className="products-filter-title"
+                                                       htmlFor={"filter-categories-toggle-mobile"}>CATEGORIES <img
+                                                    src="../img/right-arrow.png" className="filter-arrow"/></label>
+                                                <div className="filter-dropdown-container">
+                                                    {Object.keys(this.state.categories).map((category, index) => (
+                                                        <div className="filter-dropdown-option" key={index}>
+                                                            <input type="checkbox" id={`filter-category-${category}-mobile`}
+                                                                   className="filter-option-checkbox"/>
+                                                            <label
+                                                                className={`filter-category-label`}
+                                                                htmlFor={`filter-category-${category}-mobile`}>{this.state.categories[category]}</label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className="products-filter-parameters-container">
+                                                <input className="products-filter-input" type="checkbox"
+                                                       id="filter-parameters-toggle-mobile"/>
+                                                <label className="products-filter-title"
+                                                       htmlFor={"filter-parameters-toggle-mobile"}>PARAMETERS <img
+                                                    src="../img/right-arrow.png" className="filter-arrow"/></label>
+                                                <div className="filter-dropdown-container">
+                                                    {Object.keys(this.state.parameters).map((parameter, index) => (
+                                                        <div className="filter-parameter-container" key={index}>
+                                                            <input type="checkbox" className="products-filter-input"
+                                                                   id={`filter-parameter-${parameter}-mobile`} key={index}/>
+                                                            <label htmlFor={`filter-parameter-${parameter}-mobile`}
+                                                                   className="filter-parameter-title">{parameter}<img
+                                                                src="../img/right-arrow.png" className="filter-arrow"/></label>
+                                                            <div className="filter-dropdown-container">
+                                                                {this.state.parameters[parameter].map((option, index) => (
+                                                                    <div className="filter-dropdown-option" key={index}>
+                                                                        <input type="checkbox"
+                                                                               id={`filter-parameter-${option}-mobile`}
+                                                                               className="filter-parameter-checkbox"/>
+                                                                        <label
+                                                                            htmlFor={`filter-parameter-${option}-mobile`}>{option}</label>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
                                         <label htmlFor="filter-dropdown-toggle" className="filter-dropdown-close"><img
                                             src="../icons/close.png"/></label>
                                     </div>
@@ -98,49 +199,73 @@ class Products extends React.Component {
                                     </ul>
                                 </div>
                             </div>
+                            {this.state.isAdmin && <div className="add-product-button-container">
+                                <button className="add-product-button" onClick={this.handleAddModal}>+</button>
+                            </div>}
                         </div>
                     </div>
                     <div className="products-filter-container">
                         <div className="products-filter">
+                            <div className="products-filter-pricerange-container">
+                                <p className="products-filter-pricerange-title">PRICE RANGE</p>
+                                <div className="pricerange-container">
+                                    <input type="number" className="pricerange-box" id="pricerange-min" min="0"
+                                           placeholder="MIN"
+                                           onChange={(e) => this.handlePriceChange('minPrice', e.target.value)}></input>
+                                    <div className="pricerange-devider"></div>
+                                    <input type="number" className="pricerange-box" id="pricerange-max" min="0"
+                                           placeholder="MAX"
+                                           onChange={(e) => this.handlePriceChange('maxPrice', e.target.value)}></input>
+                                </div>
+                            </div>
                             <div className="products-filter-brands-container">
                                 <input className="products-filter-input" type="checkbox" id="filter-brands-toggle"/>
-                                <label className="products-filters-title" htmlFor={"filter-brands-toggle"}>BRANDS</label>
+                                <label className="products-filter-title" htmlFor={"filter-brands-toggle"}>BRANDS
+                                    <img src="../img/right-arrow.png" className="filter-arrow"/></label>
                                 <div className="filter-dropdown-container">
                                     {Object.keys(this.state.brands).map((brand, index) => (
-                                        <div className="filter-brand-dropdown-option" key={index}>
-                                            <input type="checkbox" id={`filter-brand-${brand}`} className="filter-brand-checkbox"/>
-                                            <label className={`filter-brand-label`}>{this.state.brands[brand]}</label>
+                                        <div className="filter-dropdown-option" key={index}>
+                                            <input type="checkbox" id={`filter-brand-${brand}`}
+                                                   className="filter-option-checkbox"/>
+                                            <label className={`filter-brand-label`}
+                                                   htmlFor={`filter-brand-${brand}`}>{this.state.brands[brand]}</label>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                             <div className="products-filter-categories-container">
                                 <input className="products-filter-input" type="checkbox" id="filter-categories-toggle"/>
-                                <label className="products-filter-title" htmlFor={"filter-categories-toggle"}>CATEGORIES</label>
+                                <label className="products-filter-title"
+                                       htmlFor={"filter-categories-toggle"}>CATEGORIES <img
+                                    src="../img/right-arrow.png" className="filter-arrow"/></label>
                                 <div className="filter-dropdown-container">
                                     {Object.keys(this.state.categories).map((category, index) => (
-                                        <div className="filter-categories-dropdown-option" key={index}>
+                                        <div className="filter-dropdown-option" key={index}>
                                             <input type="checkbox" id={`filter-category-${category}`}
-                                                   className="filter-category-checkbox"/>
+                                                   className="filter-option-checkbox"/>
                                             <label
-                                                className={`filter-category-label`}>{this.state.categories[category]}</label>
+                                                className={`filter-category-label`}
+                                                htmlFor={`filter-category-${category}`}>{this.state.categories[category]}</label>
                                         </div>
                                     ))}
                                 </div>
-                                </div>
+                            </div>
                             <div className="products-filter-parameters-container">
                                 <input className="products-filter-input" type="checkbox" id="filter-parameters-toggle"/>
-                                <label className="products-filter-title" htmlFor={"filter-parameters-toggle"}>PARAMETERS</label>
+                                <label className="products-filter-title"
+                                       htmlFor={"filter-parameters-toggle"}>PARAMETERS <img
+                                    src="../img/right-arrow.png" className="filter-arrow"/></label>
                                 <div className="filter-dropdown-container">
                                     {Object.keys(this.state.parameters).map((parameter, index) => (
                                         <div className="filter-parameter-container" key={index}>
                                             <input type="checkbox" className="products-filter-input"
                                                    id={`filter-parameter-${parameter}`} key={index}/>
                                             <label htmlFor={`filter-parameter-${parameter}`}
-                                                   className="filter-parameter-title"><b>{parameter}</b></label>
+                                                   className="filter-parameter-title">{parameter}<img
+                                                src="../img/right-arrow.png" className="filter-arrow"/></label>
                                             <div className="filter-dropdown-container">
-                                                {this.state.parameters[parameter].map((option, index) => (
-                                                    <div className="filter-parameter-dropdown-option" key={index}>
+                                            {this.state.parameters[parameter].map((option, index) => (
+                                                    <div className="filter-dropdown-option" key={index}>
                                                         <input type="checkbox" id={`filter-parameter-${option}`}
                                                                className="filter-parameter-checkbox"/>
                                                         <label

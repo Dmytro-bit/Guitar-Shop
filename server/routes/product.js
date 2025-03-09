@@ -1,10 +1,10 @@
-const {Product, Categories} = require("../models/product");
-const {verifyLogin} = require("./auth");
+const {Product} = require("../models/product");
+const {verifyLogin, verifyAdmin} = require("./auth");
 
 
 const router = require("express").Router();
 
-router.patch(`/products/:id`, async (req, res) => {
+router.patch(`/products/:id`, verifyLogin, verifyAdmin, async (req, res) => {
     try {
         const data = await Product.findOne({_id: req.params.id}).populate("category")
         return res.status(200).send({data: data})
@@ -23,9 +23,8 @@ router.get(`/products`, async (req, res) => {
         // https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find
         if (name) filter_dict.name = {"$regex": name, "$options": "i"}
         if (brand) filter_dict.brand = brand
-        if (category) {
-            filter_dict.category = await Categories.findOne({name: category}, undefined, undefined)
-        }
+        if (category) filter_dict.category = category
+
 
         if (minPrice || maxPrice) {
             filter_dict.price = {}
@@ -101,11 +100,8 @@ router.get(`/products/:id`, async (req, res) => {
 })
 
 
-router.post(`/products`, verifyLogin, async (req, res) => {
+router.post(`/products`, verifyLogin, verifyAdmin, async (req, res) => {
     try {
-        if (req.accessLevel !== parseInt(process.env.ACCESS_LEVEL_ADMIN)) {
-            res.status(403).send({error: 'Forbidden'});
-        }
 
         const {name, brand, model, category, images, rating, quantity, props} = req.body;
 
@@ -119,11 +115,8 @@ router.post(`/products`, verifyLogin, async (req, res) => {
 })
 
 
-router.delete(`/products/:id`, verifyLogin, async (req, res, next) => {
+router.delete(`/products/:id`, verifyLogin, verifyAdmin, async (req, res, next) => {
     try {
-        if (req.accessLevel !== parseInt(process.env.ACCESS_LEVEL_ADMIN)) {
-            res.status(403).send({error: 'Forbidden'});
-        }
 
         const result = Product.findByIdAndDelete(req.params.id, undefined);
         return res.status(200).send({data: result});
