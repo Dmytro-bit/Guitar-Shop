@@ -8,7 +8,7 @@ const router = require("express").Router();
 
 router.patch(`/products/:id`, verifyLogin, verifyAdmin, upload.array("images_files"), async (req, res, next) => {
     try {
-        let {name, brand, price, quantity, parameters} = req.body;
+        let {name, brand, category, price, quantity, parameters} = req.body;
 
         let update = {}
 
@@ -16,6 +16,7 @@ router.patch(`/products/:id`, verifyLogin, verifyAdmin, upload.array("images_fil
         if (brand) update.brand = brand;
         if (price) update.price = Number(price);
         if (quantity) update.quantity = Number(quantity);
+        if (category) update.category = category;
 
         if (parameters) {
             try {

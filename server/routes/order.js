@@ -4,7 +4,7 @@ const orderModel = require("../models/order");
 
 router.post(``, async (req, res, next) => {
     try {
-        let {user_id, items, total_price, customer_info, paymentID} = req.body;
+        let {user_id, total_price, items, customer_info, payment_id} = req.body;
 
         let data = {}
 
@@ -15,7 +15,7 @@ router.post(``, async (req, res, next) => {
         data.total_price = total_price
         data.paid = true
         data.customer_info = customer_info
-        data.payment_id = paymentID
+        data.payment_id = payment_id
 
         const newOrder = new orderModel(data);
 
@@ -27,12 +27,12 @@ router.post(``, async (req, res, next) => {
     }
 })
 
-router.get(`/order`, async (req, res, next) => {
+router.get(`/orders/:id`, async (req, res, next) => {
     try {
         let data
 
         if (req.user != null) {
-            data = await orderModel.findOne({_id: req.params.id, user_id: req.user.id});
+            data = await orderModel.findOne({_id: req.params.id});
         } else {
             data = await orderModel.findOne({_id: req.params.id, user_id: null});
         }
@@ -49,4 +49,12 @@ router.get(`/order`, async (req, res, next) => {
 })
 
 
+router.get(``, async (req, res, next) => {
+    try {
+        const data = await orderModel.find().populate("user_id").populate("items.product").sort({createdAt: -1})
+        res.status(200).json({data: data})
+    } catch (e) {
+        next(e)
+    }
+})
 module.exports = router;

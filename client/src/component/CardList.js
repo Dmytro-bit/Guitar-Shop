@@ -22,10 +22,9 @@ class CardList extends React.Component {
         } catch (error) {
             console.error("Error fetching products:", error);
         }
-    };
+    }
 
     sortProducts = (products, sortOption) => {
-        // Create a shallow copy of products to avoid mutating state
         const sortedProducts = [...products];
 
         switch (sortOption) {
@@ -36,7 +35,6 @@ class CardList extends React.Component {
                 sortedProducts.sort((a, b) => b.price - a.price);
                 break;
             case "Rating: Low to High":
-                // Assuming your product object has a rating property
                 sortedProducts.sort((a, b) => a.rating - b.rating);
                 break;
             case "Rating: High to Low":
@@ -53,10 +51,11 @@ class CardList extends React.Component {
         }
         return sortedProducts;
     };
+
     render() {
         const {search, sort} = this.props;
         const filteredData = this.state.data.filter(product => {
-            return product.name.toLowerCase().includes(search.toLowerCase())  ;
+            return product.name.toLowerCase().includes(search.toLowerCase());
         });
 
         const sortedData = this.sortProducts(filteredData, sort);
