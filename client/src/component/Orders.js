@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 
 import Order from "./Order";
 import Nav from "./Nav";
@@ -12,7 +12,8 @@ class Orders extends React.Component {
         super(props);
 
         this.state = {
-            orders: []
+            orders: [],
+            id : ""
         }
     }
 

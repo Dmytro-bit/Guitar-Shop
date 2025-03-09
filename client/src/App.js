@@ -132,7 +132,7 @@ class App extends React.Component {
                         <Route path="/cart" element={<Cart/>}/>
                         <Route path="/orders" element={<Orders />}></Route>
                         <Route path="/users" element={<Users />}></Route>
-
+                        <Route path="/orders/:id" element={<Orders />}></Route>
                     </Routes>
                     <Footer/>
                 </BrowserRouter>

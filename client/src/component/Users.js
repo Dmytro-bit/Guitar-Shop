@@ -3,13 +3,16 @@ import React from "react";
 import Nav from "./Nav";
 import "../styles/users.scss"
 import axios from "axios";
+import {Link, Navigate} from "react-router-dom";
 
 class Users extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            users: []
+            users: [],
+            ID : "",
+            toUserOrders : false
         };
     }
 
@@ -39,10 +42,15 @@ class Users extends React.Component {
         }
     }
 
+    handleToUserOrders = (id) => {
+        this.setState({toUserOrders: !this.state.toUserOrders, ID : id});
+    }
+
     render() {
         console.log("Users : ", this.state.users);
         return (
             <>
+                {this.state.toUserOrders && <Navigate to={`/orders?id=${this.state.ID}`}/>}
                 <Nav/>
                 <div className="controls-container">
                     <div className="search-container">
@@ -77,7 +85,7 @@ class Users extends React.Component {
                 </div>
                 <div className="users-container">
                     {this.state.users.map((user, index) => (
-                        <div className="user-container" key={index}>
+                        <Link className="user-container" key={index} to={`/orders/${user._id}`}>
                             <div className="user-image-container">
                                 <img
                                     style={{filter: user.profilePhotoUrl === "../icons/user.png" ? "invert(100%)" : "invert(0%)"}}
@@ -101,7 +109,7 @@ class Users extends React.Component {
                                     </button>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </>
