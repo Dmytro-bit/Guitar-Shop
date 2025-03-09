@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const usersModel = require("../models/users");
 const {verifyLogin} = require("./auth");
+const productModel = require("../models/product");
 
-
-router.get(``, verifyLogin, async (req, res) => {
+router.get(``, verifyLogin, async (req, res, next) => {
     try {
         const user = await usersModel.findOne({_id: req.user_id}, undefined, undefined).populate({
             path: "shopping_cart.product",
@@ -23,10 +23,38 @@ router.get(``, verifyLogin, async (req, res) => {
 
         res.status(200).json({shopping_cart: shopping_cart, total: totalPrice});
     } catch (err) {
-        res.status(500).json({error: err})
+        next(err);
     }
 })
 
+const guestCart = async (req, res, next) => {
+    try{
+        const data = req.body;
+        const ids = data.map(item => item.product);
+        console.log("data ", data);
+
+        const products = await productModel.Product.find({_id: {$in:ids}}).populate(`category`).lean()
+        console.log(products);
+        let totalPrice = 0;
+
+        const populatedCart = products.map(product => {
+            // Find the cart item that matches the current product ID
+            const cartItem = data.find(item => item.product === product._id.toString());
+            // Use the found quantity or default to 0 if not found
+            const quantity = cartItem ? cartItem.quantity : 0;
+            // Add to total price
+            totalPrice += (product.price || 0) * quantity;
+            // Return the product along with its quantity
+            return { product, quantity };
+        });
+        console.log("cart", populatedCart);
+        res.json({shopping_cart:populatedCart, totalPrice});
+    }catch(err){
+        next(err);
+    }
+}
+
+router.post(`/guestCart`, guestCart )
 
 router.patch(``, verifyLogin, async (req, res, next) => {
     try {

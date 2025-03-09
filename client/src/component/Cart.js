@@ -50,22 +50,23 @@ class Cart extends React.Component {
             this.setState({cartProducts: updatedCartProducts}, async ()=>{
                 try{
                     const token = localStorage.getItem("token");
-                    if (token) {
-                        const quantity = updatedCartProducts[i].quantity;
-                        console.log(updatedCartProducts[i].product);
-                        const id = updatedCartProducts[i].product._id;
+                    const quantity = updatedCartProducts[i].quantity;
+                    console.log(updatedCartProducts[i].product);
+                    const id = updatedCartProducts[i].product._id;
 
 
-                        const data = JSON.parse(localStorage.getItem("shopping_cart"))
+                    const data = JSON.parse(localStorage.getItem("shopping_cart"))
 
-                        const index = data.findIndex(obj => obj.product === id);
-                        if (index !== -1) {
-                            data[index] = {
-                                ...data[index],
-                                quantity: quantity
-                            };
-                        }
-                        localStorage.setItem("shopping_cart", JSON.stringify(data));
+                    const index = data.findIndex(obj => obj.product === id);
+                    if (index !== -1) {
+                        data[index] = {
+                            ...data[index],
+                            quantity: quantity
+                        };
+                    }
+                    localStorage.setItem("shopping_cart", JSON.stringify(data));
+                    if (token !== "null") {
+
                         const res = await axios.patch("/shopping-cart", data, {
                             headers: {
                                 Authorization: `Bearer ${token}`,
@@ -73,7 +74,6 @@ class Cart extends React.Component {
                         });
                     }
                 }catch(error) {
-                    console.log("____________________________________________________________________")
                     console.error(error);
                 }
             });
@@ -87,22 +87,23 @@ class Cart extends React.Component {
             this.setState({cartProducts: updatedCartProducts},async ()=>{
                 try{
                     const token = localStorage.getItem("token");
-                    if (token) {
-                        const id = updatedCartProducts[i].product._id;
-                        const quantity = updatedCartProducts[i].quantity;
+                    const id = updatedCartProducts[i].product._id;
+                    const quantity = updatedCartProducts[i].quantity;
 
-                        const data = JSON.parse(localStorage.getItem("shopping_cart"))
-
+                    const data = JSON.parse(localStorage.getItem("shopping_cart"))
 
 
-                        const index = data.findIndex(obj => obj.product === id);
-                        if (index !== -1) {
-                            data[index] = {
-                                ...data[index],
-                                quantity: quantity
-                            };
-                        }
-                        localStorage.setItem("shopping_cart", JSON.stringify(data));
+
+                    const index = data.findIndex(obj => obj.product === id);
+                    if (index !== -1) {
+                        data[index] = {
+                            ...data[index],
+                            quantity: quantity
+                        };
+                    }
+                    localStorage.setItem("shopping_cart", JSON.stringify(data));
+                    if (token !== "null") {
+
                         const res = await axios.patch("/shopping-cart", data, {
                             headers: {
                                 Authorization: `Bearer ${token}`,
@@ -125,14 +126,14 @@ class Cart extends React.Component {
             this.setState({ cartProducts: updatedCartProducts }, async () => {
 
                 const localCart = updatedCartProducts.map(item => ({
-                    product: item.product._id, // convert product to its id string
+                    product: item.product._id,
                     quantity: item.quantity
                 }));
 
                 localStorage.setItem("shopping_cart", JSON.stringify(localCart));
 
                 const token = localStorage.getItem("token");
-                if (token) {
+                if (token && token !== "null") {
                     await axios.patch("/shopping-cart", localCart, {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -140,6 +141,7 @@ class Cart extends React.Component {
                     });
                     window.location.reload();
                 }
+                window.location.reload();
             });
         } catch (error) {
             console.error("Error deleting item from cart:", error);
@@ -164,7 +166,7 @@ class Cart extends React.Component {
 
     getCart = async () => {
         const token = localStorage.getItem("token");
-        if (token) {
+        if (token !== "null") {
             try {
                 const res = await axios.get("/shopping-cart", {
                     headers: {
@@ -180,22 +182,34 @@ class Cart extends React.Component {
             } catch (error) {
                 console.error("Error fetching products:", error);
             }
+        } else {
+            try {
+                const data = JSON.parse(localStorage.getItem("shopping_cart"))
+                const res = await axios.post("/shopping-cart/guestCart", data);
+                const {shopping_cart, totalPrice} = res.data
+                console.log("Shopping cart guest:", shopping_cart, totalPrice);
+                this.setState({cartProducts: shopping_cart, total:totalPrice});
+            }catch(error) {
+                console.error("Error fetching cart:", error);
+            }
         }
 
     }
 
+
+
     getDefaultAddress = async () => {
-        this.checkEmptyAddress()
+
 
         const token = localStorage.getItem("token");
-        if (token) {
-            // Only proceed if the order address has not been finalized
+        if (token && token !== "null") {
+            this.checkEmptyAddress()
             if (!this.state.isAddressSet) {
                 const email = localStorage.getItem("email");
                 try {
                     const res = await axios.get("/user/getUserAddress", {params: {email}});
                     const fetchedAddress = res.data.address;  // User's current profile address
-                    // Set the order address only once, then set the flag
+
                     this.setState({address: fetchedAddress, isAddressSet: true}, () => {
                         localStorage.setItem("orderAddress", JSON.stringify(fetchedAddress));
                         localStorage.setItem("isAddressSet", "true");

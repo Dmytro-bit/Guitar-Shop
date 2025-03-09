@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const e = require("express");
 const {response} = require("express");
+const {join} = require("node:path");
 const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
 // upload image to profile
 const uploadImage = (req, res, next) => {
@@ -18,9 +19,10 @@ const uploadImage = (req, res, next) => {
 
 const addImageToProfile = async (req, res, next) => {
     try {
-        const {email} = req.body
+        const id = req.user_id
+
         const {imageUrl} = req
-        const user = await usersModel.findOneAndUpdate({email: email}, {profilePhotoUrl: imageUrl}, {returnDocument: 'after'})
+        const user = await usersModel.findOneAndUpdate({_id:id}, {profilePhotoUrl: imageUrl}, {returnDocument: 'after'})
         if (!user) {
             return res.status(404).send({message: "User not found"})
         } else {
@@ -33,14 +35,28 @@ const addImageToProfile = async (req, res, next) => {
 }
 
 
+const validateAddress = (req, res, next) => {
+    const { fline, sline, city, county, eircode } = req.body;
 
-// edit address
+    if (!fline?.trim() || !sline?.trim() || !city?.trim() || !county?.trim() || !eircode?.trim()) {
+        return res.status(400).json({ error: 'All address fields are required.' });
+    }
+
+    const eircodeRegex = /^[A-Za-z]\d{2}\s?[A-Za-z\d]{4}$/;
+    if (!eircodeRegex.test(eircode)) {
+        return res.status(400).json({ error: 'Invalid eircode format.' });
+    }
+
+    next();
+};
+
 const editAddress = async (req, res, next) => {
     try {
-        const {email} = req.body
+        const id = req.user_id
+
         const {fline, sline, city, county, eircode} = req.body;
         console.log(fline, sline, city, county, eircode)
-        let user = await usersModel.findOneAndUpdate({email: email}, {
+        let user = await usersModel.findOneAndUpdate({_id:id}, {
             address: {
                 fline: fline,
                 sline: sline,
@@ -59,11 +75,10 @@ const editAddress = async (req, res, next) => {
 
 }
 
-// get profile data
 const checkUserExists = async (req, res, next) => {
     try {
-        const email = req.query.email;
-        let user = await usersModel.findOne({email: email}, '-password -accessLevel -_id -__v', undefined)
+        const id = req.user_id
+        let user = await usersModel.findOne({_id: id}, '-password -accessLevel -_id -__v', undefined)
         if (!user) {
             return res.status(404).send({message: `User not found`})
         }
@@ -76,7 +91,23 @@ const checkUserExists = async (req, res, next) => {
     }
 }
 
+const validateImage = (req, res, next) => {
+    if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded." });
+    }
 
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!allowedTypes.includes(req.file.mimetype)) {
+        return res.status(400).json({ error: "Invalid file type. Only JPEG, PNG, and GIF are allowed." });
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+    if (req.file.size > maxSize) {
+        return res.status(400).json({ error: "File too large. Maximum size is 5MB." });
+    }
+
+    next();
+};
 
 const verifyLogin = async (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -97,7 +128,11 @@ const verifyLogin = async (req, res, next) => {
     const expiryDate = new Date(expiryTimeStamp * 1000);
     console.log("expiry date", expiryDate.getTime());
     console.log("now", Date.now());
-
+    const user_data = decoded;
+    const {email, user_id, accessLevel} = user_data
+    req.user_id = user_id
+    req.accessLevel = accessLevel
+    req.user_email = email
     if (expiryDate.getTime() < Date.now()) {
         return res.status(401).json({error: "Token expired"});
     }
@@ -115,9 +150,10 @@ const returnUserData = async (req, res, next) => {
 }
 const updateProfile = async (req, res, next) => {
     try{
-        const {email,user} = req.body;
+        const {user} = req.body;
+        const id = req.user_id
 
-        const newUser = await usersModel.findOneAndUpdate({email: email}, user, {returnDocument:`after`})
+        const newUser = await usersModel.findOneAndUpdate({_id: id}, user, {returnDocument:`after`})
 
         res.status(200).json({newUser})
     } catch (e) {
@@ -136,10 +172,10 @@ const getUserAddress = async (req, res, next) => {
         next(err)
     }
 }
-router.get('/getProfile', checkUserExists, verifyLogin, returnUserData);
-router.patch('/upload', upload.single('file'),verifyLogin, uploadImage, addImageToProfile);
-router.patch('/editAddress',verifyLogin, editAddress);
+router.get('/getProfile', verifyLogin,checkUserExists , returnUserData);
+router.patch('/upload', upload.single('file'),verifyLogin,validateImage, uploadImage, addImageToProfile);
+router.patch('/editAddress',verifyLogin, validateAddress, editAddress);
 router.patch('/updateProfile',verifyLogin, updateProfile);
-router.get('/getUserAddress',checkUserExists,verifyLogin, getUserAddress);
+router.get('/getUserAddress',verifyLogin, checkUserExists, getUserAddress);
 
 module.exports = router;
