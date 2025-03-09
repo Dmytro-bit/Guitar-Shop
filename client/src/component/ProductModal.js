@@ -112,9 +112,9 @@ class ProductModal extends React.Component {
                             <p className="product-modal-properties-title"><b>Product Properties:</b></p>
                             {Object.keys(this.state.parameters).length > 0 && Object.keys(this.state.parameters).map((key, index) => (
                                 <div className="product-modal-property-container" key={key}>
-                                    <input type="text" className="products-property-input" defaultValue={key}
+                                    <input type="text" className="product-property-input" defaultValue={key}
                                            onBlur={(e) => this.handlePropertyKeyChange(e, key)}/>
-                                    <input type="text" className="products-property-input"
+                                    <input type="text" className="product-property-input"
                                            onBlur={(e) => this.handlePropertyValueChange(e, key)}
                                            defaultValue={this.state.parameters[key]}/>
                                     <div className="product-modal-delete-property-container">
