@@ -17,8 +17,6 @@ class ProductModal extends React.Component {
     componentDidMount = async()=>{
         try {
             const res = await axios.get("/categories");
-            console.log("Categories: ", res.data.data);
-            Object.keys(res.data.data).map(key => {console.log(res.data.data[key].name)});
             this.setState({categories: res.data.data});
         } catch (e) {
             console.error(e.message);
@@ -98,11 +96,14 @@ class ProductModal extends React.Component {
                             <input type="text" className="product-modal-name-input" defaultValue={this.props.brand}/>
                         </div>
                         <div className="product-modal-category-container">
-                            <p className="product-modal-name-title"><b>Product Brand:</b></p>
-                            {/*<input type="text" className="product-modal-name-input" defaultValue={this.props.brand}/>*/}
+                            <p className="product-modal-name-title"><b>Product Category:</b></p>
                             <select className="product-modal-select-category-container">
                                 {Object.keys(this.state.categories).map(key => (
-                                    <option key={this.state.categories[key]._id} selected={this.state.categories[key].name === this.props.category}>{this.state.categories[key].name}</option>
+                                    <option key={this.state.categories[key]._id}
+                                            selected={this.state.categories[key].name === this.props.category}
+                                            className="product-modal-select-category-option">
+                                        {this.state.categories[key].name}
+                                    </option>
                                 ))}
                             </select>
                         </div>
