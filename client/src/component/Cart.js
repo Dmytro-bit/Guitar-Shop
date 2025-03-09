@@ -82,6 +82,7 @@ class Cart extends React.Component {
                             },
                         });
                     }
+                    window.location.reload(false)
                 } catch (error) {
                     console.error(error);
                 }
@@ -118,6 +119,7 @@ class Cart extends React.Component {
                             },
                         });
                     }
+                    window.location.reload(false)
                 } catch (error) {
                     console.error(error);
                 }

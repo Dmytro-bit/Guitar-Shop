@@ -4,6 +4,7 @@ import "../styles/catalogCard.scss"
 import CategoryModal from "./CategoryModal";
 import ApprovalModal from "./ApprovalModal";
 import axios from "axios";
+import {Redirect} from "react-router-dom";
 // import {Navigate} from "react-router-dom";
 
 class CatalogCard extends React.Component {
@@ -43,11 +44,9 @@ class CatalogCard extends React.Component {
     };
 
     render() {
-        // if (this.state.toFilter) {
-        //     return <Navigate to={`/products?category=${this.props.category_id}`}/>;
-        // }
-
-
+        if (this.state.toFilter) {
+            return <Redirect to={`/products?category=${this.props.category_id}`}/>;
+        }
         return (
             <>
                 {this.state.isEditModalOpen && <CategoryModal
