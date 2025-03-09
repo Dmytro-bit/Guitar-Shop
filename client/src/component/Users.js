@@ -10,7 +10,8 @@ class Users extends React.Component {
         super(props);
 
         this.state = {
-            users: [],
+            sort: "Price: Low to High",
+            users: []
         };
     }
 
@@ -26,7 +27,9 @@ class Users extends React.Component {
             console.error("Users: ", error.message);
         }
     }
-
+    handleSortChange = (sortOption) => {
+        this.setState({sort: sortOption});
+    };
     handleDeleteUser = async (id) => {
         try {
             const headers = {
@@ -39,12 +42,38 @@ class Users extends React.Component {
             console.error(e);
         }
     }
+    sortUsers = (users, sortOption) => {
+        const sortedUsers = [...users];
+        console.log(sortedUsers);
+        switch (sortOption) {
+            case "Alphabetically: A-Z":
+                sortedUsers.sort((a, b) => {
+                    const nameA = `${a.fname} ${a.lname}`.toLowerCase();
+                    const nameB = `${b.fname} ${b.lname}`.toLowerCase();
+                    return nameA.localeCompare(nameB);
+                });
+                break;
+            case "Alphabetically: Z-A":
+                sortedUsers.sort((a, b) => {
+                    const nameA = `${a.fname} ${a.lname}`.toLowerCase();
+                    const nameB = `${b.fname} ${b.lname}`.toLowerCase();
+                    return nameB.localeCompare(nameA);
+                });
+                break;
+            default:
+                break;
+        }
+        return sortedUsers;
+    };
 
     handleToUserOrders = (id) => {
         this.setState({toUserOrders: !this.state.toUserOrders, ID : id});
     }
 
     render() {
+        const {sort,users} = this.state;
+        const sortedData = this.sortUsers(users, sort);
+
         console.log("Users : ", this.state.users);
         return (
             <>
@@ -59,29 +88,18 @@ class Users extends React.Component {
                         <label htmlFor="sort-dropdown-toggle" className="sort-dropdown-label">SORT</label>
 
                         <ul className="sort-dropdown-menu">
-                            <li className="sort-dropdown-item">Price: Low to
-                                High
-                            </li>
-                            <li className="sort-dropdown-item">Price: High to
-                                Low
-                            </li>
-                            <li className="sort-dropdown-item">Rating: Low to
-                                High
-                            </li>
-                            <li className="sort-dropdown-item">Rating: High to
-                                Low
-                            </li>
-                            <li className="sort-dropdown-item ">Alphabetically:
+
+                            <li className="sort-dropdown-item " onClick={() => this.handleSortChange("Alphabetically: A-Z")}>Alphabetically:
                                 A-Z
                             </li>
-                            <li className="sort-dropdown-item">Alphabetically:
+                            <li className="sort-dropdown-item" onClick={() => this.handleSortChange("Alphabetically: Z-A")}>Alphabetically:
                                 Z-A
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div className="users-container">
-                    {this.state.users.map((user, index) => (
+                    {sortedData.map((user, index) => (
                         <div className="user-container" key={index}>
                             <Link to={`/orders/${user._id}`} className="user-image-container">
                                 <img
