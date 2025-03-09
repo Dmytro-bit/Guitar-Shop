@@ -44,7 +44,6 @@ axios.interceptors.response.use(
             switch (error.response.status) {
                 case 400:
                     const message0 = error.response?.data?.message || error.response?.data?.error || error.response?.data?.errors ||  'An unexpected error occurred';
-                    console.log("message :::",message0)
                     showNotifications(message0, 'error');
                     // 400 Bad Request
                     console.error('Bad Request:', error.response.data.message || 'Invalid request.');
@@ -52,7 +51,6 @@ axios.interceptors.response.use(
                 case 401:
                     //  401 Unauthorized
                     const url = error.response.config.url
-                    console.log("response url ", url)
                     if(error.response.config.url.includes("user/")){
                         localStorage.removeItem("token")
                         localStorage.removeItem("accessLevel")
@@ -79,20 +77,17 @@ axios.interceptors.response.use(
                 case 403:
                     //  403 Forbidden
                     const message2 = error.response?.data?.message || error.response?.data?.error || error.response?.data?.errors ||  'An unexpected error occurred';
-                    console.log("message :::",message2)
                     showNotifications(message2, 'error');
                     console.error('Forbidden:', 'User does not have the necessary permissions.');
                     break;
                 case 404:
                     // 404 Not Found
                     const message3 = error.response?.data?.message || error.response?.data?.error || error.response?.data?.errors ||  'An unexpected error occurred';
-                    console.log("message :::",message3)
                     showNotifications(message3, 'error');
                     console.error('Not Found:', 'Requested resource not found.');
                     break;
                 case 500:
                     const message4 = error.response?.data?.message || error.response?.data?.error || error.response?.data?.errors ||  'An unexpected error occurred';
-                    console.log("message :::",message4)
                     showNotifications(message4, 'error');
                     // 500 Internal Server Error
                     console.error('Server Error:', 'Internal server error occurred.');
