@@ -1,16 +1,51 @@
 const {Product} = require("../models/product");
 const {verifyLogin, verifyAdmin} = require("./auth");
+const multer = require("multer");
+const upload = multer({dest: `${process.env.UPLOADED_FILES_FOLDER}`})
 
 
 const router = require("express").Router();
 
-router.patch(`/products/:id`, verifyLogin, verifyAdmin, async (req, res) => {
+router.patch(`/products/:id`, verifyLogin, verifyAdmin, upload.array("images_files"), async (req, res, next) => {
     try {
-        const data = await Product.findOne({_id: req.params.id}).populate("category")
-        return res.status(200).send({data: data})
+        let {name, brand, price, quantity, parameters} = req.body;
+
+        let update = {}
+
+        if (name) update.name = name;
+        if (brand) update.brand = brand;
+        if (price) update.price = Number(price);
+        if (quantity) update.quantity = Number(quantity);
+
+        if (parameters) {
+            try {
+                update.parameters = JSON.parse(parameters);
+            } catch (err) {
+                return res.status(400).json({error: "Invalid parameters format"});
+            }
+        }
+
+        if (req.files && req.files.length > 0) {
+            let new_images = req.files.map(file => `http://localhost:${process.env.PORT}/uploads/${file.filename}`);
+            let images = [];
+            if (req.body.images) {
+                try {
+                    images = JSON.parse(req.body.images)
+                } catch (error) {
+                    return res.status(400).json({error: "Invalid images format"});
+                }
+            }
+            let old_images = images.filter(image => !image.startsWith("blob"));
+
+            update.images = [...old_images, ...new_images];
+        }
+
+
+        const updateProduct = await Product.findOneAndUpdate({_id: req.params.id}, update, {new: true}).populate("category")
+        return res.status(200).send({data: updateProduct})
 
     } catch (error) {
-        res.status(400).send({error: error})
+        next(error)
     }
 })
 
@@ -56,11 +91,25 @@ router.get(`/products`, async (req, res) => {
 router.get("/products/filter", async (req, res, next) => {
     try {
 
-        const brands = await Product.distinct("brand");
+        let category_filter = req.query.category;
+        let filter_dict = {}
+
+        if (!Array.isArray(category_filter)) {
+            category_filter = category_filter ? [category_filter] : [];
+        }
+
+        if (category_filter.length > 0) {
+            filter_dict = {category: {$in: category_filter}}
+        }
+
+        const brands = await Product.distinct("brand", filter_dict);
         const categories = await Product.distinct("category");
 
 
         const parametersData = await Product.aggregate([
+            {
+                $match: filter_dict,
+            },
             {$project: {parameters: {$objectToArray: "$parameters"}}},
             {$unwind: "$parameters"},
             {
@@ -100,25 +149,42 @@ router.get(`/products/:id`, async (req, res) => {
 })
 
 
-router.post(`/products`, verifyLogin, verifyAdmin, async (req, res) => {
+router.post(`/products`, verifyLogin, verifyAdmin, upload.array("images_files"), async (req, res, next) => {
     try {
+        let {name, brand, category, price, quantity, parameters} = req.body;
 
-        const {name, brand, model, category, images, rating, quantity, props} = req.body;
+        let data = {}
 
-        const newProduct = new Product({name, brand, model, category, images, rating, quantity, props});
+        if (name) data.name = name;
+        if (brand) data.brand = brand;
+        if (price) data.price = Number(price);
+        if (quantity) data.quantity = Number(quantity);
+        if (category) data.category = category;
+
+        if (parameters) {
+            try {
+                data.parameters = JSON.parse(parameters);
+            } catch (err) {
+                return res.status(400).json({error: "Invalid parameters format"});
+            }
+        }
+
+        data.images = req.files.map(file => `http://localhost:${process.env.PORT}/uploads/${file.filename}`);
+
+        const newProduct = new Product(data);
+
         const savedProduct = await newProduct.save();
 
         return res.status(200).send({data: savedProduct});
     } catch (e) {
-        res.status(400).json({error: e});
+        next(e)
     }
 })
 
 
 router.delete(`/products/:id`, verifyLogin, verifyAdmin, async (req, res, next) => {
     try {
-
-        const result = Product.findByIdAndDelete(req.params.id, undefined);
+        const result = await Product.findByIdAndDelete(req.params.id, undefined);
         return res.status(200).send({data: result});
     } catch (e) {
         next(e);
