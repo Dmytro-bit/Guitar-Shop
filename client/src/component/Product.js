@@ -67,7 +67,11 @@ class Products extends React.Component {
 
     addToCart = async () => {
         const token = localStorage.getItem("token");
-        const data = JSON.parse(localStorage.getItem("shopping_cart"));
+        let data = JSON.parse(localStorage.getItem("shopping_cart"));
+
+        if (data === null) {
+            data = []
+        }
         const {id} = this.props.params;
 
         const item =

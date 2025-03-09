@@ -1,7 +1,6 @@
 import React from "react"
 import {Link} from "react-router-dom";
-import {PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js"
-import {SANDBOX_CLIENT_ID} from "../config/global_constants"
+import {PayPalButtons} from "@paypal/react-paypal-js"
 import Nav from "./Nav"
 
 import "../styles/cart.scss"
@@ -13,9 +12,9 @@ class Cart extends React.Component {
 
         this.state = {
             cartProducts: [],
-            name : "",
-            email : "",
-            phone : "",
+            name: "",
+            email: "",
+            phone: "",
             address: {
                 fline: "",
                 sline: "",
@@ -38,6 +37,12 @@ class Cart extends React.Component {
         }
     }
 
+    handleChange = (key) => (e) => {
+        this.setState({[key]: e.target.value}, () => {
+            console.log("Updated State:", this.state);
+        });
+    };
+
     checkEmptyAddress = () => {
         const noEmptyFields = Object.keys(this.state.address).map(key =>
             this.state.address[key].trim()).every(value => value !== "")
@@ -51,8 +56,8 @@ class Cart extends React.Component {
         const updatedCartProducts = [...this.state.cartProducts];
         if (updatedCartProducts[i].quantity < updatedCartProducts[i].product.quantity) {
             updatedCartProducts[i].quantity += 1;
-            this.setState({cartProducts: updatedCartProducts}, async ()=>{
-                try{
+            this.setState({cartProducts: updatedCartProducts}, async () => {
+                try {
                     const token = localStorage.getItem("token");
                     const quantity = updatedCartProducts[i].quantity;
                     console.log(updatedCartProducts[i].product);
@@ -77,7 +82,7 @@ class Cart extends React.Component {
                             },
                         });
                     }
-                }catch(error) {
+                } catch (error) {
                     console.error(error);
                 }
             });
@@ -88,14 +93,13 @@ class Cart extends React.Component {
         const updatedCartProducts = [...this.state.cartProducts];
         if (updatedCartProducts[i].quantity > 1) {
             updatedCartProducts[i].quantity -= 1;
-            this.setState({cartProducts: updatedCartProducts},async ()=>{
-                try{
+            this.setState({cartProducts: updatedCartProducts}, async () => {
+                try {
                     const token = localStorage.getItem("token");
                     const id = updatedCartProducts[i].product._id;
                     const quantity = updatedCartProducts[i].quantity;
 
                     const data = JSON.parse(localStorage.getItem("shopping_cart"))
-
 
 
                     const index = data.findIndex(obj => obj.product === id);
@@ -114,7 +118,7 @@ class Cart extends React.Component {
                             },
                         });
                     }
-                }catch(error) {
+                } catch (error) {
                     console.error(error);
                 }
             });
@@ -127,7 +131,7 @@ class Cart extends React.Component {
             const updatedCartProducts = [...this.state.cartProducts];
             updatedCartProducts.splice(i, 1);
 
-            this.setState({ cartProducts: updatedCartProducts }, async () => {
+            this.setState({cartProducts: updatedCartProducts}, async () => {
 
                 const localCart = updatedCartProducts.map(item => ({
                     product: item.product._id,
@@ -189,17 +193,21 @@ class Cart extends React.Component {
         } else {
             try {
                 const data = JSON.parse(localStorage.getItem("shopping_cart"))
-                const res = await axios.post("/shopping-cart/guestCart", data);
-                const {shopping_cart, totalPrice} = res.data
-                console.log("Shopping cart guest:", shopping_cart, totalPrice);
-                this.setState({cartProducts: shopping_cart, total:totalPrice});
-            }catch(error) {
+                console.log("DATA:", data)
+                if (data === null) {
+                    this.setState({cartProducts: [], total: 0});
+                } else {
+                    const res = await axios.post("/shopping-cart/guestCart", data);
+                    const {shopping_cart, totalPrice} = res.data
+                    console.log("Shopping cart guest:", shopping_cart, totalPrice);
+                    this.setState({cartProducts: shopping_cart, total: totalPrice});
+                }
+            } catch (error) {
                 console.error("Error fetching cart:", error);
             }
         }
 
     }
-
 
 
     getDefaultAddress = async () => {
@@ -261,16 +269,43 @@ class Cart extends React.Component {
             console.log("Successfully approved")
             console.log(paymentData)
 
-            let customer_info = {}
+            const {total, name, phone, address, email} = this.state
+
+            let customer_info = {
+                name: name,
+                phone: phone,
+                email: email,
+                address: address
+            }
 
 
-            const res = await axios.post("/order", {
-                paymentId: paymentData.paymentID,
-                total_price: this.state.total,
-                items: this.state.cartProducts,
-                customer_info: customer_info
-            })
-            console.log(res)
+            let order_data = {}
+
+            order_data.items = this.state.cartProducts;
+            order_data.total_price = total
+            order_data.payment_id = paymentData.paymentID
+            order_data.customer_info = customer_info
+            const headers = {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            };
+
+            const res = await axios.post("/order", order_data, {headers})
+
+
+                localStorage.setItem('shopping_cart', '[]');
+
+                let token = localStorage.getItem("token");
+                if (token !== "null") {
+
+                    const res = await axios.patch("/shopping-cart", [], {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                }
+                this.forceUpdate();
+                window.location.reload();
+
 
             console.log("Payment processed successfully:", res.data)
         } catch (error) {
@@ -306,7 +341,7 @@ class Cart extends React.Component {
                                             <div className="top-row">
                                                 <p className="cart-product-name">{cartProduct.product.name}</p>
                                                 <img src="../icons/bin.png" className="cart-delete-product-icon"
-                                                     alt="delete product" onClick={() => this.deleteItem(index)} />
+                                                     alt="delete product" onClick={() => this.deleteItem(index)}/>
                                             </div>
                                             <div className="middle-row">
                                                 <p className="cart-product-delivery">Free Delivery</p>
@@ -341,11 +376,11 @@ class Cart extends React.Component {
                                 <div className="cart-total-additional-container">VAT included in the price</div>
                                 {/*FIXME first CHECKOUT?*/}
                                 <div className="cart-total-checkout-container">
-                                    <PayPalScriptProvider options={{currency: "EUR", "client-id": SANDBOX_CLIENT_ID}}>
-                                        <PayPalButtons style={{layout: "horizontal"}} createOrder={this.createOrder}
-                                                       onApprove={this.onApprove} onError={this.onError}
-                                                       onCancel={this.onCancel}/>
-                                    </PayPalScriptProvider>
+                                    {/*<PayPalScriptProvider options={{currency: "EUR", "client-id": SANDBOX_CLIENT_ID}}>*/}
+                                    <PayPalButtons style={{layout: "horizontal"}} createOrder={this.createOrder}
+                                                   onApprove={this.onApprove} onError={this.onError}
+                                                   onCancel={this.onCancel}/>
+                                    {/*</PayPalScriptProvider>*/}
                                 </div>
                             </div>
                             <div className="cart-total-container-alt">
@@ -382,21 +417,24 @@ class Cart extends React.Component {
                         </p>
                         <div className="cart-delivery-address-field-container">
                             <p className="cart-delivery-address-field-title">Name: </p>
-                            <input type="text" value={this.state.name} id={`cart-delivery-address-name`}
+                            <input type="text" value={this.state.name} onChange={this.handleChange("name")}
+                                   id={`cart-delivery-address-name`}
                                    className={`cart-delivery-address-field`}
-                                   disabled={true}/>
+                                   disabled={!(this.state.isAddressEditable || !this.state.isAddressSet)}/>
                         </div>
                         <div className="cart-delivery-address-field-container">
                             <p className="cart-delivery-address-field-title">Email: </p>
-                            <input type="text" value={this.state.email} id={`cart-delivery-address-email`}
+                            <input type="text" value={this.state.email} onChange={this.handleChange("email")}
+                                   id={`cart-delivery-address-email`}
                                    className={`cart-delivery-address-field`}
-                                   disabled={true}/>
+                                   disabled={!(this.state.isAddressEditable || !this.state.isAddressSet)}/>
                         </div>
                         <div className="cart-delivery-address-field-container">
                             <p className="cart-delivery-address-field-title">Phone: </p>
-                            <input type="text" value={this.state.phone} id={`cart-delivery-address-phone`}
+                            <input type="text" value={this.state.phone} onChange={this.handleChange("phone")}
+                                   id={`cart-delivery-address-phone`}
                                    className={`cart-delivery-address-field`}
-                                   disabled={true}/>
+                                   disabled={!(this.state.isAddressEditable || !this.state.isAddressSet)}/>
                         </div>
                         {Object.keys(this.state.address).map((line, index) => (
                             <div className="cart-delivery-address-field-container" key={index}>

@@ -1,14 +1,41 @@
 const router = require("express").Router();
-
+const fs = require("fs");
+const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
 const orderModel = require("../models/order");
+const jwt = require("jsonwebtoken");
 
-router.post(``, async (req, res, next) => {
+
+const checkUser = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {
+        const token = authHeader.split(" ")[1];
+        let user_data
+
+        jwt.verify(token, JWT_PRIVATE_KEY, (err, decoded) => {
+            if (!err) {
+
+                user_data = decoded;
+                const {email, user_id, accessLevel} = user_data
+
+                req.user_id = user_id
+                req.accessLevel = accessLevel
+                req.user_email = email
+
+            }
+        })
+    }
+    next()
+}
+
+
+router.post(``, checkUser, async (req, res, next) => {
     try {
-        let {user_id, total_price, items, customer_info, payment_id} = req.body;
+        let {total_price, items, customer_info, payment_id} = req.body;
 
         let data = {}
 
-        if (user_id) data.user_id = user_id;
+        if (req.user_id) data.user_id = req.user_id;
 
 
         data.items = items
