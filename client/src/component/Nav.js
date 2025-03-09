@@ -77,7 +77,10 @@ class Nav extends React.Component {
                         <div id="dropdown" style={{display : this.state.isMenuActive ? "flex" : "none"}}>
                             <div className="dropdown-option" onClick={this.handleUserAccount}><b>ACCOUNT</b></div>
                             <hr />
-                            <div className="dropdown-option"><b>ORDERS</b></div>
+                            {this.state.isAdmin ?
+                                (<Link to="/users" className="dropdown-option"><b>USERS</b></Link>)
+                                :
+                                (<Link to="/orders" className="dropdown-option"><b>ORDERS</b></Link>)}
                             <hr />
                             <div className="dropdown-option" style={{color:"#db3d45"}} onClick={this.handleLogOut}><b>LOG OUT</b></div>
                         </div>
