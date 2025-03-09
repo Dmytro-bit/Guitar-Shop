@@ -13,6 +13,9 @@ class Cart extends React.Component {
 
         this.state = {
             cartProducts: [],
+            name : "",
+            email : "",
+            phone : "",
             address: {
                 fline: "",
                 sline: "",
@@ -370,13 +373,31 @@ class Cart extends React.Component {
                         </div>
                     </div>
                 </div>
-                <p className="cart-delivery-address-section-title">Delivery Address</p>
+                <p className="cart-delivery-address-section-title">Order Form</p>
                 <div className="cart-delivery-address-section-container">
                     <div className="cart-delivery-address-container">
                         <p className="cart-delivery-address-unset-message"
                            style={{display: (this.state.isAddressSet || this.state.submittedOnce) ? "none" : "flex"}}>
                             You haven't set your delivery address yet. <b>Let's fix it now!</b>
                         </p>
+                        <div className="cart-delivery-address-field-container">
+                            <p className="cart-delivery-address-field-title">Name: </p>
+                            <input type="text" value={this.state.name} id={`cart-delivery-address-name`}
+                                   className={`cart-delivery-address-field`}
+                                   disabled={true}/>
+                        </div>
+                        <div className="cart-delivery-address-field-container">
+                            <p className="cart-delivery-address-field-title">Email: </p>
+                            <input type="text" value={this.state.email} id={`cart-delivery-address-email`}
+                                   className={`cart-delivery-address-field`}
+                                   disabled={true}/>
+                        </div>
+                        <div className="cart-delivery-address-field-container">
+                            <p className="cart-delivery-address-field-title">Phone: </p>
+                            <input type="text" value={this.state.phone} id={`cart-delivery-address-phone`}
+                                   className={`cart-delivery-address-field`}
+                                   disabled={true}/>
+                        </div>
                         {Object.keys(this.state.address).map((line, index) => (
                             <div className="cart-delivery-address-field-container" key={index}>
                                 <p className="cart-delivery-address-field-title">{this.state.addressParse[line]}</p>

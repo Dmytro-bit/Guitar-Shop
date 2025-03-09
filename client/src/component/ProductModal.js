@@ -1,6 +1,7 @@
 import React from "react"
 
 import "../styles/productModal.scss"
+import axios from "axios";
 
 class ProductModal extends React.Component {
     constructor(props) {
@@ -9,10 +10,17 @@ class ProductModal extends React.Component {
         this.state = {
             images: [],
             parameters : {},
+            categories : {}
         }
     }
 
-    componentDidMount() {
+    componentDidMount = async()=>{
+        try {
+            const res = await axios.get("/categories");
+            this.setState({categories: res.data.data});
+        } catch (e) {
+            console.error(e.message);
+        }
         this.setState({images: this.props.images, parameters: this.props.parameters});
     }
 
@@ -86,6 +94,18 @@ class ProductModal extends React.Component {
                         <div className="product-modal-name-container">
                             <p className="product-modal-name-title"><b>Product Brand:</b></p>
                             <input type="text" className="product-modal-name-input" defaultValue={this.props.brand}/>
+                        </div>
+                        <div className="product-modal-category-container">
+                            <p className="product-modal-name-title"><b>Product Category:</b></p>
+                            <select className="product-modal-select-category-container">
+                                {Object.keys(this.state.categories).map(key => (
+                                    <option key={this.state.categories[key]._id}
+                                            selected={this.state.categories[key].name === this.props.category}
+                                            className="product-modal-select-category-option">
+                                        {this.state.categories[key].name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div className="product-modal-images-container">
                             {this.state.images.length > 0 && this.state.images.map((image, index) => (

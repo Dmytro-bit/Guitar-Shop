@@ -78,18 +78,24 @@
       width: 100%;
     }
 
-    .product-modal-name-container, .product-modal-price-container, .product-modal-stock-container{
+    .product-modal-name-container, .product-modal-price-container, .product-modal-stock-container, .product-modal-category-container{
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 100%;
       gap: 1em;
 
-      .product-modal-name-input, .product-modal-price-input, .product-modal-stock-input {
+      .product-modal-name-input, .product-modal-price-input, .product-modal-stock-input, .product-modal-select-category-container {
         border: 2px solid rgb(55,55,55);
         border-radius: 5px;
         text-align: center;
         font-size: clamp(16px, 1.2vw, 44px);
+        background-color: transparent;
+        width: 50%;
+
+        .product-modal-select-category-option {
+          width: 100%;
+        }
 
         &:focus {
           outline: none;
