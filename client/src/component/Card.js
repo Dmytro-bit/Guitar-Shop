@@ -40,6 +40,7 @@ class Card extends React.Component {
                     type="edit"
                     name={this.props.name}
                     brand={this.props.brand}
+                    category={this.props.category}
                     images={this.props.images}
                     price={this.props.price}
                     quantity={this.props.quantity}
