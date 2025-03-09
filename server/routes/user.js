@@ -10,7 +10,7 @@ const e = require("express");
 const {response} = require("express");
 const {join} = require("node:path");
 const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
-// upload image to profile
+
 const uploadImage = (req, res, next) => {
     req.imageUrl = `http://localhost:${process.env.PORT}/uploads/${req.file.filename}`
     next()
@@ -141,7 +141,6 @@ const verifyLogin = async (req, res, next) => {
 const returnUserData = async (req, res, next) => {
     try {
         const user = req.user;
-        console.log(user.email);
         res.status(200).json({user})
     } catch (err) {
         next(err)

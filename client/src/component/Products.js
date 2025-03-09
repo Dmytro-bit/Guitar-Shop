@@ -16,19 +16,30 @@ class Products extends React.Component {
             sort: "Price: Low to High",
             data: {},
             parameters: {},
-            brands : {},
-            categories : {},
-            minPrice : 0,
-            maxPrice : 100,
-            isAdmin : false,
+            brands: [],
+            categories: [],
+            minPrice: 0,
+            maxPrice: 100,
+            isAdmin: false,
             isAddModalOpen: false,
+            checked: {
+                brands: {},
+                categories: {},
+                parameters: {}
+            },
+
         }
     }
 
     componentDidMount = async () => {
         try {
             const res = await axios.get("/products/filter")
-            this.setState({data: res.data.data, parameters : res.data.data.parameters, brands : res.data.data.brands, categories : res.data.data.categories});
+            this.setState({
+                data: res.data.data,
+                parameters: res.data.data.parameters,
+                brands: res.data.data.brands,
+                categories: res.data.data.categories
+            });
             console.log("Response data:", this.state.parameters);
         } catch (e) {
             console.log(e.message);
@@ -40,7 +51,36 @@ class Products extends React.Component {
         this.setState({sort: sortOption});
     };
 
+    // https://www.geeksforgeeks.org/what-is-currying-function-in-javascript/
+    handleCheckBoxChange = (object, key) => (event) => {
 
+        console.log("key",key, "group", object);
+        const isChecked = event.target.checked;
+
+        this.setState((prevState) => ({
+            checked: {
+                ...prevState.checked,
+                [object]: {...prevState.checked[object], [key]: isChecked}
+            }
+        }),()=>{console.log("-------------",object,key,isChecked,this.state.checked)});
+    }
+
+    handleParameterChange = (parameter, option) => (event) => {
+        const isChecked = event.target.checked;
+
+        this.setState((prevState) => ({
+            checked: {
+                ...prevState.checked,
+                parameters: {
+                    ...prevState.checked.parameters,
+                    [parameter]: {
+                        ...((prevState.checked.parameters && prevState.checked.parameters[parameter]) || {}),
+                        [option]: isChecked
+                    }
+                }
+            }
+        }) );
+    };
 
 
     handleInputChange = (e) => {
@@ -51,18 +91,18 @@ class Products extends React.Component {
     }
 
     handlePriceChange = (key, value) => {
-        this.setState({[key] : value});
+        this.setState({[key]: value});
     }
 
     handleAddModal = () => {
         this.setState({isAddModalOpen: !this.state.isAddModalOpen});
     }
 
-    render()
-    {
-        console.log("Main state", this.state)
-        return(
-            <><Nav />
+
+    render() {
+        console.log(" Products state ", this.state);
+        return (
+            <><Nav/>
                 {this.state.isAddModalOpen && <ProductModal
                     type="add"
                     name=""
@@ -110,6 +150,9 @@ class Products extends React.Component {
                                                     {Object.keys(this.state.brands).map((brand, index) => (
                                                         <div className="filter-dropdown-option" key={index}>
                                                             <input type="checkbox" id={`filter-brand-${brand}-mobile`}
+                                                                   checked={this.state.checked.brands[brand] || false}
+
+                                                                   onChange={this.handleCheckBoxChange("brands", this.state.brands[brand])}
                                                                    className="filter-option-checkbox"/>
                                                             <label className={`filter-brand-label`}
                                                                    htmlFor={`filter-brand-${brand}-mobile`}>{this.state.brands[brand]}</label>
@@ -124,15 +167,25 @@ class Products extends React.Component {
                                                        htmlFor={"filter-categories-toggle-mobile"}>CATEGORIES <img
                                                     src="../img/right-arrow.png" className="filter-arrow"/></label>
                                                 <div className="filter-dropdown-container">
-                                                    {Object.keys(this.state.categories).map((category, index) => (
-                                                        <div className="filter-dropdown-option" key={index}>
-                                                            <input type="checkbox" id={`filter-category-${category}-mobile`}
-                                                                   className="filter-option-checkbox"/>
-                                                            <label
-                                                                className={`filter-category-label`}
-                                                                htmlFor={`filter-category-${category}-mobile`}>{this.state.categories[category]}</label>
-                                                        </div>
-                                                    ))}
+                                                    {Object.keys(this.state.categories).map((key, index) => {
+                                                        const categoryName = this.state.categories[key]; // extract the actual category name
+                                                        return (
+                                                            <div className="filter-dropdown-option" key={index}>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    id={`filter-category-${key}-mobile`}
+                                                                    checked={this.state.checked.categories[categoryName] || false}
+                                                                    onChange={this.handleCheckBoxChange("categories", categoryName)}
+                                                                    className="filter-option-checkbox"
+                                                                />
+                                                                <label
+                                                                    className="filter-category-label"
+                                                                    htmlFor={`filter-category-${key}-mobile`}>
+                                                                    {categoryName}
+                                                                </label>
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </div>
                                             </div>
                                             <div className="products-filter-parameters-container">
@@ -145,7 +198,8 @@ class Products extends React.Component {
                                                     {Object.keys(this.state.parameters).map((parameter, index) => (
                                                         <div className="filter-parameter-container" key={index}>
                                                             <input type="checkbox" className="products-filter-input"
-                                                                   id={`filter-parameter-${parameter}-mobile`} key={index}/>
+                                                                   id={`filter-parameter-${parameter}-mobile`}
+                                                                   key={index}/>
                                                             <label htmlFor={`filter-parameter-${parameter}-mobile`}
                                                                    className="filter-parameter-title">{parameter}<img
                                                                 src="../img/right-arrow.png" className="filter-arrow"/></label>
@@ -153,6 +207,11 @@ class Products extends React.Component {
                                                                 {this.state.parameters[parameter].map((option, index) => (
                                                                     <div className="filter-dropdown-option" key={index}>
                                                                         <input type="checkbox"
+                                                                               checked={
+                                                                                   (this.state.checked.parameters[parameter] &&
+                                                                                       this.state.checked.parameters[parameter][option]) || false
+                                                                               }
+                                                                               onChange={this.handleParameterChange(parameter, option)}
                                                                                id={`filter-parameter-${option}-mobile`}
                                                                                className="filter-parameter-checkbox"/>
                                                                         <label
@@ -225,12 +284,18 @@ class Products extends React.Component {
                                 <label className="products-filter-title" htmlFor={"filter-brands-toggle"}>BRANDS
                                     <img src="../img/right-arrow.png" className="filter-arrow"/></label>
                                 <div className="filter-dropdown-container">
-                                    {Object.keys(this.state.brands).map((brand, index) => (
+                                    {this.state.brands.map((brand, index) => (
                                         <div className="filter-dropdown-option" key={index}>
-                                            <input type="checkbox" id={`filter-brand-${brand}`}
-                                                   className="filter-option-checkbox"/>
-                                            <label className={`filter-brand-label`}
-                                                   htmlFor={`filter-brand-${brand}`}>{this.state.brands[brand]}</label>
+                                            <input
+                                                type="checkbox"
+                                                id={`filter-brand-${brand}`}
+                                                checked={this.state.checked.brands[brand] || false}
+                                                onChange={this.handleCheckBoxChange("brands", brand)}
+                                                className="filter-option-checkbox"
+                                            />
+                                            <label className="filter-brand-label" htmlFor={`filter-brand-${brand}`}>
+                                                {brand}
+                                            </label>
                                         </div>
                                     ))}
                                 </div>
@@ -241,15 +306,25 @@ class Products extends React.Component {
                                        htmlFor={"filter-categories-toggle"}>CATEGORIES <img
                                     src="../img/right-arrow.png" className="filter-arrow"/></label>
                                 <div className="filter-dropdown-container">
-                                    {Object.keys(this.state.categories).map((category, index) => (
-                                        <div className="filter-dropdown-option" key={index}>
-                                            <input type="checkbox" id={`filter-category-${category}`}
-                                                   className="filter-option-checkbox"/>
-                                            <label
-                                                className={`filter-category-label`}
-                                                htmlFor={`filter-category-${category}`}>{this.state.categories[category]}</label>
-                                        </div>
-                                    ))}
+                                    {Object.keys(this.state.categories).map((key, index) => {
+                                        const categoryName = this.state.categories[key];
+                                        return (
+                                            <div className="filter-dropdown-option" key={index}>
+                                                <input
+                                                    type="checkbox"
+                                                    id={`filter-category-${key}`}
+                                                    checked={this.state.checked.categories[categoryName] || false}
+                                                    onChange={this.handleCheckBoxChange("categories", categoryName)}
+                                                    className="filter-option-checkbox"
+                                                />
+                                                <label
+                                                    className="filter-category-label"
+                                                    htmlFor={`filter-category-${key}`}>
+                                                    {categoryName}
+                                                </label>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                             <div className="products-filter-parameters-container">
@@ -266,9 +341,14 @@ class Products extends React.Component {
                                                    className="filter-parameter-title">{parameter}<img
                                                 src="../img/right-arrow.png" className="filter-arrow"/></label>
                                             <div className="filter-dropdown-container">
-                                            {this.state.parameters[parameter].map((option, index) => (
+                                                {this.state.parameters[parameter].map((option, index) => (
                                                     <div className="filter-dropdown-option" key={index}>
                                                         <input type="checkbox" id={`filter-parameter-${option}`}
+                                                               checked={
+                                                                   (this.state.checked.parameters[parameter] &&
+                                                                       this.state.checked.parameters[parameter][option]) || false
+                                                               }
+                                                               onChange={this.handleParameterChange(parameter, option)}
                                                                className="filter-parameter-checkbox"/>
                                                         <label
                                                             htmlFor={`filter-parameter-${option}`}>{option}</label>
@@ -283,7 +363,7 @@ class Products extends React.Component {
                     </div>
                     <div className="products-category-name">All Products</div>
                     {/*TODO Make it display currently viewed category*/}
-                    <div className="cardlist-container"><CardList sort={this.state.sort} search={this.state.search}/>
+                    <div className="cardlist-container"><CardList maxPrice={this.state.maxPrice} minPrice={this.state.minPrice} sort={this.state.sort} search={this.state.search} checked={this.state.checked}/>
                     </div>
                 </div>
             </>

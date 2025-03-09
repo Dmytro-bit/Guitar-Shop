@@ -52,11 +52,64 @@ class CardList extends React.Component {
         return sortedProducts;
     };
 
-    render() {
-        const {search, sort} = this.props;
-        const filteredData = this.state.data.filter(product => {
-            return product.name.toLowerCase().includes(search.toLowerCase());
+    getFilteredProducts = (products) => {
+        const { maxPrice, minPrice, search, checked } = this.props;
+        if (!products) return [];
+        let filtered = products;
+
+        if (search) {
+            filtered = filtered.filter((product) =>
+                product.name.toLowerCase().includes(search.toLowerCase())
+            );
+        }
+
+        const selectedBrands = Object.keys(checked.brands).filter(
+            (brand) => checked.brands[brand]
+        );
+        if (selectedBrands.length > 0) {
+            filtered = filtered.filter((product) =>
+                selectedBrands.includes(product.brand)
+            );
+        }
+
+        const selectedCategories = Object.keys(checked.categories).filter(
+            (cat) => checked.categories[cat]
+        );
+
+        if (selectedCategories.length > 0) {
+            filtered = filtered.filter((product) =>
+                selectedCategories.includes(product.category)
+            );
+        }
+
+        Object.keys(checked.parameters).forEach((parameter) => {
+            const selectedOptions = Object.keys(checked.parameters[parameter]).filter(
+                (option) => checked.parameters[parameter][option]
+            );
+
+            if (selectedOptions.length > 0) {
+                filtered = filtered.filter((product) => {
+
+                    return product.parameters && selectedOptions.includes(product.parameters[parameter]);
+                });
+            }
         });
+
+        filtered = filtered.filter((product) => {
+            const price = Number(product.price);
+            const min = Number(minPrice);
+            const max = Number(maxPrice);
+            return price >= min && price <= max;
+        });
+
+        return filtered;
+    };
+
+    render() {
+        const {sort} = this.props;
+
+        const filteredData = this.getFilteredProducts(this.state.data);
+        console.log("filtered", filteredData);
 
         const sortedData = this.sortProducts(filteredData, sort);
         return (
