@@ -9,24 +9,38 @@ class Users extends React.Component {
         super(props);
 
         this.state = {
-            users : []
+            users: []
         };
     }
 
-    componentDidMount = async() => {
+    componentDidMount = async () => {
         try {
             const headers = {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             };
             const res = await axios.get("/user", {headers});
-            this.setState({users : res.data.data});
+            this.setState({users: res.data.data});
             console.log("Users : ", this.state.users);
         } catch (error) {
             console.error("Users: ", error.message);
         }
     }
 
+    handleDeleteUser = async (id) => {
+        try {
+            const headers = {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            };
+
+            await axios.delete(`/user/${id}`, {headers});
+            window.location.reload();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     render() {
+        console.log("Users : ", this.state.users);
         return (
             <>
                 <Nav/>
@@ -65,7 +79,9 @@ class Users extends React.Component {
                     {this.state.users.map((user, index) => (
                         <div className="user-container" key={index}>
                             <div className="user-image-container">
-                                <img style={{filter : user.profilePhotoUrl === "../icons/user.png" ? "invert(100%)" : "invert(0%)"}} src={user.profilePhotoUrl} className="user-image"/>
+                                <img
+                                    style={{filter: user.profilePhotoUrl === "../icons/user.png" ? "invert(100%)" : "invert(0%)"}}
+                                    src={user.profilePhotoUrl} className="user-image"/>
                             </div>
                             <div className="user-main-container">
                                 <div className="user-description-container">
@@ -80,7 +96,9 @@ class Users extends React.Component {
                                     </div>
                                 </div>
                                 <div className="user-delete-button-category">
-                                    <button className="user-delete-button">DELETE</button>
+                                    <button className="user-delete-button"
+                                            onClick={() => this.handleDeleteUser(user._id)}>DELETE
+                                    </button>
                                 </div>
                             </div>
                         </div>

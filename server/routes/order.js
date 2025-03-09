@@ -3,6 +3,7 @@ const fs = require("fs");
 const JWT_PRIVATE_KEY = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
 const orderModel = require("../models/order");
 const jwt = require("jsonwebtoken");
+const {verifyLogin} = require("./auth")
 
 
 const checkUser = async (req, res, next) => {
@@ -76,9 +77,14 @@ router.get(`/orders/:id`, async (req, res, next) => {
 })
 
 
-router.get(``, async (req, res, next) => {
+router.get(``, verifyLogin, async (req, res, next) => {
     try {
-        const data = await orderModel.find().populate("user_id").populate("items.product").sort({createdAt: -1})
+        let data
+        if (req.accessLevel === process.env.ACCESS_LEVEL_ADMIN) {
+            data = await orderModel.find().populate("user_id").populate("items.product").sort({createdAt: -1})
+        } else {
+            data = await orderModel.find({user_id: req.user_id}).populate("user_id").populate("items.product").sort({createdAt: -1})
+        }
         res.status(200).json({data: data})
     } catch (e) {
         next(e)

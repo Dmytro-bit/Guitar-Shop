@@ -184,7 +184,7 @@ router.patch('/editAddress', verifyLogin, validateAddress, editAddress);
 router.patch('/updateProfile', verifyLogin, updateProfile);
 router.get('/getUserAddress', verifyLogin, checkUserExists, getUserAddress);
 
-router.get('', verifyLogin, async (req, res, next) => {
+router.get('', verifyLogin, verifyAdmin, async (req, res, next) => {
     try {
         const data = await usersModel.find(undefined, undefined, undefined)
 
@@ -192,6 +192,16 @@ router.get('', verifyLogin, async (req, res, next) => {
     } catch (e) {
         next(e)
     }
+})
+
+router.delete("/:id", verifyLogin, verifyAdmin, async (req, res, next) => {
+    try {
+        const data = await usersModel.findByIdAndDelete(req.params.id, undefined)
+        res.status(204).json({data})
+    } catch (e) {
+        next(e)
+    }
+
 })
 
 module.exports = router;

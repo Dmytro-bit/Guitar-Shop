@@ -60,6 +60,7 @@ class Products extends React.Component {
 
     render()
     {
+        console.log("Main state", this.state)
         return(
             <><Nav />
                 {this.state.isAddModalOpen && <ProductModal
