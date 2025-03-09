@@ -97,7 +97,28 @@ class Card extends React.Component {
                                         <p style={{color: this.props.quantity > 0 ? "green" : "red"}}
                                            className="inStock">{this.props.quantity > 0 ? "In Stock" : "Not In Stock"}</p>
                                     </div>
-                                    <button className="card-buy-button">ADD TO CART</button>
+                                    <div className="card-product-rating">
+                                        <img src="../img/star_border.png" className="rating-star-border"
+                                             alt="rating"></img>
+                                        <img src="../img/star_border.png" className="rating-star-border"
+                                             alt="rating"></img>
+                                        <img src="../img/star_border.png" className="rating-star-border"
+                                             alt="rating"></img>
+                                        <img src="../img/star_border.png" className="rating-star-border"
+                                             alt="rating"></img>
+                                        <img src="../img/star_border.png" className="rating-star-border"
+                                             alt="rating"></img>
+                                        <div
+                                            className="product-rating-stars"
+                                            style={{width: `calc(${this.props.rating * 20}%`}}
+                                        >
+                                            <img src="../img/star.png" className="rating-star" alt="rating"></img>
+                                            <img src="../img/star.png" className="rating-star" alt="rating"></img>
+                                            <img src="../img/star.png" className="rating-star" alt="rating"></img>
+                                            <img src="../img/star.png" className="rating-star" alt="rating"></img>
+                                            <img src="../img/star.png" className="rating-star" alt="rating"></img>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

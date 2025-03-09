@@ -71,6 +71,7 @@ class CardList extends React.Component {
                         model={product.model}
                         price={product.price}
                         quantity={product.quantity}
+                        rating={product.rating}
                         parameters={product.parameters}
                     /></div>
                 ))}
