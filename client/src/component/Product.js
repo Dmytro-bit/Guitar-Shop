@@ -67,27 +67,26 @@ class Products extends React.Component {
 
     addToCart = async () => {
         const token = localStorage.getItem("token");
-        if (token) {
+        const data = JSON.parse(localStorage.getItem("shopping_cart"));
+        const {id} = this.props.params;
+
+        const item =
+            {
+                "product": id,
+                "quantity": this.state.quantity,
+            }
+        const index = data.findIndex(obj => obj.product === this.props.params);
+        if (index !== -1) {
+            data[index] = {
+                ...data[index],
+                quantity: this.state.quantity
+            };
+        } else {
+            data.push(item)
+        }
+        localStorage.setItem("shopping_cart", JSON.stringify(data));
+        if (token !== "null") {
             try {
-                const {id} = this.props.params;
-                const data = JSON.parse(localStorage.getItem("shopping_cart"));
-                const item =
-                    {
-                        "product": id,
-                        "quantity": this.state.quantity,
-                    }
-
-                const index = data.findIndex(obj => obj.product === this.props.params);
-                if (index !== -1) {
-                    data[index] = {
-                        ...data[index],
-                        quantity: this.state.quantity
-                    };
-                } else {
-                    data.push(item)
-                }
-
-                localStorage.setItem("shopping_cart", JSON.stringify(data));
                 const res = await axios.patch("/shopping-cart", data, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -99,8 +98,8 @@ class Products extends React.Component {
                 (error) {
                 console.error("Error creating cart:", error);
             }
-
         }
+
     }
 
     render() {
