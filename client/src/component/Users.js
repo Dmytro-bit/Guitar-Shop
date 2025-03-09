@@ -3,7 +3,7 @@ import React from "react";
 import Nav from "./Nav";
 import "../styles/users.scss"
 import axios from "axios";
-import {Link, Navigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 class Users extends React.Component {
     constructor(props) {
@@ -11,8 +11,6 @@ class Users extends React.Component {
 
         this.state = {
             users: [],
-            ID : "",
-            toUserOrders : false
         };
     }
 
@@ -50,7 +48,6 @@ class Users extends React.Component {
         console.log("Users : ", this.state.users);
         return (
             <>
-                {this.state.toUserOrders && <Navigate to={`/orders?id=${this.state.ID}`}/>}
                 <Nav/>
                 <div className="controls-container">
                     <div className="search-container">
@@ -85,14 +82,14 @@ class Users extends React.Component {
                 </div>
                 <div className="users-container">
                     {this.state.users.map((user, index) => (
-                        <Link className="user-container" key={index} to={`/orders/${user._id}`}>
-                            <div className="user-image-container">
+                        <div className="user-container" key={index}>
+                            <Link to={`/orders/${user._id}`} className="user-image-container">
                                 <img
                                     style={{filter: user.profilePhotoUrl === "../icons/user.png" ? "invert(100%)" : "invert(0%)"}}
                                     src={user.profilePhotoUrl} className="user-image"/>
-                            </div>
+                            </Link>
                             <div className="user-main-container">
-                                <div className="user-description-container">
+                                <Link to={`/orders/${user._id}`} className="user-description-container">
                                     <div className="user-name-container">
                                         <p className="user-name">{user.fname} {user.lname}</p>
                                     </div>
@@ -102,14 +99,14 @@ class Users extends React.Component {
                                     <div className="user-phone-container">
                                         <p className="user-phone">{user.phone}</p>
                                     </div>
-                                </div>
+                                </Link>
                                 <div className="user-delete-button-category">
                                     <button className="user-delete-button"
                                             onClick={() => this.handleDeleteUser(user._id)}>DELETE
                                     </button>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     ))}
                 </div>
             </>

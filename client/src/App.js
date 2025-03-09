@@ -1,145 +1,107 @@
 import React from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {PayPalScriptProvider} from "@paypal/react-paypal-js"
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import Home from "./component/Home";
 import Catalog from "./component/Catalog";
 import Products from "./component/Products";
 import Product from "./component/Product";
 import About from "./component/About";
-import Login from "./component/Login"
+import Login from "./component/Login";
 import Register from "./component/Register";
-import Cart from "./component/Cart"
+import Cart from "./component/Cart";
 import Orders from "./component/Orders";
 import Users from "./component/Users";
 import Footer from "./component/Footer";
-import {ACCESS_LEVEL_GUEST, SERVER_HOST, SANDBOX_CLIENT_ID} from "./config/global_constants";
+import { ACCESS_LEVEL_GUEST, SERVER_HOST, SANDBOX_CLIENT_ID } from "./config/global_constants";
 import axios from "axios";
-import {showNotifications} from "./ShowNotifications";
+import { showNotifications } from "./ShowNotifications";
 
 axios.defaults.baseURL = SERVER_HOST;
 
-if (typeof localStorage.accessLevel === "undefined" || localStorage.accessLevel === "null" || localStorage.accessLevel === 0) {
-    localStorage.accessLevel = ACCESS_LEVEL_GUEST
-    localStorage.token = null
-    localStorage.email = null
+if (!localStorage.accessLevel || localStorage.accessLevel === "null" || localStorage.accessLevel === "0") {
+    localStorage.accessLevel = ACCESS_LEVEL_GUEST;
+    localStorage.token = null;
+    localStorage.email = null;
 }
 
 axios.interceptors.request.use(config => {
     const token = localStorage.getItem("token");
-    console.log("token in App.js interceptor", token);
     const protectedApi = config.url.includes("user/");
-    console.log("protectedApi", protectedApi);
-    const configUrl = config.url
-    console.log("configUrl ", configUrl);
     if (token && token !== "null" && protectedApi) {
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
-})
+});
+
 axios.interceptors.response.use(
     response => response,
     error => {
         if (error.response) {
+            const message = error.response?.data?.message || error.response?.data?.error || 'An unexpected error occurred';
+            showNotifications(message, 'error');
 
-            // const message = error.response?.data?.message || 'An unexpected error occurred';
-            // showNotifications(message, 'error');
             switch (error.response.status) {
                 case 400:
-                    const message0 = error.response?.data?.message || error.response?.data?.error || error.response?.data?.errors || 'An unexpected error occurred';
-                    console.log("message :::", message0)
-                    showNotifications(message0, 'error');
-                    // 400 Bad Request
-                    console.error('Bad Request:', error.response.data.message || 'Invalid request.');
+                    console.error('Bad Request:', message);
                     break;
                 case 401:
-                    //  401 Unauthorized
-                    const url = error.response.config.url
-                    console.log("response url ", url)
                     if (error.response.config.url.includes("user/")) {
-                        localStorage.removeItem("token")
-                        localStorage.removeItem("accessLevel")
-                        localStorage.removeItem("email")
-                        const orderAddress =
-                            {
-                                fline: "",
-                                sline: "",
-                                city: "",
-                                county: "",
-                                eircode: "",
-                            }
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("accessLevel");
+                        localStorage.removeItem("email");
                         localStorage.setItem("isAddressSet", "false");
-
-                        localStorage.setItem("orderAddress", JSON.stringify(orderAddress))
-                        const message1 = error.response?.data?.message || error.response?.data?.error || error.response?.data?.errors || 'An unexpected error occurred';
-                        console.log("message :::", message1)
-                        showNotifications(message1, 'error');
+                        localStorage.setItem("orderAddress", JSON.stringify({
+                            fline: "", sline: "", city: "", county: "", eircode: ""
+                        }));
                         window.location.reload();
                     } else {
-                        console.error('Unauthorized:', 'User is not authenticated.');
+                        console.error('Unauthorized:', message);
                     }
                     break;
                 case 403:
-                    //  403 Forbidden
-                    const message2 = error.response?.data?.message || error.response?.data?.error || error.response?.data?.errors || 'An unexpected error occurred';
-                    console.log("message :::", message2)
-                    showNotifications(message2, 'error');
-                    console.error('Forbidden:', 'User does not have the necessary permissions.');
+                    console.error('Forbidden:', message);
                     break;
                 case 404:
-                    // 404 Not Found
-                    const message3 = error.response?.data?.message || error.response?.data?.error || error.response?.data?.errors || 'An unexpected error occurred';
-                    console.log("message :::", message3)
-                    showNotifications(message3, 'error');
-                    console.error('Not Found:', 'Requested resource not found.');
+                    console.error('Not Found:', message);
                     break;
                 case 500:
-                    const message4 = error.response?.data?.message || error.response?.data?.error || error.response?.data?.errors || 'An unexpected error occurred';
-                    console.log("message :::", message4)
-                    showNotifications(message4, 'error');
-                    // 500 Internal Server Error
-                    console.error('Server Error:', 'Internal server error occurred.');
+                    console.error('Server Error:', message);
                     break;
                 default:
-
-                    // Handle other status codes
-                    console.error(`Error ${error.response.status}:`, error.response.data);
+                    console.error(`Error ${error.response.status}:`, message);
             }
         } else if (error.request) {
-            console.log('No response received: ', error.request);
-            const url = error.response.config.url
-            console.log("response url ", url)
+            console.error('No response received:', error.request);
         } else {
-            console.log('Axios error', error.message);
+            console.error('Axios error:', error.message);
         }
         return Promise.reject(error);
     }
-)
-
+);
 
 class App extends React.Component {
     render() {
         return (
-            <PayPalScriptProvider options={{currency: "EUR", "client-id": SANDBOX_CLIENT_ID}}>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="/" element={<Home/>}/>
-                        <Route path="/catalog" element={<Catalog/>}/>
-                        <Route path="/products" element={<Products/>}/>
-                        <Route path="/products/:id" element={<Product/>}/>
-                        <Route path="/about" element={<About/>}/>
-                        <Route path="/login" element={<Login/>}/>
-                        <Route path="/register" element={<Register/>}/>
-                        <Route path="/cart" element={<Cart/>}/>
-                        <Route path="/orders" element={<Orders />}></Route>
-                        <Route path="/users" element={<Users />}></Route>
-                        <Route path="/orders/:id" element={<Orders />}></Route>
-                    </Routes>
-                    <Footer/>
-                </BrowserRouter>
+            <PayPalScriptProvider options={{ currency: "EUR", "client-id": SANDBOX_CLIENT_ID }}>
+                <Router>
+                    <Switch>
+                        <Route exact path="/" component={Home} />
+                        <Route exact path="/catalog" component={Catalog} />
+                        <Route exact path="/products" component={Products} />
+                        <Route path="/products/:id" component={Product} />
+                        <Route exact path="/about" component={About} />
+                        <Route exact path="/login" component={Login} />
+                        <Route exact path="/register" component={Register} />
+                        <Route exact path="/cart" component={Cart} />
+                        <Route path="/orders/:id" component={Orders} />
+                        <Route exact path="/orders" component={Orders} />
+                        <Route exact path="/users" component={Users} />
+                    </Switch>
+                    <Footer />
+                </Router>
             </PayPalScriptProvider>
         );
     }
 }
 
 export default App;
- 
